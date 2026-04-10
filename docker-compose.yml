@@ -1,0 +1,79 @@
+services:
+  # ─── PostgreSQL ───────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: intranet
+      POSTGRES_USER: intranet
+      POSTGRES_PASSWORD: intranet_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U intranet"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ─── Backend Go ───────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: intranet
+      DB_USER: intranet
+      DB_PASSWORD: intranet_dev
+      CORS_ORIGIN: "http://localhost:3000"
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── API Python ───────────────────────────────────────────
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: intranet
+      DB_USER: intranet
+      DB_PASSWORD: intranet_dev
+      CORS_ORIGIN: "http://localhost:3000"
+      JWT_SECRET_KEY: dev-jwt-secret-change-me
+      JWT_REFRESH_SECRET_KEY: dev-jwt-refresh-secret-change-me
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── Frontend React (Nginx) ──────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_ENV: docker
+        VITE_BASE_URL: ""
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+      - api
+
+volumes:
+  pg_data:
+  backend_uploads:

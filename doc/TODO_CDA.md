@@ -11,11 +11,11 @@
 - [x] Docker pour conteneurisation
 - [x] Kubernetes pour orchestration
 - [ ] **Documenter la procédure d'installation de l'environnement de dev** (README détaillé avec prérequis)
-- [ ] **Documenter le choix des outils** (IDE, extensions, linters, formatters)
-- [ ] **Mettre en place un linter frontend** (ESLint avec config stricte)
-- [ ] **Mettre en place un linter backend Go** (golangci-lint)
-- [ ] **Mettre en place un linter Python** (ruff ou flake8)
-- [ ] **Mettre en place un formatter** (Prettier frontend, gofmt backend, black Python)
+- [x] **Documenter le choix des outils** (IDE, extensions, linters, formatters)
+- [x] **Mettre en place un linter frontend** (ESLint avec config stricte)
+- [x] **Mettre en place un linter backend Go** (golangci-lint)
+- [x] **Mettre en place un linter Python** (ruff ou flake8)
+- [x] **Mettre en place un formatter** (Prettier frontend, gofmt backend, black Python)
 - [x] **Documenter la veille technologique** (dossier section 11.1)
 - [ ] **Créer un document de veille sécurité** (CVE, ANSSI, OWASP)
 

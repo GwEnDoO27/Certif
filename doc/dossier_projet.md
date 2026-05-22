@@ -811,7 +811,83 @@ WebSocket Manager → Tous les clients WS : Broadcast {user_offline: uid}
 | **Traefik** | Reverse proxy / ingress controller natif K8s, Let's Encrypt intégré |
 | **GitHub Actions** | CI/CD intégrée au repository, gratuit pour projets privés |
 
-## 5.2 Architecture logicielle choisie
+## 5.2 Outillage de développement
+
+### 5.2.1 Linters et formatters
+
+La qualité de code est garantie par une chaîne d'outillage cohérente sur les trois langages du projet. Chaque outil est exécuté localement (hook pre-commit recommandé) et en CI pour bloquer toute régression.
+
+#### Frontend (React / JavaScript)
+
+| Outil | Rôle | Configuration |
+|-------|------|---------------|
+| **ESLint** | Lint statique | `eslint:recommended` + `plugin:react/recommended` + `plugin:react-hooks/recommended` |
+| **Prettier** | Formatage automatique | Largeur 100, single-quote, trailing comma `es5` |
+
+Règles strictes activées :
+- `no-unused-vars` : error
+- `react-hooks/rules-of-hooks` : error
+- `react-hooks/exhaustive-deps` : warn
+
+#### Backend Go
+
+| Outil | Rôle |
+|-------|------|
+| **golangci-lint** | Méta-linter (govet, errcheck, staticcheck, gosec, gocyclo, ineffassign) |
+| **gofmt** | Formatage standard Go |
+| **goimports** | Tri automatique des imports |
+
+Linters de sécurité activés via `gosec` : détection des injections SQL non paramétrées, des hashs faibles, des secrets en dur, des permissions fichiers permissives.
+
+#### API Python
+
+| Outil | Rôle |
+|-------|------|
+| **ruff** | Linter (remplace flake8, isort, pyupgrade, partiellement pylint) |
+| **black** | Formatage opinionated |
+
+Configuration ruff : règles `E`, `F`, `W`, `I`, `B`, `UP`, `SIM` activées (style, bugs, simplifications, modernisation).
+
+#### Stratégie d'exécution
+
+```
+Développement local :  pre-commit hook → lint + format auto sur fichiers staged
+CI (GitHub Actions)  : job dédié "lint" en parallèle des tests, bloque le merge si KO
+```
+
+### 5.2.2 IDE et extensions recommandées
+
+L'environnement de référence est **Visual Studio Code**, choisi pour sa polyvalence multi-langages et la richesse de son écosystème.
+
+#### Extensions essentielles
+
+| Extension | Usage |
+|-----------|-------|
+| **ESLint** (dbaeumer.vscode-eslint) | Lint JS/JSX en temps réel |
+| **Prettier** (esbenp.prettier-vscode) | Formatage auto à la sauvegarde |
+| **Go** (golang.go) | LSP Go, debug, tests intégrés |
+| **Python** (ms-python.python) + **Pylance** | LSP Python, types |
+| **Tailwind CSS IntelliSense** (bradlc.vscode-tailwindcss) | Autocomplétion classes Tailwind |
+| **Docker** (ms-azuretools.vscode-docker) | Gestion images/conteneurs |
+| **GitLens** (eamodio.gitlens) | Annotations Git, historique |
+| **REST Client** (humao.rest-client) | Test des endpoints depuis VS Code |
+| **Mermaid Preview** (bierner.markdown-mermaid) | Aperçu diagrammes dans Markdown |
+
+#### Settings partagés (`.vscode/settings.json` recommandé)
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "go.lintTool": "golangci-lint",
+  "[python]": { "editor.defaultFormatter": "ms-python.black-formatter" }
+}
+```
+
+## 5.3 Architecture logicielle choisie
 
 - **Frontend** : Architecture par composants (React), patterns Context/Provider pour l'état global
 - **Backend** : Architecture en couches (Handler → Service → Repository), Clean Architecture

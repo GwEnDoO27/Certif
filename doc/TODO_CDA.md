@@ -167,7 +167,7 @@
 - [ ] **Rédiger le dossier de projet** (40-60 pages + annexes)
 
 ### CT2 - Utiliser l'anglais dans son activité professionnelle
-- [ ] **Documenter les termes techniques en anglais** (glossaire)
+- [x] **Documenter les termes techniques en anglais** (glossaire)
 - [ ] **Préparer le questionnaire professionnel en anglais** (30 min)
 - [x] Code source principalement en anglais (noms de variables, fonctions)
 

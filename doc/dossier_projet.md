@@ -1737,43 +1737,72 @@ Le projet est fonctionnel et déployé en préproduction. Les prochaines évolut
 
 # 14. Glossaire
 
-| Terme | Définition |
-|-------|------------|
-| **API** | Application Programming Interface - Interface de communication entre logiciels |
-| **ASGI** | Asynchronous Server Gateway Interface - Protocole Python pour serveurs web asynchrones |
-| **bcrypt** | Algorithme de hashage de mots de passe basé sur Blowfish |
-| **CI/CD** | Continuous Integration / Continuous Deployment - Automatisation du build et déploiement |
-| **CORS** | Cross-Origin Resource Sharing - Mécanisme de sécurité navigateur pour les requêtes cross-origin |
-| **CRUD** | Create, Read, Update, Delete - Les quatre opérations de base sur les données |
-| **Docker** | Plateforme de conteneurisation d'applications |
-| **FastAPI** | Framework Python moderne pour la création d'API REST |
-| **Go (Golang)** | Langage de programmation compilé créé par Google |
-| **Goroutine** | Thread léger géré par le runtime Go pour la concurrence |
-| **HMR** | Hot Module Replacement - Rechargement à chaud des modules en développement |
-| **HTTP** | HyperText Transfer Protocol - Protocole de communication web |
-| **HTTPS** | HTTP Secure - HTTP chiffré via TLS |
-| **JWT** | JSON Web Token - Standard de token d'authentification |
-| **K3s** | Distribution légère de Kubernetes |
-| **K8s** | Kubernetes - Système d'orchestration de conteneurs |
-| **MCD** | Modèle Conceptuel de Données |
-| **MLD** | Modèle Logique de Données |
-| **MPD** | Modèle Physique de Données |
-| **Nginx** | Serveur web et reverse proxy haute performance |
-| **ORM** | Object-Relational Mapping - Abstraction de la base de données en objets |
-| **OWASP** | Open Web Application Security Project - Référentiel de sécurité web |
-| **PostgreSQL** | Système de gestion de base de données relationnelle open source |
-| **RBAC** | Role-Based Access Control - Contrôle d'accès basé sur les rôles |
-| **REST** | Representational State Transfer - Style d'architecture pour API web |
-| **RGAA** | Référentiel Général d'Amélioration de l'Accessibilité |
-| **RGPD** | Règlement Général sur la Protection des Données |
-| **SPA** | Single Page Application - Application web monopage |
-| **SQLAlchemy** | ORM Python pour l'accès aux bases de données |
-| **Tailwind CSS** | Framework CSS utility-first |
-| **Traefik** | Reverse proxy et ingress controller moderne |
-| **UML** | Unified Modeling Language - Langage de modélisation standardisé |
-| **UUID** | Universally Unique Identifier - Identifiant unique universel |
-| **Vite** | Outil de build frontend rapide basé sur ESBuild |
-| **WebSocket** | Protocole de communication bidirectionnelle temps réel |
+Glossaire bilingue (français / anglais) des termes techniques mobilisés dans le dossier. Couvre la compétence transversale **CT2** (utiliser l'anglais dans son activité professionnelle).
+
+| Terme FR | Terme EN | Définition |
+|----------|----------|------------|
+| **API** | Application Programming Interface | Interface de communication entre logiciels |
+| **ASGI** | Asynchronous Server Gateway Interface | Protocole Python pour serveurs web asynchrones |
+| **Authentification** | Authentication | Vérification de l'identité d'un utilisateur |
+| **Autorisation** | Authorization | Vérification des droits d'accès d'un utilisateur authentifié |
+| **bcrypt** | bcrypt | Algorithme de hachage de mots de passe basé sur Blowfish |
+| **Cache** | Cache | Stockage temporaire de données pour accélérer les accès |
+| **CI/CD** | Continuous Integration / Continuous Deployment | Automatisation du build et du déploiement |
+| **Clé étrangère** | Foreign key | Référence d'une table vers la clé primaire d'une autre |
+| **Conteneurisation** | Containerization | Encapsulation d'une application et de ses dépendances dans un conteneur isolé |
+| **CORS** | Cross-Origin Resource Sharing | Mécanisme navigateur autorisant les requêtes cross-origin |
+| **Couche** | Layer | Niveau d'abstraction dans une architecture en couches |
+| **CRUD** | Create, Read, Update, Delete | Les quatre opérations de base sur les données |
+| **CSRF** | Cross-Site Request Forgery | Attaque par requête forgée depuis un site tiers |
+| **CSWSH** | Cross-Site WebSocket Hijacking | Détournement d'une connexion WebSocket cross-origin |
+| **Déploiement continu** | Continuous Deployment (CD) | Mise en production automatisée à chaque merge |
+| **Docker** | Docker | Plateforme de conteneurisation d'applications |
+| **Endpoint** | Endpoint | Point d'accès d'une API (URL + méthode HTTP) |
+| **FastAPI** | FastAPI | Framework Python moderne pour la création d'API REST |
+| **Go (Golang)** | Go (Golang) | Langage de programmation compilé créé par Google |
+| **Goroutine** | Goroutine | Thread léger géré par le runtime Go pour la concurrence |
+| **Hachage** | Hashing | Transformation irréversible d'une donnée en empreinte |
+| **HMR** | Hot Module Replacement | Rechargement à chaud des modules en développement |
+| **HSTS** | HTTP Strict Transport Security | Header forçant l'usage de HTTPS |
+| **HTTP** | HyperText Transfer Protocol | Protocole de communication web |
+| **HTTPS** | HTTP Secure | HTTP chiffré via TLS |
+| **Intergiciel** | Middleware | Composant interceptant les requêtes/réponses |
+| **Intégration continue** | Continuous Integration (CI) | Tests automatisés à chaque push |
+| **Jeton** | Token | Chaîne d'authentification (ex : JWT) |
+| **JWT** | JSON Web Token | Standard de jeton d'authentification signé |
+| **K3s** | K3s | Distribution légère de Kubernetes |
+| **K8s** | Kubernetes | Système d'orchestration de conteneurs |
+| **MCD** | Conceptual Data Model (CDM) | Modèle Conceptuel de Données |
+| **MLD** | Logical Data Model (LDM) | Modèle Logique de Données |
+| **Migration (BDD)** | Database migration | Évolution incrémentale du schéma de base de données |
+| **MPD** | Physical Data Model (PDM) | Modèle Physique de Données |
+| **Nginx** | Nginx | Serveur web et reverse proxy haute performance |
+| **Orchestration** | Orchestration | Coordination automatisée de plusieurs conteneurs/services |
+| **ORM** | Object-Relational Mapping | Abstraction de la base de données en objets |
+| **OWASP** | Open Web Application Security Project | Référentiel de sécurité web |
+| **Persistance** | Persistence | Sauvegarde durable de données |
+| **PostgreSQL** | PostgreSQL | Système de gestion de base de données relationnelle open source |
+| **Rate limiting** | Rate limiting | Limitation du nombre de requêtes par client et par fenêtre temporelle |
+| **RBAC** | Role-Based Access Control | Contrôle d'accès basé sur les rôles |
+| **Refactorisation** | Refactoring | Restructuration de code sans changement de comportement |
+| **Référentiel (Git)** | Repository | Stockage d'un projet versionné |
+| **REST** | Representational State Transfer | Style d'architecture pour API web |
+| **RGAA** | Référentiel Général d'Amélioration de l'Accessibilité | Standard français d'accessibilité numérique (équivalent WCAG) |
+| **RGPD** | General Data Protection Regulation (GDPR) | Règlement européen sur la protection des données |
+| **Rollback** | Rollback | Retour à un état stable antérieur |
+| **Sérialisation** | Serialization | Transformation d'un objet en flux transmissible |
+| **SPA** | Single Page Application | Application web monopage |
+| **SQLAlchemy** | SQLAlchemy | ORM Python pour l'accès aux bases de données |
+| **Tableau de bord** | Dashboard | Interface de visualisation synthétique |
+| **Tailwind CSS** | Tailwind CSS | Framework CSS utility-first |
+| **Test d'intégration** | Integration test | Test de l'interaction entre composants |
+| **Test unitaire** | Unit test | Test d'une unité de code isolée |
+| **Traefik** | Traefik | Reverse proxy et ingress controller moderne |
+| **UML** | Unified Modeling Language | Langage de modélisation standardisé |
+| **UUID** | Universally Unique Identifier | Identifiant unique universel (128 bits) |
+| **Vite** | Vite | Outil de build frontend rapide basé sur ESBuild |
+| **WebSocket** | WebSocket | Protocole de communication bidirectionnelle persistante |
+| **XSS** | Cross-Site Scripting | Injection de code malveillant côté client |
 
 ---
 

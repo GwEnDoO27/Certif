@@ -10,21 +10,89 @@
 
 # Table des matières
 
-1. [Introduction](#1-introduction)
-2. [Cahier des charges](#2-cahier-des-charges)
-3. [Organisation du projet](#3-organisation-du-projet)
-4. [Conception](#4-conception)
-5. [Choix des technologies](#5-choix-des-technologies)
-6. [Architecture technique](#6-architecture-technique)
-7. [Réalisation](#7-réalisation)
-8. [Sécurité](#8-sécurité)
-9. [Tests](#9-tests)
-10. [Déploiement](#10-déploiement)
-11. [Veille technologique et sécurité](#11-veille-technologique-et-sécurité)
-12. [Améliorations et perspectives](#12-améliorations-et-perspectives)
-13. [Conclusion](#13-conclusion)
-14. [Glossaire](#14-glossaire)
-15. [Annexes](#15-annexes)
+1. **Introduction**
+   - 1.1 Contexte du projet
+   - 1.2 Présentation de l'entreprise
+   - 1.3 Objectifs du projet
+   - 1.4 Périmètre fonctionnel
+2. **Cahier des charges**
+   - 2.1 Expression du besoin (BF / BNF)
+   - 2.2 Contraintes
+   - 2.3 Livrables attendus
+   - 2.4 User Stories (5 épics)
+3. **Organisation du projet**
+   - 3.1 Méthodologie
+   - 3.2 Planning et sprints
+   - 3.3 Outils de gestion de projet
+   - 3.4 Conventions de commit
+   - 3.5 Stratégie de branching Git
+4. **Conception**
+   - 4.1 Diagramme de cas d'utilisation
+   - 4.2 Maquettes et wireframes
+   - 4.3 Principes UX et accessibilité (RGAA)
+   - 4.4 Modélisation des données
+     - 4.4.1 Dictionnaire de données
+     - 4.4.2 MCD
+     - 4.4.3 MLD
+     - 4.4.4 MPD
+     - 4.4.5 Justifications de conception
+   - 4.5 Diagrammes de séquence
+   - 4.6 Diagramme de classes UML
+5. **Choix des technologies**
+   - 5.1 Tableau comparatif et justifications
+   - 5.2 Outillage de développement (linters, formatters, IDE)
+   - 5.3 Architecture logicielle choisie
+6. **Architecture technique**
+   - 6.1 Architecture globale
+   - 6.2 Architecture frontend
+   - 6.3 Architecture backend (Go)
+   - 6.4 Architecture API Python
+   - 6.5 Documentation des API REST (OpenAPI)
+   - 6.6 Infrastructure de déploiement
+7. **Réalisation** *(par module fonctionnel)*
+   - 7.1 Authentification et sessions
+   - 7.2 Administration des utilisateurs
+   - 7.3 Catalogue d'applications
+   - 7.4 Outils métier
+   - 7.5 Tableau de bord analytique
+   - 7.6 WebSocket — présence temps réel
+   - 7.7 Configuration McDonald's
+   - 7.8 Thème (Dark Mode)
+8. **Sécurité**
+   - 8.1 Analyse OWASP Top 10
+   - 8.2 Authentification et sessions
+   - 8.3 Contrôle d'accès (RBAC)
+   - 8.4 Protection des données (RGPD)
+   - 8.5 Protection CSRF et headers HTTP
+   - 8.6 Rate limiting
+   - 8.7 Logging de sécurité
+   - 8.8 Gestion des secrets
+   - 8.9 Veille sécurité
+9. **Tests**
+   - 9.1 Stratégie de tests
+   - 9.2 Tests unitaires Backend (Go)
+   - 9.3 Tests unitaires API Python (pytest)
+   - 9.4 Tests unitaires Frontend (Vitest)
+   - 9.5 Tests d'intégration
+   - 9.6 Tests end-to-end (Playwright)
+   - 9.7 Résultats des tests
+   - 9.8 Tests manuels et jeux de données
+   - 9.9 Exécution dans la CI/CD
+10. **Déploiement**
+    - 10.1 Conteneurisation (Docker)
+    - 10.2 Orchestration Kubernetes
+    - 10.3 Pipeline CI/CD
+    - 10.4 Environnements
+    - 10.5 Procédure de déploiement step-by-step
+    - 10.6 Stratégie de rollback
+    - 10.7 Monitoring et observabilité
+    - 10.8 Versioning sémantique et CHANGELOG
+    - 10.9 Développement local avec docker-compose
+11. **Veille technologique et sécurité**
+12. **Améliorations et perspectives**
+13. **Conclusion**
+14. **Glossaire (FR / EN)**
+15. **Annexes**
 
 ---
 
@@ -3064,6 +3132,8 @@ Ce projet de portail intranet d'entreprise m'a permis de mettre en pratique l'en
 - **Collaboration et gestion de projet** en méthodologie Agile
 
 ### Bilan personnel
+
+> *Note au candidat : cette sous-section est à personnaliser. Les éléments factuels (technologies acquises, difficultés résolues) peuvent s'appuyer sur les sections 3 à 11. Les ressentis (apprentissages personnels, points forts/faibles du parcours) doivent être ajoutés à la main.*
 
 Ce projet m'a permis d'approfondir mes compétences dans plusieurs domaines :
 

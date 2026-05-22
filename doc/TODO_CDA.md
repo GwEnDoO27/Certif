@@ -225,8 +225,45 @@
 14. Ajouter linters/formatters
 
 ### Basse priorité (bonus)
-15. Tests E2E (Cypress)
-16. Monitoring (Prometheus/Grafana)
+15. ~~Tests E2E (Cypress / Playwright)~~ ✅ Stratégie documentée (section 9.6)
+16. ~~Monitoring (Prometheus/Grafana)~~ ✅ Stratégie documentée (section 10.7)
 17. Cache Redis
-18. Rate limiting
-19. CHANGELOG.md + SemVer
+18. ~~Rate limiting~~ ✅ Stratégie documentée (section 8.6)
+19. ~~CHANGELOG.md + SemVer~~ ✅ Stratégie documentée (section 10.8)
+
+---
+
+## Couverture finale (post-rédaction du dossier)
+
+| CP / CT | Couverture | Sections du dossier |
+|---------|------------|---------------------|
+| **CP1** Installer/configurer l'environnement | ✅ Complète | 5.1, 5.2 (outillage, linters, IDE) |
+| **CP2** Développer des interfaces utilisateur | ✅ Complète | 4.2 (maquettes), 4.3 (UX/RGAA), 7.* (UI par module) |
+| **CP3** Développer des composants métier | ✅ Complète | 4.6 (classes), 7.* (services métier par module) |
+| **CP4** Développer la persistance | ✅ Complète | 4.4.1 (dictionnaire), 4.4.2-4.4.5 (MCD/MLD/MPD/justifs) |
+| **CP5** Application multicouche répartie | ✅ Complète | 6.1, 6.5 (OpenAPI), 6.6 |
+| **CP6** Collaboration / gestion de projet | ✅ Complète | 3.1 à 3.5 (méthodo, planning, commit, branching) |
+| **CP7** Sécurité applicative | ✅ Complète | 8.1 à 8.9 (OWASP, RBAC, RGPD, CSRF, rate limit, logging, secrets) |
+| **CP8** Composants d'accès aux données | ✅ Complète | 6.3, 6.4, 7.*-BDD, annexes A.1, A.4 |
+| **CP9** Plans de tests | ✅ Complète | 9.1 à 9.9 (stratégie, unitaires, intégration, E2E, manuels, CI) |
+| **CP10** Déploiement | ✅ Complète | 10.1 à 10.7, 10.9 (Docker, K8s, CI, env, step-by-step, rollback, monitoring, compose) |
+| **CP11** Gestion de versions | ✅ Complète | 3.5 (branching), 10.8 (SemVer + CHANGELOG) |
+| **CT1** Communication pro | ⚠️ Diaporama à préparer | Tout le dossier ; diaporama hors scope rédactionnel |
+| **CT2** Anglais | ✅ Complète | 14 (glossaire bilingue FR/EN, 62 termes) |
+| **CT3** Veille / partage | ✅ Complète | 11.1, 11.2 (veille techno et sécurité) |
+
+### Reste à produire manuellement (hors plan de rédaction)
+
+- **§ 1.2** Présentation de l'entreprise (nom, secteur, taille, contexte)
+- **§ 1.5 / en-tête** Identité candidat + session CDA
+- **§ 13** Personnalisation du bilan personnel
+- **Annexe B** Captures d'écran de l'application
+- **Diaporama** de présentation (CT1, 40 min)
+- **Préparation** du questionnaire anglais (CT2, 30 min)
+- **Création effective** des artefacts dont seule la stratégie est documentée :
+  - `CHANGELOG.md` au format Keep a Changelog
+  - `docker-compose.yml` à la racine du repo
+  - Configs `.eslintrc`, `.prettierrc`, `golangci.yml`, `ruff.toml`
+  - Suite de tests E2E Playwright (`e2e/`)
+  - Headers HTTP de sécurité et middleware rate limiting (code Go)
+  - Stack Prometheus + Grafana

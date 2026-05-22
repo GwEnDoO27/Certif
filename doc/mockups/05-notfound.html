@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Mockup — 404</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; margin:0; background:#0f172a; color:#e2e8f0; }
+  .frame { border-radius: 14px; overflow: hidden; box-shadow: 0 25px 60px -20px rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.08); }
+  .frame-header { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.08); padding: 8px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #94a3b8; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background:#ef4444 } .dot.y { background:#eab308 } .dot.g { background:#22c55e }
+  code { background: rgba(99,102,241,.12); padding: 1px 6px; border-radius: 4px; color:#a5b4fc; font-size: 12px; }
+
+  .app-light { background:linear-gradient(135deg,#eff6ff,#e0e7ff); min-height:580px; display:flex; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden; }
+  .app-dark { background:linear-gradient(135deg,#020617,#0f172a); min-height:580px; display:flex; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden; }
+</style>
+</head>
+<body>
+
+<div style="max-width: 1280px; margin: 0 auto; padding: 24px 18px 40px;">
+  <div style="text-align:center; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#94a3b8; margin-bottom:8px; font-weight:600;">
+    Mockup — Page <strong style="color:#a5b4fc">404 / Not Found</strong> · Route fallback <code>*</code>
+  </div>
+  <h1 style="text-align:center; color:#f1f5f9; font-size:26px; margin:0 0 4px; letter-spacing:-0.02em;">Page non trouvée</h1>
+  <p style="text-align:center; color:#94a3b8; font-size:13px; margin:0 0 22px;">État actuel (minimaliste) + proposition d'évolution alignée à la charte</p>
+
+  <!-- ÉTAT ACTUEL -->
+  <div style="font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#fbbf24; margin-bottom:10px; font-weight:700; text-align:center;">▸ État actuel du code</div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom:32px;">
+
+    <!-- Light actuel -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☀ Light mode</div>
+      <div class="frame">
+        <div class="frame-header" style="background:#f8fafc; color:#64748b; border-bottom:1px solid #e2e8f0;">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/route-inexistante</span>
+        </div>
+        <div style="background:#eff6ff; min-height:380px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;">
+          <h1 style="font-size:32px; font-weight:700; color:#1e293b; margin:0 0 12px;">404 - Page non trouvée</h1>
+          <p style="font-size:16px; color:#64748b; margin:0 0 24px;">La page que vous recherchez n'existe pas.</p>
+          <a href="#" style="color:#3b82f6; text-decoration:underline; font-size:14px;">Retour à l'accueil</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark actuel -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☾ Dark mode</div>
+      <div class="frame">
+        <div class="frame-header">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/route-inexistante</span>
+        </div>
+        <div style="background:#0f172a; min-height:380px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;">
+          <h1 style="font-size:32px; font-weight:700; color:#f1f5f9; margin:0 0 12px;">404 - Page non trouvée</h1>
+          <p style="font-size:16px; color:#94a3b8; margin:0 0 24px;">La page que vous recherchez n'existe pas.</p>
+          <a href="#" style="color:#60a5fa; text-decoration:underline; font-size:14px;">Retour à l'accueil</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSITION D'ÉVOLUTION -->
+  <div style="font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#10b981; margin-bottom:10px; font-weight:700; text-align:center;">▸ Évolution proposée (alignée à la charte du projet)</div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+
+    <!-- Light proposé -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☀ Light mode</div>
+      <div class="frame">
+        <div class="frame-header" style="background:#f8fafc; color:#64748b; border-bottom:1px solid #e2e8f0;">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/route-inexistante</span>
+        </div>
+        <div class="app-light">
+          <!-- Blobs background -->
+          <div style="position:absolute; top:-15%; left:-15%; width:60%; height:60%; border-radius:50%; background:rgba(99,102,241,.18); filter:blur(90px);"></div>
+          <div style="position:absolute; bottom:-15%; right:-15%; width:60%; height:60%; border-radius:50%; background:rgba(244,114,182,.18); filter:blur(90px);"></div>
+
+          <div style="position:relative; text-align:center; max-width:440px;">
+            <!-- Big 404 -->
+            <div style="position:relative; margin-bottom:14px;">
+              <div style="font-size:140px; font-weight:900; line-height:1; background:linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-0.06em;">404</div>
+              <!-- Floating warning badge -->
+              <div style="position:absolute; top:-8px; right:-8px; width:46px; height:46px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 25px -8px rgba(0,0,0,.12);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+            </div>
+
+            <h2 style="font-size:24px; font-weight:700; color:#0f172a; margin:0 0 6px; letter-spacing:-0.02em;">Cette page s'est égarée</h2>
+            <p style="font-size:14px; color:#64748b; margin:0 0 24px; line-height:1.5;">L'adresse que vous avez saisie n'existe pas ou la page a peut-être été déplacée.</p>
+
+            <!-- CTA group -->
+            <div style="display:flex; gap:10px; justify-content:center;">
+              <button style="background:linear-gradient(90deg,#6366f1,#2563eb); color:white; border:none; padding:11px 22px; border-radius:12px; font-weight:600; font-size:13.5px; display:inline-flex; align-items:center; gap:7px; box-shadow:0 10px 22px -8px rgba(99,102,241,.45); cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Retour à l'accueil
+              </button>
+              <button style="background:white; color:#475569; border:1px solid #e2e8f0; padding:11px 22px; border-radius:12px; font-weight:600; font-size:13.5px; display:inline-flex; align-items:center; gap:7px; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Page précédente
+              </button>
+            </div>
+
+            <div style="margin-top:24px; font-size:12px; color:#94a3b8;">
+              Besoin d'aide ? <a href="#" style="color:#6366f1; font-weight:500;">Contactez le support</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark proposé -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☾ Dark mode</div>
+      <div class="frame">
+        <div class="frame-header">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/route-inexistante</span>
+        </div>
+        <div class="app-dark">
+          <div style="position:absolute; top:-15%; left:-15%; width:60%; height:60%; border-radius:50%; background:rgba(99,102,241,.28); filter:blur(100px);"></div>
+          <div style="position:absolute; bottom:-15%; right:-15%; width:60%; height:60%; border-radius:50%; background:rgba(236,72,153,.18); filter:blur(100px);"></div>
+
+          <div style="position:relative; text-align:center; max-width:440px;">
+            <div style="position:relative; margin-bottom:14px;">
+              <div style="font-size:140px; font-weight:900; line-height:1; background:linear-gradient(135deg,#a5b4fc,#f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-0.06em;">404</div>
+              <div style="position:absolute; top:-8px; right:-8px; width:46px; height:46px; background:#1e293b; border:1px solid #334155; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px -8px rgba(0,0,0,.5);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+            </div>
+
+            <h2 style="font-size:24px; font-weight:700; color:#f1f5f9; margin:0 0 6px; letter-spacing:-0.02em;">Cette page s'est égarée</h2>
+            <p style="font-size:14px; color:#94a3b8; margin:0 0 24px; line-height:1.5;">L'adresse que vous avez saisie n'existe pas ou la page a peut-être été déplacée.</p>
+
+            <div style="display:flex; gap:10px; justify-content:center;">
+              <button style="background:linear-gradient(90deg,#6366f1,#2563eb); color:white; border:none; padding:11px 22px; border-radius:12px; font-weight:600; font-size:13.5px; display:inline-flex; align-items:center; gap:7px; box-shadow:0 10px 25px -8px rgba(99,102,241,.6); cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Retour à l'accueil
+              </button>
+              <button style="background:#1e293b; color:#cbd5e1; border:1px solid #334155; padding:11px 22px; border-radius:12px; font-weight:600; font-size:13.5px; display:inline-flex; align-items:center; gap:7px; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Page précédente
+              </button>
+            </div>
+
+            <div style="margin-top:24px; font-size:12px; color:#64748b;">
+              Besoin d'aide ? <a href="#" style="color:#a5b4fc; font-weight:500;">Contactez le support</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Annotations -->
+  <div style="margin-top:24px; padding:18px 22px; background:rgba(99,102,241,.08); border:1px solid rgba(99,102,241,.25); border-radius:14px;">
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#a5b4fc; font-weight:700; margin-bottom:8px;">🔍 Constat &amp; pistes d'amélioration</div>
+    <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:#cbd5e1;">
+      <li><strong style="color:#fbbf24">Existant</strong> — composant <code>NotFound.jsx</code> de 12 lignes, simple <code>div</code> centré avec h1/p/lien, sans cohérence avec la charte glassmorphism du reste</li>
+      <li><strong style="color:#10b981">Proposition</strong> — typographie 404 géante avec gradient (cohérent avec le logo Login), badge d'alerte flottant, doubles CTA (accueil + retour), lien support</li>
+      <li><strong style="color:#10b981">Cohérence</strong> — réutilise les blobs animés du Login, les <code>rounded-2xl</code>, le gradient <code>primary→blue-600</code> et la palette indigo/pink déjà présente</li>
+      <li><strong style="color:#10b981">UX</strong> — donne deux issues à l'utilisateur (revenir, ou aller à l'accueil), et un fallback support pour cas extrêmes (très utile pour la conformité RGAA / aide à l'utilisateur)</li>
+      <li><strong style="color:#a5b4fc">Note REAC CP2</strong> — montre la démarche UX : analyse de l'existant → constat → proposition argumentée</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

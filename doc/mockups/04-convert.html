@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Mockup — Convert</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; margin:0; background:#0f172a; color:#e2e8f0; }
+  .frame { border-radius: 14px; overflow: hidden; box-shadow: 0 25px 60px -20px rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.08); }
+  .frame-header { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.08); padding: 8px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #94a3b8; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background:#ef4444 } .dot.y { background:#eab308 } .dot.g { background:#22c55e }
+  code { background: rgba(99,102,241,.12); padding: 1px 6px; border-radius: 4px; color:#a5b4fc; font-size: 12px; }
+
+  /* LIGHT */
+  .app-light { background:#f8fafc; min-height:920px; padding: 20px; }
+  .card-light { background:white; border:1px solid #f1f5f9; border-radius:18px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .accordion-head-light { background:#f8fafc; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+  .float-label-light { background:white; padding: 0 6px; position:absolute; top:-7px; left:12px; font-size:11px; font-weight:500; color:#475569; }
+  .input-light { background:white; border:1px solid #e2e8f0; border-radius:14px; padding:10px 14px; font-size:13px; color:#334155; }
+  .input-light.modified { border-color:#60a5fa; background: rgba(239,246,255,.5); }
+
+  /* DARK */
+  .app-dark { background:#0f172a; min-height:920px; padding: 20px; }
+  .card-dark { background:#1e293b; border:1px solid #334155; border-radius:18px; }
+  .accordion-head-dark { background: rgba(51,65,85,.5); padding:14px 16px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+  .float-label-dark { background:#1e293b; padding: 0 6px; position:absolute; top:-7px; left:12px; font-size:11px; font-weight:500; color:#94a3b8; }
+  .input-dark { background:#334155; border:1px solid #475569; border-radius:14px; padding:10px 14px; font-size:13px; color:#cbd5e1; }
+  .input-dark.modified { border-color:#60a5fa; background: rgba(30,58,138,.25); }
+</style>
+</head>
+<body>
+
+<div style="max-width: 1480px; margin: 0 auto; padding: 24px 18px 40px;">
+  <div style="text-align:center; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#94a3b8; margin-bottom:8px; font-weight:600;">
+    Mockup haute fidélité — Page <strong style="color:#a5b4fc">Convert</strong> · Route <code>/facture-mb/home</code>
+  </div>
+  <h1 style="text-align:center; color:#f1f5f9; font-size:26px; margin:0 0 4px; letter-spacing:-0.02em;">Transformation Factures MB</h1>
+  <p style="text-align:center; color:#94a3b8; font-size:13px; margin:0 0 22px;">EDI (.txt) → Excel (.xlsx) · Configuration codes comptables + upload drag&amp;drop + traitement</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+
+    <!-- ============== LIGHT ============== -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☀ Light mode</div>
+      <div class="frame">
+        <div class="frame-header" style="background:#f8fafc; color:#64748b; border-bottom:1px solid #e2e8f0;">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/facture-mb/home</span>
+        </div>
+        <div class="app-light">
+
+          <!-- Page header -->
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+            <div style="padding:12px; background:linear-gradient(135deg,#3b82f6,#2563eb); border-radius:16px; box-shadow:0 10px 20px -8px rgba(59,130,246,.5);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="white" stroke-width="2" fill="rgba(255,255,255,.25)"/><polyline points="14 2 14 8 20 8" stroke="white" stroke-width="2" fill="none"/><line x1="8" y1="13" x2="16" y2="13" stroke="white" stroke-width="2"/><line x1="8" y1="17" x2="16" y2="17" stroke="white" stroke-width="2"/></svg>
+            </div>
+            <div>
+              <h2 style="margin:0; font-size:22px; color:#0f172a; font-weight:700; letter-spacing:-0.02em;">Transformation Factures MB</h2>
+              <p style="margin:3px 0 0; font-size:13px; color:#64748b;">Transforme les .edi en excel</p>
+            </div>
+          </div>
+
+          <!-- Stepper -->
+          <div class="card-light" style="padding:18px 22px; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; justify-content:center;">
+              <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; display:flex; align-items:center; justify-content:center; transform:scale(1.1); box-shadow:0 5px 15px -3px rgba(59,130,246,.5);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </div>
+              <div style="flex:1; max-width:240px; height:4px; margin:0 18px; border-radius:999px; background:linear-gradient(90deg,#3b82f6,#2563eb);"></div>
+              <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; display:flex; align-items:center; justify-content:center; transform:scale(1.1); box-shadow:0 5px 15px -3px rgba(59,130,246,.5);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; max-width:340px; margin:10px auto 0;">
+              <span style="font-size:13px; font-weight:600; color:#2563eb;">Configuration</span>
+              <span style="font-size:13px; font-weight:600; color:#2563eb;">Traitement</span>
+            </div>
+          </div>
+
+          <!-- Two columns -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+
+            <!-- Left: codes config -->
+            <div class="card-light" style="padding:20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:16px; font-weight:600; color:#0f172a;">Configuration des codes</h3>
+                <span style="font-size:10.5px; font-weight:600; background:#dbeafe; color:#1d4ed8; padding:4px 10px; border-radius:999px;">2 modifs non sauvegardées</span>
+              </div>
+
+              <!-- Accordion 1 -->
+              <div style="border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; margin-bottom:10px;">
+                <div class="accordion-head-light">
+                  <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#334155; font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+                    Codes généraux et auxiliaires
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="transform:rotate(90deg);"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div style="padding:14px 14px 12px; border-top:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                  <div style="position:relative;"><span class="float-label-light">code_tva</span><div class="input-light">445660</div></div>
+                  <div style="position:relative;"><span class="float-label-light">code_client</span><div class="input-light modified">411000<span style="float:right; width:6px; height:6px; background:#3b82f6; border-radius:50%; margin-top:5px;"></span></div></div>
+                  <div style="position:relative;"><span class="float-label-light">code_fournisseur</span><div class="input-light">401000</div></div>
+                  <div style="position:relative;"><span class="float-label-light">code_banque</span><div class="input-light">512000</div></div>
+                </div>
+              </div>
+
+              <!-- Accordion 2 -->
+              <div style="border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; margin-bottom:10px;">
+                <div class="accordion-head-light">
+                  <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#334155; font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Codes comptables
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="transform:rotate(90deg);"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div style="padding:14px 14px 12px; border-top:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                  <div style="position:relative;"><span class="float-label-light">vente_marchandise</span><div class="input-light">707000</div></div>
+                  <div style="position:relative;"><span class="float-label-light">achat_matiere</span><div class="input-light modified">601000<span style="float:right; width:6px; height:6px; background:#3b82f6; border-radius:50%; margin-top:5px;"></span></div></div>
+                </div>
+              </div>
+
+              <!-- Accordion 3 -->
+              <div style="border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; margin-bottom:14px;">
+                <div class="accordion-head-light">
+                  <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#334155; font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>
+                    Codes journal
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+              </div>
+
+              <button style="width:100%; padding:13px; background:linear-gradient(90deg,#3b82f6,#2563eb); color:white; border:none; border-radius:14px; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 10px 22px -8px rgba(59,130,246,.5); cursor:pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+                Enregistrer les modifications
+              </button>
+            </div>
+
+            <!-- Right: upload + guide -->
+            <div>
+              <div class="card-light" style="padding:20px; margin-bottom:14px;">
+                <h3 style="margin:0 0 14px; font-size:16px; font-weight:600; color:#0f172a;">Fichiers à transformer</h3>
+
+                <!-- Drop zone (active state) -->
+                <div style="border:2px dashed #93c5fd; background:rgba(239,246,255,.5); border-radius:18px; padding:28px 18px; text-align:center;">
+                  <div style="width:56px; height:56px; background:#dbeafe; border-radius:14px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  </div>
+                  <p style="margin:0 0 3px; color:#334155; font-weight:600; font-size:13.5px;">3 fichier(s) sélectionné(s) (0.42 MB)</p>
+                  <p style="margin:0; font-size:12px; color:#64748b;">ou cliquez pour parcourir</p>
+                  <p style="margin:6px 0 0; font-size:11px; color:#94a3b8;">Fichiers .txt uniquement</p>
+                </div>
+
+                <!-- Files list -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin:16px 0 8px;">
+                  <span style="font-size:12px; font-weight:500; color:#334155;">Fichiers sélectionnés</span>
+                  <span style="font-size:11.5px; color:#dc2626; display:flex; align-items:center; gap:4px; cursor:pointer;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg>
+                    Tout supprimer
+                  </span>
+                </div>
+                <div style="background:#f8fafc; border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style="flex:1;"><div style="font-size:12.5px; font-weight:600; color:#334155;">facture_001.txt</div><div style="font-size:10.5px; color:#94a3b8;">154.2 KB</div></div>
+                </div>
+                <div style="background:#f8fafc; border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style="flex:1;"><div style="font-size:12.5px; font-weight:600; color:#334155;">facture_002.txt</div><div style="font-size:10.5px; color:#94a3b8;">132.8 KB</div></div>
+                </div>
+                <div style="background:#f8fafc; border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style="flex:1;"><div style="font-size:12.5px; font-weight:600; color:#334155;">facture_003.txt</div><div style="font-size:10.5px; color:#94a3b8;">142.5 KB</div></div>
+                </div>
+
+                <button style="width:100%; padding:13px; margin-top:16px; background:linear-gradient(90deg,#22c55e,#059669); color:white; border:none; border-radius:14px; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 10px 22px -8px rgba(34,197,94,.5); cursor:pointer;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Lancer la transformation
+                </button>
+              </div>
+
+              <!-- Guide -->
+              <div style="background:linear-gradient(135deg,#eff6ff,#eef2ff); border:1px solid #dbeafe; border-radius:18px; padding:18px;">
+                <h4 style="margin:0 0 12px; font-size:14px; font-weight:600; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  Guide rapide
+                </h4>
+                <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                  <div style="width:24px; height:24px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#2563eb; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,.06);">1</div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#0f172a;">Configurez vos codes</div><div style="font-size:11px; color:#64748b;">Adaptez les codes selon vos besoins</div></div>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                  <div style="width:24px; height:24px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#2563eb; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,.06);">2</div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#0f172a;">Ajoutez vos fichiers</div><div style="font-size:11px; color:#64748b;">Glissez ou sélectionnez vos fichiers .txt</div></div>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:10px;">
+                  <div style="width:24px; height:24px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#2563eb; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,.06);">3</div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#0f172a;">Lancez la transformation</div><div style="font-size:11px; color:#64748b;">Le fichier Excel sera téléchargé automatiquement</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============== DARK ============== -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☾ Dark mode</div>
+      <div class="frame">
+        <div class="frame-header">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/facture-mb/home</span>
+        </div>
+        <div class="app-dark">
+
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+            <div style="padding:12px; background:linear-gradient(135deg,#3b82f6,#2563eb); border-radius:16px; box-shadow:0 10px 25px -8px rgba(59,130,246,.6);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="white" stroke-width="2" fill="rgba(255,255,255,.25)"/><polyline points="14 2 14 8 20 8" stroke="white" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div>
+              <h2 style="margin:0; font-size:22px; color:#f1f5f9; font-weight:700; letter-spacing:-0.02em;">Transformation Factures MB</h2>
+              <p style="margin:3px 0 0; font-size:13px; color:#94a3b8;">Transforme les .edi en excel</p>
+            </div>
+          </div>
+
+          <div class="card-dark" style="padding:18px 22px; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; justify-content:center;">
+              <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; display:flex; align-items:center; justify-content:center; transform:scale(1.1); box-shadow:0 5px 18px -3px rgba(59,130,246,.7);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div style="flex:1; max-width:240px; height:4px; margin:0 18px; border-radius:999px; background:linear-gradient(90deg,#3b82f6,#2563eb);"></div>
+              <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; display:flex; align-items:center; justify-content:center; transform:scale(1.1); box-shadow:0 5px 18px -3px rgba(59,130,246,.7);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; max-width:340px; margin:10px auto 0;">
+              <span style="font-size:13px; font-weight:600; color:#60a5fa;">Configuration</span>
+              <span style="font-size:13px; font-weight:600; color:#60a5fa;">Traitement</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+
+            <div class="card-dark" style="padding:20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:16px; font-weight:600; color:#f1f5f9;">Configuration des codes</h3>
+                <span style="font-size:10.5px; font-weight:600; background:rgba(59,130,246,.2); color:#93c5fd; padding:4px 10px; border-radius:999px;">2 modifs non sauvegardées</span>
+              </div>
+
+              <div style="border:1px solid #334155; border-radius:14px; overflow:hidden; margin-bottom:10px;">
+                <div class="accordion-head-dark">
+                  <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#cbd5e1; font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+                    Codes généraux et auxiliaires
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="transform:rotate(90deg);"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div style="padding:14px 14px 12px; border-top:1px solid #334155; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                  <div style="position:relative;"><span class="float-label-dark">code_tva</span><div class="input-dark">445660</div></div>
+                  <div style="position:relative;"><span class="float-label-dark">code_client</span><div class="input-dark modified">411000<span style="float:right; width:6px; height:6px; background:#60a5fa; border-radius:50%; margin-top:5px;"></span></div></div>
+                  <div style="position:relative;"><span class="float-label-dark">code_fournisseur</span><div class="input-dark">401000</div></div>
+                  <div style="position:relative;"><span class="float-label-dark">code_banque</span><div class="input-dark">512000</div></div>
+                </div>
+              </div>
+
+              <div style="border:1px solid #334155; border-radius:14px; overflow:hidden; margin-bottom:10px;">
+                <div class="accordion-head-dark">
+                  <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#cbd5e1; font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Codes comptables
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="transform:rotate(90deg);"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div style="padding:14px 14px 12px; border-top:1px solid #334155; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                  <div style="position:relative;"><span class="float-label-dark">vente_marchandise</span><div class="input-dark">707000</div></div>
+                  <div style="position:relative;"><span class="float-label-dark">achat_matiere</span><div class="input-dark modified">601000<span style="float:right; width:6px; height:6px; background:#60a5fa; border-radius:50%; margin-top:5px;"></span></div></div>
+                </div>
+              </div>
+
+              <div style="border:1px solid #334155; border-radius:14px; overflow:hidden; margin-bottom:14px;">
+                <div class="accordion-head-dark">
+                  <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#cbd5e1; font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>
+                    Codes journal
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+              </div>
+
+              <button style="width:100%; padding:13px; background:linear-gradient(90deg,#3b82f6,#2563eb); color:white; border:none; border-radius:14px; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 10px 25px -8px rgba(59,130,246,.6); cursor:pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+                Enregistrer les modifications
+              </button>
+            </div>
+
+            <div>
+              <div class="card-dark" style="padding:20px; margin-bottom:14px;">
+                <h3 style="margin:0 0 14px; font-size:16px; font-weight:600; color:#f1f5f9;">Fichiers à transformer</h3>
+
+                <div style="border:2px dashed #1d4ed8; background:rgba(30,58,138,.25); border-radius:18px; padding:28px 18px; text-align:center;">
+                  <div style="width:56px; height:56px; background:rgba(59,130,246,.2); border-radius:14px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  </div>
+                  <p style="margin:0 0 3px; color:#e2e8f0; font-weight:600; font-size:13.5px;">3 fichier(s) sélectionné(s) (0.42 MB)</p>
+                  <p style="margin:0; font-size:12px; color:#94a3b8;">ou cliquez pour parcourir</p>
+                  <p style="margin:6px 0 0; font-size:11px; color:#64748b;">Fichiers .txt uniquement</p>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin:16px 0 8px;">
+                  <span style="font-size:12px; font-weight:500; color:#cbd5e1;">Fichiers sélectionnés</span>
+                  <span style="font-size:11.5px; color:#f87171; display:flex; align-items:center; gap:4px; cursor:pointer;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg>
+                    Tout supprimer
+                  </span>
+                </div>
+                <div style="background: rgba(51,65,85,.4); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style="flex:1;"><div style="font-size:12.5px; font-weight:600; color:#e2e8f0;">facture_001.txt</div><div style="font-size:10.5px; color:#64748b;">154.2 KB</div></div>
+                </div>
+                <div style="background: rgba(51,65,85,.4); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style="flex:1;"><div style="font-size:12.5px; font-weight:600; color:#e2e8f0;">facture_002.txt</div><div style="font-size:10.5px; color:#64748b;">132.8 KB</div></div>
+                </div>
+                <div style="background: rgba(51,65,85,.4); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style="flex:1;"><div style="font-size:12.5px; font-weight:600; color:#e2e8f0;">facture_003.txt</div><div style="font-size:10.5px; color:#64748b;">142.5 KB</div></div>
+                </div>
+
+                <button style="width:100%; padding:13px; margin-top:16px; background:linear-gradient(90deg,#22c55e,#059669); color:white; border:none; border-radius:14px; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 10px 25px -8px rgba(34,197,94,.6); cursor:pointer;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Lancer la transformation
+                </button>
+              </div>
+
+              <div style="background:linear-gradient(135deg,rgba(30,58,138,.3),rgba(67,56,202,.3)); border:1px solid rgba(59,130,246,.25); border-radius:18px; padding:18px;">
+                <h4 style="margin:0 0 12px; font-size:14px; font-weight:600; color:#f1f5f9; display:flex; align-items:center; gap:6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  Guide rapide
+                </h4>
+                <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                  <div style="width:24px; height:24px; background:#1e293b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#60a5fa; flex-shrink:0; border:1px solid #334155;">1</div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#f1f5f9;">Configurez vos codes</div><div style="font-size:11px; color:#94a3b8;">Adaptez les codes selon vos besoins</div></div>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                  <div style="width:24px; height:24px; background:#1e293b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#60a5fa; flex-shrink:0; border:1px solid #334155;">2</div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#f1f5f9;">Ajoutez vos fichiers</div><div style="font-size:11px; color:#94a3b8;">Glissez ou sélectionnez vos fichiers .txt</div></div>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:10px;">
+                  <div style="width:24px; height:24px; background:#1e293b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#60a5fa; flex-shrink:0; border:1px solid #334155;">3</div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#f1f5f9;">Lancez la transformation</div><div style="font-size:11px; color:#94a3b8;">Le fichier Excel sera téléchargé automatiquement</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px; padding:18px 22px; background:rgba(99,102,241,.08); border:1px solid rgba(99,102,241,.25); border-radius:14px;">
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#a5b4fc; font-weight:700; margin-bottom:8px;">🔍 Éléments de design clés</div>
+    <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:#cbd5e1;">
+      <li><strong style="color:#e0e7ff">Accent métier bleu</strong> — la page utilise <code>blue-500/blue-600</code> (et non primary indigo) pour la cohérence avec Excel/factures</li>
+      <li><strong style="color:#e0e7ff">Stepper 2 étapes</strong> — Configuration (Settings icon) → Traitement (FileCheck icon), couleur active gradient bleu + scale 1.1</li>
+      <li><strong style="color:#e0e7ff">Accordéons</strong> — 3 sections de codes (généraux, comptables, journal), chevron rotation 90° à l'ouverture</li>
+      <li><strong style="color:#e0e7ff">Labels flottants</strong> — composant <code>InputField</code> custom avec label en absolute top-3, bordure bleue + pulse dot si modifié</li>
+      <li><strong style="color:#e0e7ff">Drop zone</strong> — drag &amp; drop natif + click, accept=".txt" multiple, état actif (border bleu + bg-blue-50)</li>
+      <li><strong style="color:#e0e7ff">CTA conversion</strong> — bouton vert <code>from-green-500 to-emerald-600</code> pour différencier "action métier" de "sauvegarde config"</li>
+      <li><strong style="color:#e0e7ff">Téléchargement direct</strong> — Blob → download anchor, nom <code>factures_MB_YYYYMMDD.xlsx</code></li>
+      <li><strong style="color:#e0e7ff">Analytics</strong> — hook <code>useAnalytics('facture-mb')</code> traque l'usage de l'outil</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

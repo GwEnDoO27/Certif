@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-api-achat-facture-mb
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /srv/docker/infra/api-achat-facture-mb/data
+  persistentVolumeReclaimPolicy: Retain

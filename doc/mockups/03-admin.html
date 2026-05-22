@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Mockup — Admin</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; margin:0; background:#0f172a; color:#e2e8f0; }
+  .frame { border-radius: 14px; overflow: hidden; box-shadow: 0 25px 60px -20px rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.08); }
+  .frame-header { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.08); padding: 8px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #94a3b8; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background:#ef4444 } .dot.y { background:#eab308 } .dot.g { background:#22c55e }
+  code { background: rgba(99,102,241,.12); padding: 1px 6px; border-radius: 4px; color:#a5b4fc; font-size: 12px; }
+
+  /* ------- LIGHT ------- */
+  .app-light { background: #f8fafc; min-height: 880px; }
+  .topbar-light { background:white; border-bottom:1px solid #e2e8f0; padding: 14px 24px; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+  .seg-light { display:inline-flex; background:#f1f5f9; padding:4px; border-radius: 11px; gap:2px; }
+  .seg-item-light { padding: 7px 14px; font-size:12.5px; font-weight:600; border-radius:8px; display:flex; align-items:center; gap:6px; color:#64748b; cursor:pointer; }
+  .seg-item-light.active { background:white; color:#0f172a; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .stat-card-light { background:white; border:1px solid #e2e8f0; border-radius:16px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.04); display:flex; justify-content:space-between; align-items:center; }
+  .table-card-light { background:white; border:1px solid #e2e8f0; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .table-row-light { padding:14px 18px; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; gap:12px; }
+  .badge-light { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:600; }
+  .avatar-light { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; font-size:13px; flex-shrink:0; }
+
+  /* ------- DARK ------- */
+  .app-dark { background: #0f172a; min-height: 880px; }
+  .topbar-dark { background:#1e293b; border-bottom:1px solid #334155; padding: 14px 24px; display:flex; justify-content:space-between; align-items:center; }
+  .seg-dark { display:inline-flex; background:#334155; padding:4px; border-radius: 11px; gap:2px; }
+  .seg-item-dark { padding: 7px 14px; font-size:12.5px; font-weight:600; border-radius:8px; display:flex; align-items:center; gap:6px; color:#94a3b8; cursor:pointer; }
+  .seg-item-dark.active { background:#475569; color:white; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+  .stat-card-dark { background:#1e293b; border:1px solid #334155; border-radius:16px; padding:20px; display:flex; justify-content:space-between; align-items:center; }
+  .table-card-dark { background:#1e293b; border:1px solid #334155; border-radius:16px; }
+  .table-row-dark { padding:14px 18px; border-bottom:1px solid #334155; display:flex; align-items:center; gap:12px; }
+  .badge-dark { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:600; }
+
+  .icon-tile-blue-light { width:46px; height:46px; background:#eff6ff; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .icon-tile-green-light { width:46px; height:46px; background:#ecfdf5; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .icon-tile-emerald-light { width:46px; height:46px; background:#ecfdf5; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .icon-tile-blue-dark { width:46px; height:46px; background:rgba(59,130,246,.15); border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .icon-tile-green-dark { width:46px; height:46px; background:rgba(34,197,94,.15); border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .icon-tile-emerald-dark { width:46px; height:46px; background:rgba(16,185,129,.15); border-radius:12px; display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+
+<div style="max-width: 1480px; margin: 0 auto; padding: 24px 18px 40px;">
+  <div style="text-align:center; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#94a3b8; margin-bottom:8px; font-weight:600;">
+    Mockup haute fidélité — Page <strong style="color:#a5b4fc">Admin</strong> · Route <code>/admin</code> · Onglet <code>Utilisateurs</code>
+  </div>
+  <h1 style="text-align:center; color:#f1f5f9; font-size:26px; margin:0 0 4px; letter-spacing:-0.02em;">Console d'administration</h1>
+  <p style="text-align:center; color:#94a3b8; font-size:13px; margin:0 0 22px;">3 onglets · Stats temps réel · CRUD utilisateurs · Panel utilisateurs connectés (WebSocket)</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+
+    <!-- ============== LIGHT ============== -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☀ Light mode</div>
+      <div class="frame">
+        <div class="frame-header" style="background:#f8fafc; color:#64748b; border-bottom:1px solid #e2e8f0;">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/admin</span>
+        </div>
+        <div class="app-light">
+          <!-- Header -->
+          <div class="topbar-light">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="padding:10px; background:rgba(99,102,241,.1); border-radius:12px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+              </div>
+              <div>
+                <div style="font-weight:700; color:#0f172a; font-size:18px;">Administration</div>
+                <div style="font-size:12.5px; color:#64748b;">Gestion globale du système</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="seg-light">
+                <div class="seg-item-light active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Utilisateurs</div>
+                <div class="seg-item-light"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Applications</div>
+                <div class="seg-item-light"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Analytics</div>
+              </div>
+              <button style="background:#6366f1; color:white; border:none; padding:9px 16px; border-radius:11px; font-weight:600; font-size:13px; display:flex; align-items:center; gap:6px; box-shadow:0 8px 20px -6px rgba(99,102,241,.4); cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                Nouveau
+              </button>
+            </div>
+          </div>
+
+          <div style="padding:24px;">
+            <!-- Stats -->
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:24px;">
+              <div class="stat-card-light">
+                <div>
+                  <div style="font-size:13px; color:#64748b; font-weight:500;">Utilisateurs</div>
+                  <div style="font-size:32px; font-weight:700; color:#0f172a; margin-top:4px;">12</div>
+                  <div style="margin-top:6px;"><span class="badge-light" style="background:#eff6ff; color:#1d4ed8;">3 admins</span></div>
+                </div>
+                <div class="icon-tile-blue-light">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-light">
+                <div>
+                  <div style="font-size:13px; color:#64748b; font-weight:500;">Applications</div>
+                  <div style="font-size:32px; font-weight:700; color:#0f172a; margin-top:4px;">8</div>
+                  <div style="margin-top:6px;"><span class="badge-light" style="background:#ecfdf5; color:#15803d;">Actives</span></div>
+                </div>
+                <div class="icon-tile-green-light">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-light">
+                <div>
+                  <div style="font-size:13px; color:#64748b; font-weight:500;">État Système</div>
+                  <div style="font-size:32px; font-weight:700; color:#0f172a; margin-top:4px;">Stable</div>
+                  <div style="margin-top:6px;"><span class="badge-light" style="background:#ecfdf5; color:#047857;">● 100% Uptime</span></div>
+                </div>
+                <div class="icon-tile-emerald-light">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main: UserList + Panel -->
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:18px;">
+              <div class="table-card-light">
+                <div style="padding:16px 18px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-weight:700; color:#0f172a; font-size:15px;">Liste des utilisateurs</div>
+                  <div style="position:relative;">
+                    <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input placeholder="Rechercher…" style="background:#f8fafc; border:1px solid #e2e8f0; padding:7px 10px 7px 30px; border-radius:9px; font-size:12.5px; width:180px; outline:none;" />
+                  </div>
+                </div>
+                <!-- Row 1 -->
+                <div class="table-row-light" style="background:#f8fafc;">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#6366f1,#3b82f6);">SM</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#0f172a; font-size:13.5px;">Sophie Martini</div>
+                    <div style="font-size:11.5px; color:#94a3b8;">sophie@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-light" style="background:rgba(99,102,241,.1); color:#4f46e5;">Admin</span>
+                  <span class="badge-light" style="background:#f1f5f9; color:#475569;">5 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#f1f5f9; border:none; border-radius:7px; cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button style="padding:6px; background:#fef2f2; border:none; border-radius:7px; cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                  </div>
+                </div>
+                <!-- Row 2 -->
+                <div class="table-row-light">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#ec4899,#f43f5e);">JD</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#0f172a; font-size:13.5px;">Julien Dubois</div>
+                    <div style="font-size:11.5px; color:#94a3b8;">julien@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-light" style="background:#ecfdf5; color:#15803d;">Comptable</span>
+                  <span class="badge-light" style="background:#f1f5f9; color:#475569;">3 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#f1f5f9; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button style="padding:6px; background:#fef2f2; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <!-- Row 3 -->
+                <div class="table-row-light">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#10b981,#06b6d4);">AL</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#0f172a; font-size:13.5px;">Anne Laurent</div>
+                    <div style="font-size:11.5px; color:#94a3b8;">anne@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-light" style="background:#fff7ed; color:#c2410c;">Social</span>
+                  <span class="badge-light" style="background:#f1f5f9; color:#475569;">4 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#f1f5f9; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg></button>
+                    <button style="padding:6px; background:#fef2f2; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <!-- Row 4 -->
+                <div class="table-row-light">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">MR</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#0f172a; font-size:13.5px;">Marc Robert</div>
+                    <div style="font-size:11.5px; color:#94a3b8;">marc@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-light" style="background:#fefce8; color:#a16207;">Auditeur</span>
+                  <span class="badge-light" style="background:#f1f5f9; color:#475569;">2 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#f1f5f9; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg></button>
+                    <button style="padding:6px; background:#fef2f2; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <div style="padding:12px 18px; display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-size:12px; color:#94a3b8;">4 sur 12 utilisateurs</div>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:5px 9px; background:#f1f5f9; border:none; border-radius:6px; font-size:11px;">‹</button>
+                    <button style="padding:5px 9px; background:#6366f1; color:white; border:none; border-radius:6px; font-size:11px; font-weight:600;">1</button>
+                    <button style="padding:5px 9px; background:#f1f5f9; border:none; border-radius:6px; font-size:11px;">2</button>
+                    <button style="padding:5px 9px; background:#f1f5f9; border:none; border-radius:6px; font-size:11px;">3</button>
+                    <button style="padding:5px 9px; background:#f1f5f9; border:none; border-radius:6px; font-size:11px;">›</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Online users panel -->
+              <div class="table-card-light" style="height:fit-content;">
+                <div style="padding:16px 18px; border-bottom:1px solid #f1f5f9;">
+                  <div style="font-weight:700; color:#0f172a; font-size:14px; display:flex; align-items:center; gap:8px;">
+                    <span style="width:8px; height:8px; background:#10b981; border-radius:50%; box-shadow:0 0 0 3px rgba(16,185,129,.25);"></span>
+                    En ligne · 3
+                  </div>
+                  <div style="font-size:11.5px; color:#94a3b8; margin-top:4px;">Temps réel via WebSocket</div>
+                </div>
+                <div style="padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f1f5f9;">
+                  <div style="position:relative;">
+                    <div class="avatar-light" style="width:32px; height:32px; font-size:11px; background:linear-gradient(135deg,#6366f1,#3b82f6);">SM</div>
+                    <span style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10b981; border:2px solid white; border-radius:50%;"></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; font-size:12.5px; color:#0f172a;">Sophie Martini</div>
+                    <div style="font-size:10.5px; color:#94a3b8;">/admin</div>
+                  </div>
+                </div>
+                <div style="padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f1f5f9;">
+                  <div style="position:relative;">
+                    <div class="avatar-light" style="width:32px; height:32px; font-size:11px; background:linear-gradient(135deg,#ec4899,#f43f5e);">JD</div>
+                    <span style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10b981; border:2px solid white; border-radius:50%;"></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; font-size:12.5px; color:#0f172a;">Julien Dubois</div>
+                    <div style="font-size:10.5px; color:#94a3b8;">/facture-mb/home</div>
+                  </div>
+                </div>
+                <div style="padding:14px 18px; display:flex; align-items:center; gap:10px;">
+                  <div style="position:relative;">
+                    <div class="avatar-light" style="width:32px; height:32px; font-size:11px; background:linear-gradient(135deg,#10b981,#06b6d4);">AL</div>
+                    <span style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10b981; border:2px solid white; border-radius:50%;"></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; font-size:12.5px; color:#0f172a;">Anne Laurent</div>
+                    <div style="font-size:10.5px; color:#94a3b8;">/home</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============== DARK ============== -->
+    <div>
+      <div style="text-align:center; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#cbd5e1; margin-bottom:8px; font-weight:600;">☾ Dark mode</div>
+      <div class="frame">
+        <div class="frame-header">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:8px;">portail.cabinet-martini.fr/admin</span>
+        </div>
+        <div class="app-dark">
+          <!-- Header -->
+          <div class="topbar-dark">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="padding:10px; background:rgba(99,102,241,.15); border-radius:12px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+              </div>
+              <div>
+                <div style="font-weight:700; color:#f1f5f9; font-size:18px;">Administration</div>
+                <div style="font-size:12.5px; color:#94a3b8;">Gestion globale du système</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="seg-dark">
+                <div class="seg-item-dark active" style="color:white;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Utilisateurs</div>
+                <div class="seg-item-dark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Applications</div>
+                <div class="seg-item-dark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Analytics</div>
+              </div>
+              <button style="background:#6366f1; color:white; border:none; padding:9px 16px; border-radius:11px; font-weight:600; font-size:13px; display:flex; align-items:center; gap:6px; box-shadow:0 8px 20px -6px rgba(99,102,241,.6);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                Nouveau
+              </button>
+            </div>
+          </div>
+
+          <div style="padding:24px;">
+            <!-- Stats -->
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:24px;">
+              <div class="stat-card-dark">
+                <div>
+                  <div style="font-size:13px; color:#94a3b8; font-weight:500;">Utilisateurs</div>
+                  <div style="font-size:32px; font-weight:700; color:#f1f5f9; margin-top:4px;">12</div>
+                  <div style="margin-top:6px;"><span class="badge-dark" style="background:rgba(59,130,246,.15); color:#60a5fa;">3 admins</span></div>
+                </div>
+                <div class="icon-tile-blue-dark">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-dark">
+                <div>
+                  <div style="font-size:13px; color:#94a3b8; font-weight:500;">Applications</div>
+                  <div style="font-size:32px; font-weight:700; color:#f1f5f9; margin-top:4px;">8</div>
+                  <div style="margin-top:6px;"><span class="badge-dark" style="background:rgba(34,197,94,.15); color:#4ade80;">Actives</span></div>
+                </div>
+                <div class="icon-tile-green-dark">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-dark">
+                <div>
+                  <div style="font-size:13px; color:#94a3b8; font-weight:500;">État Système</div>
+                  <div style="font-size:32px; font-weight:700; color:#f1f5f9; margin-top:4px;">Stable</div>
+                  <div style="margin-top:6px;"><span class="badge-dark" style="background:rgba(16,185,129,.15); color:#34d399;">● 100% Uptime</span></div>
+                </div>
+                <div class="icon-tile-emerald-dark">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main -->
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:18px;">
+              <div class="table-card-dark">
+                <div style="padding:16px 18px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-weight:700; color:#f1f5f9; font-size:15px;">Liste des utilisateurs</div>
+                  <div style="position:relative;">
+                    <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input placeholder="Rechercher…" style="background:#0f172a; border:1px solid #334155; padding:7px 10px 7px 30px; border-radius:9px; font-size:12.5px; width:180px; outline:none; color:#cbd5e1;" />
+                  </div>
+                </div>
+                <div class="table-row-dark" style="background:rgba(99,102,241,.06);">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#6366f1,#3b82f6);">SM</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#f1f5f9; font-size:13.5px;">Sophie Martini</div>
+                    <div style="font-size:11.5px; color:#64748b;">sophie@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-dark" style="background:rgba(99,102,241,.18); color:#a5b4fc;">Admin</span>
+                  <span class="badge-dark" style="background:#334155; color:#cbd5e1;">5 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#334155; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg></button>
+                    <button style="padding:6px; background:rgba(239,68,68,.15); border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <div class="table-row-dark">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#ec4899,#f43f5e);">JD</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#f1f5f9; font-size:13.5px;">Julien Dubois</div>
+                    <div style="font-size:11.5px; color:#64748b;">julien@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-dark" style="background:rgba(34,197,94,.18); color:#4ade80;">Comptable</span>
+                  <span class="badge-dark" style="background:#334155; color:#cbd5e1;">3 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#334155; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg></button>
+                    <button style="padding:6px; background:rgba(239,68,68,.15); border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <div class="table-row-dark">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#10b981,#06b6d4);">AL</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#f1f5f9; font-size:13.5px;">Anne Laurent</div>
+                    <div style="font-size:11.5px; color:#64748b;">anne@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-dark" style="background:rgba(245,158,11,.18); color:#fbbf24;">Social</span>
+                  <span class="badge-dark" style="background:#334155; color:#cbd5e1;">4 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#334155; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg></button>
+                    <button style="padding:6px; background:rgba(239,68,68,.15); border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <div class="table-row-dark">
+                  <div class="avatar-light" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">MR</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; color:#f1f5f9; font-size:13.5px;">Marc Robert</div>
+                    <div style="font-size:11.5px; color:#64748b;">marc@cabinet-martini.fr</div>
+                  </div>
+                  <span class="badge-dark" style="background:rgba(234,179,8,.18); color:#fde047;">Auditeur</span>
+                  <span class="badge-dark" style="background:#334155; color:#cbd5e1;">2 apps</span>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:6px; background:#334155; border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg></button>
+                    <button style="padding:6px; background:rgba(239,68,68,.15); border:none; border-radius:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+                  </div>
+                </div>
+                <div style="padding:12px 18px; display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-size:12px; color:#64748b;">4 sur 12 utilisateurs</div>
+                  <div style="display:flex; gap:4px;">
+                    <button style="padding:5px 9px; background:#334155; color:#cbd5e1; border:none; border-radius:6px; font-size:11px;">‹</button>
+                    <button style="padding:5px 9px; background:#6366f1; color:white; border:none; border-radius:6px; font-size:11px; font-weight:600;">1</button>
+                    <button style="padding:5px 9px; background:#334155; color:#cbd5e1; border:none; border-radius:6px; font-size:11px;">2</button>
+                    <button style="padding:5px 9px; background:#334155; color:#cbd5e1; border:none; border-radius:6px; font-size:11px;">3</button>
+                    <button style="padding:5px 9px; background:#334155; color:#cbd5e1; border:none; border-radius:6px; font-size:11px;">›</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-card-dark" style="height:fit-content;">
+                <div style="padding:16px 18px; border-bottom:1px solid #334155;">
+                  <div style="font-weight:700; color:#f1f5f9; font-size:14px; display:flex; align-items:center; gap:8px;">
+                    <span style="width:8px; height:8px; background:#10b981; border-radius:50%; box-shadow:0 0 0 3px rgba(16,185,129,.3);"></span>
+                    En ligne · 3
+                  </div>
+                  <div style="font-size:11.5px; color:#94a3b8; margin-top:4px;">Temps réel via WebSocket</div>
+                </div>
+                <div style="padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #334155;">
+                  <div style="position:relative;">
+                    <div class="avatar-light" style="width:32px; height:32px; font-size:11px; background:linear-gradient(135deg,#6366f1,#3b82f6);">SM</div>
+                    <span style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10b981; border:2px solid #1e293b; border-radius:50%;"></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; font-size:12.5px; color:#f1f5f9;">Sophie Martini</div>
+                    <div style="font-size:10.5px; color:#64748b;">/admin</div>
+                  </div>
+                </div>
+                <div style="padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #334155;">
+                  <div style="position:relative;">
+                    <div class="avatar-light" style="width:32px; height:32px; font-size:11px; background:linear-gradient(135deg,#ec4899,#f43f5e);">JD</div>
+                    <span style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10b981; border:2px solid #1e293b; border-radius:50%;"></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; font-size:12.5px; color:#f1f5f9;">Julien Dubois</div>
+                    <div style="font-size:10.5px; color:#64748b;">/facture-mb/home</div>
+                  </div>
+                </div>
+                <div style="padding:14px 18px; display:flex; align-items:center; gap:10px;">
+                  <div style="position:relative;">
+                    <div class="avatar-light" style="width:32px; height:32px; font-size:11px; background:linear-gradient(135deg,#10b981,#06b6d4);">AL</div>
+                    <span style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10b981; border:2px solid #1e293b; border-radius:50%;"></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600; font-size:12.5px; color:#f1f5f9;">Anne Laurent</div>
+                    <div style="font-size:10.5px; color:#64748b;">/home</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Annotations -->
+  <div style="margin-top:24px; padding:18px 22px; background:rgba(99,102,241,.08); border:1px solid rgba(99,102,241,.25); border-radius:14px;">
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#a5b4fc; font-weight:700; margin-bottom:8px;">🔍 Éléments de design clés</div>
+    <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:#cbd5e1;">
+      <li><strong style="color:#e0e7ff">Garde route admin</strong> — vérif <code>verify-admin</code> au mount, redirige vers <code>/</code> si non-admin</li>
+      <li><strong style="color:#e0e7ff">Segment control</strong> — 3 onglets (Utilisateurs · Applications · Analytics) avec état actif <code>bg-white shadow-sm</code></li>
+      <li><strong style="color:#e0e7ff">Stats temps réel</strong> — compteurs animés (Framer Motion, delays échelonnés 0.1/0.2/0.3s)</li>
+      <li><strong style="color:#e0e7ff">CRUD utilisateurs</strong> — modal Headless UI pour confirmation suppression, popup d'édition séparé</li>
+      <li><strong style="color:#e0e7ff">Panel WebSocket</strong> — utilisateurs en ligne avec route actuelle, badge vert pulsé (<code>UsersPanel</code>)</li>
+      <li><strong style="color:#e0e7ff">Badges de rôle</strong> — 6 rôles colorés : Admin (indigo), Comptable (vert), Social (orange), Auditeur (jaune), Dev, Client</li>
+      <li><strong style="color:#e0e7ff">Toast feedback</strong> — <code>react-hot-toast</code> pour succès/erreurs CRUD</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

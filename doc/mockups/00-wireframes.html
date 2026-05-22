@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Wireframes basse fidélité — 5 pages</title>
+<style>
+  :root {
+    --ink: #1f2937;
+    --ink-soft: #6b7280;
+    --line: #9ca3af;
+    --fill: #e5e7eb;
+    --fill-soft: #f3f4f6;
+    --paper: #ffffff;
+    --accent: #1f2937;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    background: #fafafa;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px 24px;
+  }
+  h1.title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 0 0 4px;
+  }
+  .legend {
+    font-size: 11px;
+    color: var(--ink-soft);
+    display: inline-flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+  }
+  .legend span { display:inline-flex; align-items:center; gap:5px; }
+  .legend .sw { display:inline-block; width:14px; height:14px; border:1.5px solid var(--ink); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px;
+    margin-top: 24px;
+  }
+  .grid-single { grid-column: 1 / -1; max-width: 600px; margin: 0 auto; }
+
+  /* Wireframe frame */
+  .wf {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .wf-header {
+    background: var(--fill-soft);
+    border-bottom: 1.5px solid var(--ink);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .wf-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1.5px solid var(--ink);
+  }
+  .wf-title-band {
+    background: var(--ink);
+    color: white;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .wf-body { padding: 16px; }
+
+  /* WF primitives */
+  .box {
+    border: 1.5px solid var(--ink);
+    background: var(--fill);
+    border-radius: 2px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 500;
+    padding: 6px 8px;
+    text-align:center;
+  }
+  .box-empty {
+    border: 1.5px dashed var(--line);
+    background: var(--paper);
+  }
+  .box-filled {
+    background: var(--ink);
+    color: white;
+  }
+  .box-grey {
+    background: var(--fill-soft);
+  }
+  .ph {
+    background: var(--fill);
+    border: 1.5px solid var(--line);
+    border-radius: 2px;
+    position: relative;
+  }
+  .ph::before, .ph::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+  }
+  .ph::before {
+    background:
+      linear-gradient(to top right, transparent calc(50% - 0.75px), var(--line) calc(50% - 0.75px), var(--line) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+  }
+  .ph::after {
+    background:
+      linear-gradient(to bottom right, transparent calc(50% - 0.75px), var(--line) calc(50% - 0.75px), var(--line) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+  }
+  .lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-soft);
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  .row { display:flex; gap: 8px; }
+  .col { display:flex; flex-direction: column; gap: 8px; }
+  .stack-tight { display:flex; flex-direction: column; gap: 4px; }
+  .input-wf {
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    border-radius: 2px;
+    height: 32px;
+    display:flex; align-items:center;
+    padding: 0 10px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .btn-wf {
+    border: 1.5px solid var(--ink);
+    background: var(--ink);
+    color: white;
+    border-radius: 2px;
+    padding: 8px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .btn-wf-ghost {
+    border: 1.5px solid var(--ink);
+    background: white;
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 8px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .tag-num {
+    position: absolute;
+    background: white;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-left: -28px;
+    margin-top: -2px;
+  }
+  .annot {
+    border: 1.5px dashed var(--line);
+    background: white;
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--ink);
+    margin-top: 14px;
+  }
+  .annot ol {
+    margin: 0;
+    padding-left: 18px;
+    line-height: 1.55;
+  }
+  .annot b { background: var(--ink); color: white; padding: 0 5px; border-radius: 2px; font-weight: 700; }
+
+  .page-header {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom: 18px;
+    flex-wrap: wrap; gap:10px;
+  }
+  .page-header h2 {
+    font-size: 14px;
+    margin: 0 0 3px;
+    font-weight: 700;
+  }
+  .page-header .route {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-family: ui-monospace, Menlo, monospace;
+    background: var(--fill-soft);
+    padding: 2px 6px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1 class="title">Wireframes basse fidélité — 5 pages</h1>
+  <p class="lede">Stade 1 sur 3 du processus design : <b>Wireframe</b> → Maquette → Mockup haute fidélité. Boîtes grises et libellés uniquement. Objectif : valider la <strong>structure</strong> et le <strong>parcours utilisateur</strong>, sans distraction visuelle.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--fill)"></i> Bloc de contenu</span>
+    <span><i class="sw" style="background:white;border-style:dashed"></i> Zone optionnelle / dynamique</span>
+    <span><i class="sw" style="background:var(--ink);border-color:var(--ink)"></i> CTA primaire</span>
+    <span><i class="sw" style="background:white"></i> CTA secondaire / input</span>
+    <span>① Annotation de flux</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- =================== 1. LOGIN =================== -->
+    <div class="wf">
+      <div class="wf-header"><span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span><span>portail.cabinet-martini.fr/</span></div>
+      <div class="wf-title-band">1 — Login · Route /</div>
+      <div class="wf-body" style="min-height:380px; display:flex; align-items:center; justify-content:center;">
+        <div style="width:240px;">
+          <div class="ph" style="height:48px; margin: 0 auto 14px; width:48px; border-radius:6px;"></div>
+          <div class="box" style="margin: 0 auto 4px; width:120px; height:22px; border:none; background:transparent; font-weight:700; font-size:13px;">Bienvenue</div>
+          <div class="box" style="margin: 0 auto 18px; width:160px; height:14px; border:none; background:transparent; font-size:10px; color:var(--ink-soft);">Connectez-vous</div>
+
+          <div class="stack-tight" style="margin-bottom:10px;">
+            <span class="lbl">Email</span>
+            <div class="input-wf">nom@entreprise.com</div>
+          </div>
+          <div class="stack-tight" style="margin-bottom:14px;">
+            <span class="lbl">Mot de passe</span>
+            <div class="input-wf">••••••••</div>
+          </div>
+          <div class="btn-wf">SE CONNECTER →</div>
+          <div class="box" style="margin: 14px auto 0; border:none; background:transparent; font-size:10px; color:var(--ink-soft);">© 2026 Cabinet Martini</div>
+        </div>
+      </div>
+      <div style="padding: 0 16px 14px;">
+        <div class="annot">
+          <ol>
+            <li><b>1</b> Logo en hero → identité de marque immédiate</li>
+            <li><b>2</b> Titre + accroche → contexte rassurant</li>
+            <li><b>3</b> Formulaire 2 champs → friction minimale</li>
+            <li><b>4</b> Succès → redirige vers <code>/home</code> · Erreur → message rouge sous le titre</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== 2. HOME =================== -->
+    <div class="wf">
+      <div class="wf-header"><span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span><span>portail.cabinet-martini.fr/home</span></div>
+      <div class="wf-title-band">2 — Home · Route /home</div>
+      <div class="wf-body" style="min-height:520px;">
+        <!-- Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 10px; border:1.5px solid var(--ink); margin-bottom:14px; background:var(--fill-soft);">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div class="ph" style="width:24px; height:24px;"></div>
+            <div class="box" style="border:none; background:transparent; font-weight:700;">LOGO + TITRE</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <div class="box" style="font-size:10px; padding:3px 8px;">☾</div>
+            <div class="box" style="font-size:10px; padding:3px 8px;">Admin</div>
+            <div class="box" style="font-size:10px; padding:3px 8px;">Logout</div>
+          </div>
+        </div>
+
+        <!-- Widgets -->
+        <div class="row" style="margin-bottom:14px;">
+          <div class="box" style="flex:1; height:80px; flex-direction:column; gap:4px;">
+            <div style="font-size:22px; font-weight:700;">HH:MM</div>
+            <div style="font-size:10px; color:var(--ink-soft);">Date</div>
+          </div>
+          <div class="box" style="flex:1; height:80px; flex-direction:column;">
+            <div style="font-weight:700;">Bon retour !</div>
+            <div style="font-size:10px; color:var(--ink-soft);">Accroche</div>
+          </div>
+        </div>
+
+        <!-- Main: Apps + News -->
+        <div class="row">
+          <div style="flex:2;">
+            <span class="lbl">Mes applications (groupées)</span>
+            <div class="col">
+              <div class="box-grey box" style="height:18px; font-weight:600; justify-content:flex-start; padding-left:8px;">▾ Groupe A</div>
+              <div class="row">
+                <div class="box" style="flex:1; height:46px;">Carte App 1</div>
+                <div class="box" style="flex:1; height:46px;">Carte App 2</div>
+              </div>
+              <div class="box-grey box" style="height:18px; font-weight:600; justify-content:flex-start; padding-left:8px;">▾ Groupe B</div>
+              <div class="row">
+                <div class="box" style="flex:1; height:46px;">Carte App 3</div>
+                <div class="box" style="flex:1; height:46px;">Carte App 4</div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;">
+            <span class="lbl">Actualités</span>
+            <div class="col">
+              <div class="box" style="height:34px; flex-direction:column; align-items:flex-start; padding:6px 8px;">
+                <div style="font-size:10px; font-weight:600;">Titre 1</div>
+                <div style="font-size:9px; color:var(--ink-soft);">Date</div>
+              </div>
+              <div class="box" style="height:34px; flex-direction:column; align-items:flex-start; padding:6px 8px;">
+                <div style="font-size:10px; font-weight:600;">Titre 2</div>
+                <div style="font-size:9px; color:var(--ink-soft);">Date</div>
+              </div>
+              <div class="box" style="height:34px; flex-direction:column; align-items:flex-start; padding:6px 8px;">
+                <div style="font-size:10px; font-weight:600;">Titre 3</div>
+                <div style="font-size:9px; color:var(--ink-soft);">Date</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 0 16px 14px;">
+        <div class="annot">
+          <ol>
+            <li><b>1</b> Header sticky avec actions globales (theme, admin si rôle, logout)</li>
+            <li><b>2</b> Widgets contextuels haut de page (heure live + accroche)</li>
+            <li><b>3</b> Sélecteur d'applications groupé — chargé via <code>/sys/user-applications</code></li>
+            <li><b>4</b> Sidebar actualités → reste lisible au scroll</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== 3. ADMIN =================== -->
+    <div class="wf" style="grid-column: 1 / -1;">
+      <div class="wf-header"><span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span><span>portail.cabinet-martini.fr/admin</span></div>
+      <div class="wf-title-band">3 — Admin · Route /admin · Onglet Utilisateurs</div>
+      <div class="wf-body" style="min-height:540px;">
+        <!-- Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 12px; border:1.5px solid var(--ink); margin-bottom:16px; background:var(--fill-soft);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="ph" style="width:28px; height:28px;"></div>
+            <div style="font-weight:700;">Administration</div>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <div style="display:inline-flex; border:1.5px solid var(--ink); border-radius:3px; overflow:hidden;">
+              <div class="box-filled" style="border:none; padding:5px 12px; font-size:10.5px;">Utilisateurs</div>
+              <div class="box" style="border:none; padding:5px 12px; font-size:10.5px;">Applications</div>
+              <div class="box" style="border:none; padding:5px 12px; font-size:10.5px;">Analytics</div>
+            </div>
+            <div class="btn-wf" style="padding:5px 12px; font-size:10.5px;">+ Nouveau</div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="row" style="margin-bottom:16px;">
+          <div class="box" style="flex:1; height:72px; flex-direction:column; align-items:flex-start; padding:8px 12px;">
+            <div style="font-size:10px; color:var(--ink-soft);">UTILISATEURS</div>
+            <div style="font-size:24px; font-weight:700;">N</div>
+            <div style="font-size:9px;">+ badge admins</div>
+          </div>
+          <div class="box" style="flex:1; height:72px; flex-direction:column; align-items:flex-start; padding:8px 12px;">
+            <div style="font-size:10px; color:var(--ink-soft);">APPLICATIONS</div>
+            <div style="font-size:24px; font-weight:700;">N</div>
+            <div style="font-size:9px;">+ badge actives</div>
+          </div>
+          <div class="box" style="flex:1; height:72px; flex-direction:column; align-items:flex-start; padding:8px 12px;">
+            <div style="font-size:10px; color:var(--ink-soft);">ÉTAT SYSTÈME</div>
+            <div style="font-size:24px; font-weight:700;">Stable</div>
+            <div style="font-size:9px;">+ badge uptime</div>
+          </div>
+        </div>
+
+        <!-- Main -->
+        <div class="row">
+          <div style="flex:2;">
+            <span class="lbl">Liste des utilisateurs</span>
+            <div class="col" style="border:1.5px solid var(--ink); padding:0;">
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; border-bottom:1.5px solid var(--ink); background:var(--fill-soft);">
+                <div style="font-weight:700; font-size:11px;">Header / recherche</div>
+                <div class="input-wf" style="width:140px; height:22px;">Rechercher…</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--line);">
+                <div class="ph" style="width:24px; height:24px; border-radius:50%;"></div>
+                <div style="flex:1;"><div style="font-size:11px; font-weight:600;">Nom utilisateur</div><div style="font-size:9.5px; color:var(--ink-soft);">email</div></div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">Rôle</div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">N apps</div>
+                <div class="box" style="font-size:10px; padding:3px 6px;">✎</div>
+                <div class="box" style="font-size:10px; padding:3px 6px;">×</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--line);">
+                <div class="ph" style="width:24px; height:24px; border-radius:50%;"></div>
+                <div style="flex:1;"><div style="font-size:11px; font-weight:600;">Nom utilisateur</div><div style="font-size:9.5px; color:var(--ink-soft);">email</div></div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">Rôle</div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">N apps</div>
+                <div class="box" style="font-size:10px; padding:3px 6px;">✎</div>
+                <div class="box" style="font-size:10px; padding:3px 6px;">×</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--line);">
+                <div class="ph" style="width:24px; height:24px; border-radius:50%;"></div>
+                <div style="flex:1;"><div style="font-size:11px; font-weight:600;">Nom utilisateur</div><div style="font-size:9.5px; color:var(--ink-soft);">email</div></div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">Rôle</div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">N apps</div>
+                <div class="box" style="font-size:10px; padding:3px 6px;">✎</div>
+                <div class="box" style="font-size:10px; padding:3px 6px;">×</div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
+                <div style="font-size:10px; color:var(--ink-soft);">N sur M utilisateurs</div>
+                <div style="display:flex; gap:3px;">
+                  <div class="box" style="padding:2px 6px; font-size:10px;">‹</div>
+                  <div class="box-filled" style="padding:2px 6px; font-size:10px; border:1.5px solid var(--ink);">1</div>
+                  <div class="box" style="padding:2px 6px; font-size:10px;">2</div>
+                  <div class="box" style="padding:2px 6px; font-size:10px;">›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1;">
+            <span class="lbl">Panel temps réel · WebSocket</span>
+            <div class="col" style="border:1.5px solid var(--ink); padding:0;">
+              <div style="padding:8px 12px; border-bottom:1.5px solid var(--ink); background:var(--fill-soft);">
+                <div style="font-weight:700; font-size:11px;">● En ligne · N</div>
+              </div>
+              <div style="padding:8px 12px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--line);">
+                <div class="ph" style="width:24px; height:24px; border-radius:50%;"></div>
+                <div style="flex:1;"><div style="font-size:11px; font-weight:600;">Utilisateur</div><div style="font-size:9.5px; color:var(--ink-soft);">/route-actuelle</div></div>
+              </div>
+              <div style="padding:8px 12px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--line);">
+                <div class="ph" style="width:24px; height:24px; border-radius:50%;"></div>
+                <div style="flex:1;"><div style="font-size:11px; font-weight:600;">Utilisateur</div><div style="font-size:9.5px; color:var(--ink-soft);">/route-actuelle</div></div>
+              </div>
+              <div style="padding:8px 12px; display:flex; gap:8px; align-items:center;">
+                <div class="ph" style="width:24px; height:24px; border-radius:50%;"></div>
+                <div style="flex:1;"><div style="font-size:11px; font-weight:600;">Utilisateur</div><div style="font-size:9.5px; color:var(--ink-soft);">/route-actuelle</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 0 16px 14px;">
+        <div class="annot">
+          <ol>
+            <li><b>1</b> Vérification du rôle Admin au mount (redirige vers <code>/</code> sinon)</li>
+            <li><b>2</b> Onglets segmentés → 3 vues (Utilisateurs, Applications, Analytics) sans rechargement</li>
+            <li><b>3</b> Stats globales en haut → contexte avant action</li>
+            <li><b>4</b> Liste paginée + recherche pour gérer 10 à 200 utilisateurs sans surcharge cognitive</li>
+            <li><b>5</b> Panel temps réel (WebSocket) → visibilité de l'activité collaborateurs</li>
+            <li><b>6</b> CRUD via modal de confirmation (suppression) et popup d'édition séparé</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== 4. CONVERT =================== -->
+    <div class="wf" style="grid-column: 1 / -1;">
+      <div class="wf-header"><span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span><span>portail.cabinet-martini.fr/facture-mb/home</span></div>
+      <div class="wf-title-band">4 — Convert · Route /facture-mb/home</div>
+      <div class="wf-body" style="min-height:560px;">
+        <!-- Page header -->
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+          <div class="ph" style="width:42px; height:42px;"></div>
+          <div>
+            <div style="font-size:15px; font-weight:700;">Transformation Factures MB</div>
+            <div style="font-size:11px; color:var(--ink-soft);">Transforme les .edi en excel</div>
+          </div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="box" style="height:60px; margin-bottom:16px; flex-direction:column; gap:8px; padding:8px;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:10px; width:100%;">
+            <div class="box-filled" style="width:24px; height:24px; border-radius:50%; padding:0; font-size:10px;">1</div>
+            <div style="flex:1; max-width:160px; height:2px; background:var(--ink);"></div>
+            <div class="box-filled" style="width:24px; height:24px; border-radius:50%; padding:0; font-size:10px;">2</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; width:240px; font-size:10px; font-weight:600;">
+            <span>Configuration</span>
+            <span>Traitement</span>
+          </div>
+        </div>
+
+        <!-- 2 colonnes -->
+        <div class="row">
+          <div style="flex:1;">
+            <span class="lbl">Configuration des codes</span>
+            <div class="col" style="border:1.5px solid var(--ink); padding:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-size:11px; font-weight:700;">Codes</div>
+                <div class="box" style="font-size:9.5px; padding:2px 7px;">N modif.</div>
+              </div>
+              <div class="box-grey box" style="height:32px; justify-content:space-between; padding:0 12px; font-weight:600;">▾ Codes généraux et auxiliaires <span>›</span></div>
+              <div style="border:1.5px solid var(--ink); padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div class="input-wf">code_tva</div>
+                <div class="input-wf">code_client</div>
+                <div class="input-wf">code_fournisseur</div>
+                <div class="input-wf">code_banque</div>
+              </div>
+              <div class="box-grey box" style="height:32px; justify-content:space-between; padding:0 12px; font-weight:600;">▸ Codes comptables <span>›</span></div>
+              <div class="box-grey box" style="height:32px; justify-content:space-between; padding:0 12px; font-weight:600;">▸ Codes journal <span>›</span></div>
+              <div class="btn-wf" style="margin-top:4px;">ENREGISTRER LES MODIFICATIONS</div>
+            </div>
+          </div>
+
+          <div style="flex:1;">
+            <span class="lbl">Fichiers à transformer</span>
+            <div class="col" style="border:1.5px solid var(--ink); padding:12px;">
+              <div style="border:2px dashed var(--ink); padding:24px 14px; text-align:center; background:var(--fill-soft);">
+                <div class="ph" style="width:36px; height:36px; margin:0 auto 8px;"></div>
+                <div style="font-size:11.5px; font-weight:600;">Glissez vos fichiers ici</div>
+                <div style="font-size:10px; color:var(--ink-soft);">ou cliquez pour parcourir</div>
+                <div style="font-size:9.5px; color:var(--ink-soft); margin-top:4px;">Fichiers .txt uniquement</div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="lbl" style="margin:0;">Fichiers sélectionnés</span>
+                <span style="font-size:10px;">[Tout supprimer]</span>
+              </div>
+              <div class="box" style="height:34px; justify-content:space-between; padding:0 10px;"><span style="font-size:11px;">📄 facture_NNN.txt</span><span style="font-size:10px; color:var(--ink-soft);">N KB</span></div>
+              <div class="box" style="height:34px; justify-content:space-between; padding:0 10px;"><span style="font-size:11px;">📄 facture_NNN.txt</span><span style="font-size:10px; color:var(--ink-soft);">N KB</span></div>
+              <div class="btn-wf" style="margin-top:4px;">⚡ LANCER LA TRANSFORMATION</div>
+            </div>
+
+            <span class="lbl" style="margin-top:12px;">Guide rapide</span>
+            <div class="box" style="flex-direction:column; align-items:flex-start; padding:10px 12px; gap:6px;">
+              <div style="font-size:10.5px;"><b style="background:var(--ink); color:white; padding:0 5px; border-radius:50%;">1</b> Configurez vos codes</div>
+              <div style="font-size:10.5px;"><b style="background:var(--ink); color:white; padding:0 5px; border-radius:50%;">2</b> Ajoutez vos fichiers</div>
+              <div style="font-size:10.5px;"><b style="background:var(--ink); color:white; padding:0 5px; border-radius:50%;">3</b> Lancez la transformation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 0 16px 14px;">
+        <div class="annot">
+          <ol>
+            <li><b>1</b> Stepper visible → contexte du parcours en 2 étapes</li>
+            <li><b>2</b> Codes en accordéons → réduit la charge visuelle, dépliage à la demande</li>
+            <li><b>3</b> Modifications signalées avant sauvegarde (badge "N modif.")</li>
+            <li><b>4</b> Drop zone double action : drag&amp;drop OU click → flexibilité</li>
+            <li><b>5</b> CTA conversion séparé du CTA "enregistrer codes" → deux actions distinctes, ne pas mélanger</li>
+            <li><b>6</b> Guide rapide à droite → onboarding inline pour utilisateur novice</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== 5. 404 =================== -->
+    <div class="wf grid-single">
+      <div class="wf-header"><span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span><span>portail.cabinet-martini.fr/route-inexistante</span></div>
+      <div class="wf-title-band">5 — 404 / Not Found · Route *</div>
+      <div class="wf-body" style="min-height:340px; display:flex; align-items:center; justify-content:center;">
+        <div style="text-align:center; max-width:300px;">
+          <div class="box" style="border:none; background:transparent; font-size:64px; font-weight:900; padding:0; margin-bottom:6px;">404</div>
+          <div class="box" style="border:none; background:transparent; padding:0; margin-bottom:6px; font-weight:700;">Cette page s'est égarée</div>
+          <div class="box" style="border:none; background:transparent; padding:0 0 18px; font-size:10.5px; color:var(--ink-soft);">L'adresse que vous avez saisie n'existe pas ou la page a peut-être été déplacée.</div>
+          <div style="display:flex; gap:8px; justify-content:center;">
+            <div class="btn-wf">🏠 ACCUEIL</div>
+            <div class="btn-wf-ghost">← PRÉCÉDENT</div>
+          </div>
+          <div class="box" style="border:none; background:transparent; font-size:10px; color:var(--ink-soft); margin-top:14px;">Besoin d'aide ? <u>Contactez le support</u></div>
+        </div>
+      </div>
+      <div style="padding: 0 16px 14px;">
+        <div class="annot">
+          <ol>
+            <li><b>1</b> Identifiant clair "404" en typographie hero → impossible de se tromper</li>
+            <li><b>2</b> Deux issues à l'utilisateur : revenir OU aller à l'accueil → ne jamais le bloquer</li>
+            <li><b>3</b> Lien support en bas → escalade si problème persistant (conformité RGAA aide utilisateur)</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer parcours -->
+  <div style="margin-top:30px; padding:18px 22px; border:1.5px dashed var(--line); background:white; border-radius:6px;">
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:.1em; font-weight:700; margin-bottom:10px;">▸ Parcours utilisateur global</div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px;">
+      <span class="box" style="padding:5px 10px;">① Login</span>
+      <span style="color:var(--ink-soft)">→</span>
+      <span class="box" style="padding:5px 10px;">② Home</span>
+      <span style="color:var(--ink-soft)">→</span>
+      <span class="box" style="padding:5px 10px;">④ Convert (outil métier)</span>
+      <span style="color:var(--ink-soft)">↘ téléchargement .xlsx</span>
+      <br />
+      <span class="box" style="padding:5px 10px;">② Home</span>
+      <span style="color:var(--ink-soft)">→ (rôle Admin uniquement) →</span>
+      <span class="box" style="padding:5px 10px;">③ Admin</span>
+      <br />
+      <span class="box" style="padding:5px 10px;">⑤ 404</span>
+      <span style="color:var(--ink-soft)">→ retour vers ② Home (toute route invalide)</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

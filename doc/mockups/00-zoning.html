@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Zoning fonctionnel — 5 pages</title>
+<style>
+  :root {
+    /* Zones fonctionnelles — code couleur sémantique */
+    --z-header: #3b82f6;       /* bleu — Navigation globale */
+    --z-identity: #8b5cf6;     /* violet — Identité / hero */
+    --z-content: #ec4899;      /* rose — Contenu principal */
+    --z-action: #10b981;       /* vert — Zone d'action / CTA */
+    --z-aux: #f59e0b;          /* orange — Sidebar / auxiliaire */
+    --z-meta: #6b7280;         /* gris — Footer / méta */
+    --z-feedback: #ef4444;     /* rouge — Feedback / erreur */
+    --z-form: #06b6d4;         /* cyan — Formulaire / saisie */
+
+    --ink: #1f2937;
+    --ink-soft: #6b7280;
+    --line: #e5e7eb;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    background: #fafafa;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1500px; margin: 0 auto; padding: 30px 24px; }
+  h1.title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 0 0 18px;
+  }
+  .legend {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 18px;
+    font-size: 11.5px;
+    margin-top: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .legend-sw {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,.1);
+  }
+  .legend-item strong { font-weight: 600; color: var(--ink); }
+  .legend-item span { color: var(--ink-soft); font-size: 11px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 22px;
+  }
+  .grid-single { grid-column: 1 / -1; max-width: 600px; margin: 0 auto; }
+
+  /* Frame */
+  .zone-frame {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    border: 1px solid var(--line);
+  }
+  .zone-frame-header {
+    background: var(--ink);
+    color: white;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .zone-frame-header .route {
+    font-family: ui-monospace, Menlo, monospace;
+    font-weight: 500;
+    background: rgba(255,255,255,.18);
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 10px;
+  }
+  .zone-body {
+    padding: 14px;
+    background: #fafafa;
+  }
+
+  /* Zones */
+  .zone {
+    border-radius: 6px;
+    padding: 12px 14px;
+    color: white;
+    font-size: 11.5px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    text-shadow: 0 1px 2px rgba(0,0,0,.15);
+    min-height: 50px;
+    justify-content: center;
+  }
+  .zone .zone-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    opacity: .85;
+    font-weight: 700;
+  }
+  .zone .zone-desc {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .zone .zone-meta {
+    font-size: 10px;
+    opacity: .8;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .z-header { background: var(--z-header); }
+  .z-identity { background: var(--z-identity); }
+  .z-content { background: var(--z-content); }
+  .z-action { background: var(--z-action); }
+  .z-aux { background: var(--z-aux); }
+  .z-meta { background: var(--z-meta); }
+  .z-feedback { background: var(--z-feedback); }
+  .z-form { background: var(--z-form); }
+
+  .row { display: flex; gap: 10px; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+
+  .annot {
+    background: rgba(99,102,241,.06);
+    border: 1px solid rgba(99,102,241,.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--ink);
+    margin: 14px 16px;
+  }
+  .annot .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 700;
+    color: #6366f1;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1 class="title">Zoning fonctionnel — 5 pages</h1>
+  <p class="lede">Stade 0 du processus design : <b>Zoning</b> → Wireframe → Maquette → Mockup HD. Découpage en <strong>zones fonctionnelles</strong> avant tout choix graphique. Chaque couleur représente le <strong>rôle UX</strong> d'une zone, pas son apparence finale.</p>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-header)"></span><div><strong>Navigation</strong><br><span>Header, menu, accès</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-identity)"></span><div><strong>Identité / Hero</strong><br><span>Logo, titre, branding</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-content)"></span><div><strong>Contenu principal</strong><br><span>Info clé, listes, données</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-action)"></span><div><strong>Action / CTA</strong><br><span>Bouton primaire, conversion</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-aux)"></span><div><strong>Auxiliaire</strong><br><span>Sidebar, infos complémentaires</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-form)"></span><div><strong>Saisie</strong><br><span>Formulaire, input, upload</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-feedback)"></span><div><strong>Feedback</strong><br><span>Erreur, alerte, état système</span></div></div>
+    <div class="legend-item"><span class="legend-sw" style="background:var(--z-meta)"></span><div><strong>Méta / Footer</strong><br><span>Copyright, légal</span></div></div>
+  </div>
+
+  <div class="grid">
+
+    <!-- =================== 1. LOGIN =================== -->
+    <div class="zone-frame">
+      <div class="zone-frame-header">1 — Login<span class="route">/</span></div>
+      <div class="zone-body" style="min-height:380px;">
+        <div class="col" style="max-width:300px; margin:0 auto;">
+          <div class="zone z-identity" style="min-height:70px; text-align:center; align-items:center;">
+            <div class="zone-label">Identité / Hero</div>
+            <div class="zone-desc">Logo + Titre "Bienvenue" + Accroche</div>
+            <div class="zone-meta">Premier contact visuel</div>
+          </div>
+          <div class="zone z-feedback" style="min-height:32px; padding:6px 12px;">
+            <div class="zone-label">Feedback (conditionnel)</div>
+            <div class="zone-desc" style="font-size:11px;">Message d'erreur si login échoue</div>
+          </div>
+          <div class="zone z-form" style="min-height:130px;">
+            <div class="zone-label">Saisie</div>
+            <div class="zone-desc">Formulaire 2 champs : email + mot de passe</div>
+            <div class="zone-meta">Validation HTML5 native + ARIA labels</div>
+          </div>
+          <div class="zone z-action">
+            <div class="zone-label">Action principale</div>
+            <div class="zone-desc">CTA "Se connecter" → POST /sys/login</div>
+          </div>
+          <div class="zone z-meta" style="min-height:30px; padding:6px 12px;">
+            <div class="zone-label">Méta</div>
+            <div class="zone-desc" style="font-size:11px;">Copyright</div>
+          </div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="label">Objectif fonctionnel</div>
+        Page d'entrée. Friction minimale : <strong>4 zones</strong> + 1 conditionnelle (feedback erreur). Aucune navigation parasite (pas de header).
+      </div>
+    </div>
+
+    <!-- =================== 2. HOME =================== -->
+    <div class="zone-frame">
+      <div class="zone-frame-header">2 — Home<span class="route">/home</span></div>
+      <div class="zone-body" style="min-height:520px;">
+        <div class="col">
+          <div class="zone z-header" style="min-height:42px; padding:8px 14px;">
+            <div class="zone-desc" style="font-size:11.5px;">Navigation globale (logo, theme, admin*, logout)</div>
+          </div>
+          <div class="row">
+            <div class="zone z-content" style="flex:1; min-height:70px;">
+              <div class="zone-label">Widget contextuel</div>
+              <div class="zone-desc">Horloge live + date</div>
+            </div>
+            <div class="zone z-identity" style="flex:1; min-height:70px;">
+              <div class="zone-label">Accueil personnalisé</div>
+              <div class="zone-desc">"Bon retour !" — accroche</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="zone z-content" style="flex:2; min-height:180px;">
+              <div class="zone-label">Contenu principal</div>
+              <div class="zone-desc">Sélecteur d'applications groupées</div>
+              <div class="zone-meta">8 accents colorés rotatifs par carte · Chargement dynamique selon rôle utilisateur</div>
+            </div>
+            <div class="zone z-aux" style="flex:1; min-height:180px;">
+              <div class="zone-label">Auxiliaire</div>
+              <div class="zone-desc">Fil d'actualités</div>
+              <div class="zone-meta">News système, mises à jour</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="label">Objectif fonctionnel</div>
+        Tableau de bord post-login. <strong>2/3 contenu principal, 1/3 auxiliaire</strong>. Header sticky pour navigation persistante. Widgets de contexte en haut pour réduire la charge cognitive avant l'action.
+      </div>
+    </div>
+
+    <!-- =================== 3. ADMIN =================== -->
+    <div class="zone-frame" style="grid-column: 1 / -1;">
+      <div class="zone-frame-header">3 — Admin · Onglet Utilisateurs<span class="route">/admin</span></div>
+      <div class="zone-body" style="min-height:540px;">
+        <div class="col">
+          <div class="zone z-header" style="min-height:50px;">
+            <div class="zone-desc" style="font-size:12px;">Navigation locale : titre "Administration" + onglets segmentés (Utilisateurs · Applications · Analytics) + CTA "Nouveau"</div>
+          </div>
+
+          <div class="row">
+            <div class="zone z-content" style="flex:1; min-height:80px;">
+              <div class="zone-label">Stat globale 1</div>
+              <div class="zone-desc">Utilisateurs (count + badge admins)</div>
+            </div>
+            <div class="zone z-content" style="flex:1; min-height:80px;">
+              <div class="zone-label">Stat globale 2</div>
+              <div class="zone-desc">Applications (count + badge actives)</div>
+            </div>
+            <div class="zone z-content" style="flex:1; min-height:80px;">
+              <div class="zone-label">Stat globale 3</div>
+              <div class="zone-desc">État système (uptime)</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col" style="flex:2;">
+              <div class="zone z-content" style="min-height:260px;">
+                <div class="zone-label">Contenu principal</div>
+                <div class="zone-desc">Liste CRUD utilisateurs (avec recherche + pagination)</div>
+                <div class="zone-meta">Actions par ligne : éditer ✎ / supprimer × · Badges de rôles colorés</div>
+              </div>
+            </div>
+            <div class="col" style="flex:1;">
+              <div class="zone z-aux" style="min-height:260px;">
+                <div class="zone-label">Auxiliaire temps réel</div>
+                <div class="zone-desc">Panel "En ligne · N" via WebSocket</div>
+                <div class="zone-meta">Utilisateurs connectés + route actuelle · Sticky au scroll</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="zone z-action" style="position:absolute; right:30px; top:90px; padding:6px 12px; min-height:30px; box-shadow:0 4px 12px rgba(0,0,0,.2);">
+            <div class="zone-desc" style="font-size:11px;">⊕ CTA Nouveau utilisateur (ouvre modal)</div>
+          </div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="label">Objectif fonctionnel</div>
+        Console d'administration. <strong>4 niveaux d'information</strong> : navigation (onglets) → stats (vue d'ensemble) → contenu (action CRUD) → auxiliaire (présence temps réel). Garde d'accès via vérif <code>verify-admin</code> au mount.
+      </div>
+    </div>
+
+    <!-- =================== 4. CONVERT =================== -->
+    <div class="zone-frame" style="grid-column: 1 / -1;">
+      <div class="zone-frame-header">4 — Convert · Transformation Factures MB<span class="route">/facture-mb/home</span></div>
+      <div class="zone-body" style="min-height:540px;">
+        <div class="col">
+          <div class="zone z-identity" style="min-height:50px;">
+            <div class="zone-desc" style="font-size:12px;">Identité de l'outil : icône XLSX + titre + sous-titre "Transforme les .edi en excel"</div>
+          </div>
+
+          <div class="zone z-header" style="min-height:54px;">
+            <div class="zone-label">Indicateur de progression</div>
+            <div class="zone-desc">Stepper 2 étapes : Configuration → Traitement</div>
+          </div>
+
+          <div class="row">
+            <div class="col" style="flex:1;">
+              <div class="zone z-form" style="min-height:280px;">
+                <div class="zone-label">Saisie — colonne configuration</div>
+                <div class="zone-desc">3 accordéons de codes (généraux, comptables, journal)</div>
+                <div class="zone-meta">Inputs labellisés avec indicateur "modifié" · Sauvegarde par badge</div>
+              </div>
+              <div class="zone z-action">
+                <div class="zone-label">Action secondaire (bleu)</div>
+                <div class="zone-desc">CTA "Enregistrer les modifications"</div>
+                <div class="zone-meta">Désactivé si aucune modification</div>
+              </div>
+            </div>
+
+            <div class="col" style="flex:1;">
+              <div class="zone z-form" style="min-height:160px;">
+                <div class="zone-label">Saisie — colonne fichiers</div>
+                <div class="zone-desc">Drop zone .txt (drag&amp;drop + click) + liste des fichiers sélectionnés</div>
+                <div class="zone-meta">Filtre type MIME · suppression individuelle ou globale</div>
+              </div>
+              <div class="zone z-action" style="background:var(--z-action);">
+                <div class="zone-label">Action principale (vert)</div>
+                <div class="zone-desc">CTA "Lancer la transformation" → POST /facture-mb/conversion</div>
+                <div class="zone-meta">Téléchargement direct du .xlsx généré</div>
+              </div>
+              <div class="zone z-aux" style="min-height:90px;">
+                <div class="zone-label">Onboarding</div>
+                <div class="zone-desc">Guide rapide en 3 étapes</div>
+                <div class="zone-meta">Aide inline pour utilisateur novice</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="label">Objectif fonctionnel</div>
+        Outil métier — conversion EDI vers XLSX. <strong>2 actions distinctes</strong> visuellement séparées : sauvegarde config (bleu) ≠ lancement traitement (vert). Le stepper rappelle le parcours en 2 temps. Guide rapide à droite pour onboarding sans documentation externe.
+      </div>
+    </div>
+
+    <!-- =================== 5. 404 =================== -->
+    <div class="zone-frame grid-single">
+      <div class="zone-frame-header">5 — 404 / Not Found<span class="route">*</span></div>
+      <div class="zone-body" style="min-height:280px;">
+        <div class="col" style="max-width:340px; margin:0 auto;">
+          <div class="zone z-feedback" style="min-height:70px; text-align:center; align-items:center;">
+            <div class="zone-label">Feedback critique</div>
+            <div class="zone-desc">Identifiant erreur "404" + message rassurant</div>
+          </div>
+          <div class="row">
+            <div class="zone z-action" style="flex:1;">
+              <div class="zone-label">Action principale</div>
+              <div class="zone-desc">Retour à l'accueil</div>
+            </div>
+            <div class="zone z-action" style="flex:1; opacity:.75;">
+              <div class="zone-label">Action secondaire</div>
+              <div class="zone-desc">Page précédente</div>
+            </div>
+          </div>
+          <div class="zone z-aux" style="min-height:30px; padding:6px 12px; text-align:center;">
+            <div class="zone-desc" style="font-size:11px;">Lien contact support — escalade</div>
+          </div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="label">Objectif fonctionnel</div>
+        Page d'erreur. <strong>Ne jamais bloquer l'utilisateur</strong> : feedback clair + 2 issues + support. Conforme RGAA (aide à l'utilisateur en cas d'erreur).
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer progression -->
+  <div style="margin-top:30px; padding:18px 22px; background:white; border:1px solid var(--line); border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:.1em; font-weight:700; color:#6366f1; margin-bottom:10px;">▸ Position dans le processus design</div>
+    <div style="display:flex; align-items:stretch; gap:0; font-size:12px;">
+      <div style="flex:1; padding:12px 14px; background:rgba(99,102,241,.1); border:1px solid #6366f1; text-align:center; transform:scale(1.04); border-radius:8px; z-index:1;">
+        <div style="font-size:10px; color:#6366f1; margin-bottom:3px; font-weight:700;">▸ STADE 0 — VOUS ÊTES ICI</div>
+        <div style="font-weight:700; color:#4f46e5;">Zoning</div>
+        <div style="font-size:10.5px; color:#475569; margin-top:2px;">Zones fonctionnelles</div>
+      </div>
+      <div style="flex:1; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; text-align:center;">
+        <div style="font-size:10px; color:#94a3b8; margin-bottom:3px;">STADE 1</div>
+        <div style="font-weight:700;">Wireframe</div>
+        <div style="font-size:10.5px; color:#64748b; margin-top:2px;">Structure pure</div>
+      </div>
+      <div style="flex:1; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; text-align:center;">
+        <div style="font-size:10px; color:#94a3b8; margin-bottom:3px;">STADE 2</div>
+        <div style="font-weight:700;">Maquette</div>
+        <div style="font-size:10.5px; color:#64748b; margin-top:2px;">Couleurs &amp; composants</div>
+      </div>
+      <div style="flex:1; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:0 8px 8px 0; text-align:center;">
+        <div style="font-size:10px; color:#94a3b8; margin-bottom:3px;">STADE 3</div>
+        <div style="font-weight:700;">Mockup HD</div>
+        <div style="font-size:10.5px; color:#64748b; margin-top:2px;">Pixel-perfect</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

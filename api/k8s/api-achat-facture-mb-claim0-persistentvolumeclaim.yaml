@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api-achat-facture-mb-claim0
+  name: api-achat-facture-mb-claim0
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: pv-api-achat-facture-mb
+  storageClassName: ""
+status: {}

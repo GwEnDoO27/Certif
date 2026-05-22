@@ -320,6 +320,53 @@ perf(analyse): optimisation des requêtes d'analytique par index PostgreSQL
 
 ---
 
+## 3.5 Stratégie de branching Git
+
+Compte tenu du caractère solo du projet et du rythme de livraison continu, la stratégie **GitHub Flow** est retenue plutôt que Git Flow (jugé trop lourd pour ce contexte).
+
+### Principes
+
+- Une seule branche permanente : `main` (toujours déployable)
+- Toute modification passe par une branche `feature/<nom-court>` éphémère
+- Pull request (même solo) avant merge dans `main` pour bénéficier de la CI
+- Merge en squash pour garder un historique linéaire
+- Tags Git `vMAJOR.MINOR.PATCH` posés sur `main` pour chaque release
+
+### Schéma
+
+```
+main ──●──●──●──●──●──●─── (toujours déployable)
+        \  /    \  /
+         ●●      ●●         feature/auth-jwt, feature/analytics
+```
+
+### Conventions de nommage
+
+| Préfixe | Usage | Exemple |
+|---------|-------|---------|
+| `feature/` | Nouvelle fonctionnalité | `feature/admin-dashboard` |
+| `fix/` | Correction de bug | `fix/cors-typo` |
+| `chore/` | Maintenance | `chore/upgrade-go-1.24` |
+| `docs/` | Documentation | `docs/owasp-top10` |
+
+### Cycle de vie d'une branche
+
+1. `git checkout -b feature/xxx` depuis `main` à jour
+2. Commits suivant Conventional Commits (§ 3.4)
+3. Push + Pull Request
+4. CI verte requise (tests + lint)
+5. Squash & merge dans `main`
+6. Suppression de la branche distante et locale
+
+### Justification du choix
+
+GitHub Flow simplifie le workflow par rapport à Git Flow (`develop`, `release/*`, `hotfix/*`), ce qui est cohérent avec :
+- Une équipe d'un seul développeur
+- Un déploiement continu vers preprod après chaque merge
+- L'absence de version « long-term support » à maintenir en parallèle
+
+---
+
 # 4. Conception
 
 ## 4.1 Diagramme de cas d'utilisation

@@ -149,7 +149,7 @@
 ### CP11 - Gérer les versions d'une application
 - [x] Git avec GitHub
 - [x] CI/CD automatisé
-- [ ] **Documenter la stratégie de branching** (Git Flow, GitHub Flow, etc.)
+- [x] **Documenter la stratégie de branching** (Git Flow, GitHub Flow, etc.)
 - [ ] **Mettre en place le versioning sémantique** (SemVer)
 - [ ] **Ajouter un CHANGELOG.md**
 - [ ] **Documenter la politique de release**

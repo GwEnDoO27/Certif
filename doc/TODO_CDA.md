@@ -84,7 +84,7 @@
 - [ ] **Documenter la méthodologie Agile** utilisée (Scrum/Kanban)
 - [ ] **Créer des comptes-rendus de réunion** (même fictifs si projet solo)
 - [ ] **Documenter les sprints** (backlog, sprint review, rétrospective)
-- [ ] **Utiliser les conventions de commit** (Conventional Commits)
+- [x] **Utiliser les conventions de commit** (Conventional Commits)
 - [ ] **Créer un tableau Kanban** documenté avec captures d'écran
 - [ ] **Rédiger les spécifications techniques** détaillées
 

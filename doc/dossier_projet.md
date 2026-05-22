@@ -265,6 +265,61 @@ gantt
 
 ---
 
+## 3.4 Conventions de commit
+
+Le projet adopte la convention **Conventional Commits** (https://www.conventionalcommits.org/) afin de garantir la lisibilité de l'historique, l'automatisation du versioning et la génération du CHANGELOG.
+
+### Format
+
+```
+<type>(<scope>) : <description>
+
+[corps optionnel]
+
+[footer optionnel]
+```
+
+### Types utilisés
+
+| Type | Usage |
+|------|-------|
+| `feat` | Nouvelle fonctionnalité |
+| `fix` | Correction de bug |
+| `docs` | Documentation seule |
+| `style` | Mise en forme (espaces, formatage) — pas de changement de code |
+| `refactor` | Refactorisation sans changement de comportement |
+| `test` | Ajout ou modification de tests |
+| `chore` | Tâches de maintenance (build, dépendances) |
+| `ci` | Modifications de la chaîne CI/CD |
+| `perf` | Amélioration de performance |
+| `security` | Correction ou amélioration de sécurité |
+
+### Exemples tirés du projet
+
+Les commits suivants illustrent l'application de la convention sur ce dépôt (les commits antérieurs à l'adoption formelle sont reformulés à titre d'exemple) :
+
+```
+docs: add CDA dossier implementation plan
+docs: add CDA dossier writing plan spec
+feat(frontend): ajout des fichiers HTML de maquette et mock-up
+chore(schemas): ajout des schémas de base de données initiaux
+chore: initial commit — structure mono-repo (frontend, api, backend)
+feat(backend): authentification JWT et gestion des sessions utilisateur
+feat(admin): CRUD utilisateurs et gestion des rôles
+feat(websocket): présence utilisateur en temps réel
+fix(api): correction de la conversion EDI vers PDF
+perf(analyse): optimisation des requêtes d'analytique par index PostgreSQL
+```
+
+### Bénéfices
+
+- Historique lisible et filtrable (`git log --grep="^feat"`)
+- Génération automatique du CHANGELOG via `git-cliff` ou `standard-version`
+- Détection automatique du type de release (SemVer) : `feat` → MINOR, `fix` → PATCH, `BREAKING CHANGE` → MAJOR
+- Onboarding facilité pour de nouveaux contributeurs
+
+---
+
 # 4. Conception
 
 ## 4.1 Diagramme de cas d'utilisation

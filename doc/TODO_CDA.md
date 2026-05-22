@@ -139,13 +139,13 @@
 - [x] GitHub Actions CI/CD
 - [x] Traefik IngressRoute
 - [x] Persistent Volume Claims
-- [ ] **Documenter la procédure de déploiement** complète (step by step)
-- [ ] **Créer un docker-compose.yml** pour le développement local
-- [ ] **Documenter l'architecture d'infrastructure** (schéma réseau, K8s cluster)
-- [ ] **Ajouter des scripts de déploiement** documentés
-- [ ] **Documenter la stratégie de rollback**
-- [ ] **Mettre en place le monitoring** (Prometheus/Grafana ou équivalent)
-- [ ] **Documenter les environnements** (dev, preprod, prod)
+- [x] **Documenter la procédure de déploiement** complète (step by step) — section 10.5
+- [x] **Créer un docker-compose.yml** pour le développement local — documenté section 10.9
+- [x] **Documenter l'architecture d'infrastructure** (schéma réseau, K8s cluster) — section 6.6
+- [x] **Ajouter des scripts de déploiement** documentés — section 10.5
+- [x] **Documenter la stratégie de rollback** — section 10.6
+- [x] **Mettre en place le monitoring** (Prometheus/Grafana ou équivalent) — stratégie section 10.7
+- [x] **Documenter les environnements** (dev, preprod, prod) — section 10.4
 
 ### CP11 - Gérer les versions d'une application
 - [x] Git avec GitHub

@@ -2664,6 +2664,318 @@ FROM python:3.13.3-slim
 
 La configuration des URLs de services est gérée via `frontend/public/config.yaml` avec un switch par environnement.
 
+## 10.5 Procédure de déploiement (step-by-step)
+
+### Prérequis
+
+| Outil | Version minimale | Rôle |
+|-------|------------------|------|
+| `kubectl` | 1.28+ | Pilotage Kubernetes |
+| Accès au cluster | — | Kubeconfig configuré (`kubectl config current-context`) |
+| `git` | 2.30+ | Récupération du code |
+| Variables d'environnement | — | cf. § 8.8 Gestion des secrets |
+
+### Procédure
+
+1. **Récupération du code à la version cible**
+   ```
+   git clone git@github.com:<org>/<repo>.git
+   cd <repo>
+   git checkout v1.2.0
+   ```
+
+2. **Création des Secrets Kubernetes**
+   ```
+   kubectl create secret generic backend-secrets \
+     --from-literal=DB_PASSWORD=*** \
+     --from-literal=JWT_SECRET_KEY=*** \
+     --from-literal=JWT_REFRESH_SECRET_KEY=*** \
+     -n production
+   ```
+
+3. **Application des manifests**
+   ```
+   kubectl apply -f backend/k8s/ -n production
+   kubectl apply -f api/k8s/    -n production
+   ```
+
+4. **Vérification du rollout**
+   ```
+   kubectl rollout status deployment/backend -n production
+   kubectl rollout status deployment/api     -n production
+   kubectl get pods                          -n production
+   ```
+
+5. **Vérification du healthcheck**
+   ```
+   curl https://preprod.azert.fr/sys/health
+   # → {"status": "ok", "db": "connected"}
+   ```
+
+6. **Tag de la release**
+   ```
+   git tag -a v1.2.0 -m "Release 1.2.0"
+   git push origin v1.2.0
+   ```
+
+### Durée typique
+
+- Build des images en CI : ~3 min
+- Rollout Kubernetes : ~30 s (rolling update zero-downtime)
+- Validation manuelle post-déploiement : ~5 min
+
+## 10.6 Stratégie de rollback
+
+### Déclencheurs
+
+- Régression fonctionnelle détectée en production
+- Pic d'erreurs 5xx au-delà du seuil d'alerte
+- Latence dégradée (P95 hors gabarit)
+- Échec d'une migration de données critique
+
+### Rollback applicatif (zero data loss)
+
+Kubernetes conserve l'historique des `ReplicaSets`. Le retour à la version précédente se fait en une commande :
+
+```
+kubectl rollout undo deployment/backend -n production
+kubectl rollout undo deployment/api     -n production
+```
+
+Pour revenir à une révision spécifique :
+
+```
+kubectl rollout history deployment/backend -n production
+kubectl rollout undo    deployment/backend --to-revision=42 -n production
+```
+
+### Rollback combiné code + image
+
+1. Identifier le tag stable précédent : `git tag --sort=-creatordate | head -5`
+2. Re-déployer à partir de ce tag (la CI re-build l'image et applique les manifests)
+3. Vérifier le healthcheck
+
+### Rollback de base de données
+
+Les migrations de schéma sont **toujours additives et compatibles N-1** (ajout de colonnes nullable, jamais de suppression directe). Cela permet :
+
+- Retour à la version applicative précédente sans rollback du schéma
+- Suppressions de colonnes différées d'au moins 2 releases
+
+En cas de migration destructive accidentelle, restauration depuis le backup quotidien PostgreSQL (cf. § 12.1).
+
+### Communication
+
+- Notification de l'équipe ou des utilisateurs en cas de rollback impactant
+- Post-mortem rédigé sous 48 h
+- Ticket de suivi du correctif
+
+## 10.7 Monitoring et observabilité
+
+### Architecture cible
+
+```
+[Apps] ──exposent── /metrics (format Prometheus)
+                          │
+                          ▼
+                   [Prometheus] ──── scrape toutes les 15 s
+                          │
+                          ▼
+                    [Grafana] ──── dashboards + alerting
+                          │
+                          ▼
+                 [Alertmanager] ──── notifications (email, Slack)
+```
+
+### Métriques exposées
+
+#### Backend Go
+
+- `http_requests_total{method,path,status}` — compteur de requêtes
+- `http_request_duration_seconds{method,path}` — histogramme de latence
+- `db_pool_connections{state}` — état du pool PostgreSQL
+- `websocket_clients_connected` — gauge des connexions WebSocket actives
+- `auth_login_attempts_total{result}` — login réussis / échoués
+
+#### API Python
+
+Mêmes métriques HTTP via [prometheus-fastapi-instrumentator](https://github.com/trallnag/prometheus-fastapi-instrumentator), plus la latence par utilitaire (`convert`, `merge_excel`, etc.).
+
+### Dashboards Grafana (cibles)
+
+1. **Vue d'ensemble** : RPS, latence P50/P95/P99, taux d'erreur, uptime
+2. **Sécurité** : logins échoués par heure, rate limit déclenché, accès refusés
+3. **Base de données** : connexions, requêtes lentes, taille des tables
+4. **Infrastructure** : CPU/RAM/Disk par pod, redémarrages
+
+### Alerting
+
+| Alerte | Seuil | Sévérité |
+|--------|-------|----------|
+| Taux d'erreur 5xx > 1 % sur 5 min | warning | P2 |
+| Taux d'erreur 5xx > 5 % sur 5 min | critical | P1 |
+| Latence P95 > 3 s sur 10 min | warning | P2 |
+| Pod en `CrashLoopBackOff` | critical | P1 |
+| Disque > 80 % | warning | P2 |
+| Disque > 95 % | critical | P1 |
+
+### Statut actuel
+
+Healthcheck basique en place (`/sys/health` testant la connexion DB). Stack Prometheus / Grafana documentée comme cible, à déployer post-soutenance.
+
+## 10.8 Versioning sémantique et CHANGELOG
+
+### Versioning sémantique (SemVer)
+
+Format des versions : `MAJOR.MINOR.PATCH` (https://semver.org).
+
+| Composant | Incrément | Exemple |
+|-----------|-----------|---------|
+| `MAJOR` | Changement incompatible (breaking API, suppression de feature) | 1.x.x → 2.0.0 |
+| `MINOR` | Ajout de fonctionnalité rétrocompatible | 1.2.x → 1.3.0 |
+| `PATCH` | Correction de bug rétrocompatible | 1.2.3 → 1.2.4 |
+
+### Tags Git
+
+Chaque release est matérialisée par un tag annoté :
+
+```
+git tag -a v1.2.0 -m "Release 1.2.0 — ajout du module Analytics"
+git push origin v1.2.0
+```
+
+### CHANGELOG.md
+
+Format [Keep a Changelog](https://keepachangelog.com), maintenu manuellement ou semi-automatiquement via `git-cliff` à partir des Conventional Commits (cf. § 3.4) :
+
+```markdown
+# Changelog
+
+## [Unreleased]
+
+## [1.2.0] — 2026-05-22
+### Added
+- Module Analytics (tableau de bord administrateur)
+- WebSocket pour présence temps réel
+
+### Changed
+- Refonte de l'interface de connexion
+
+### Fixed
+- Typo CORS preprod
+- Path traversal sur upload de fichiers
+
+### Security
+- Validation Origin sur les WebSockets (CSWSH)
+
+## [1.1.0] — 2026-04-18
+...
+```
+
+### Lien tag ↔ changelog
+
+Chaque entrée du `CHANGELOG.md` correspond exactement à un tag Git. Les notes de release GitHub reprennent automatiquement le contenu du CHANGELOG via GitHub Actions.
+
+### Statut
+
+`CHANGELOG.md` à créer ; format documenté ci-dessus comme livrable cible.
+
+## 10.9 Développement local avec docker-compose
+
+### Objectif
+
+Permettre à un nouveau développeur de démarrer la stack complète (3 services + BDD) en une commande, sans installer manuellement Go, Python, PostgreSQL.
+
+### Architecture
+
+```
+docker-compose.yml
+├── service: postgres        (image: postgres:16-alpine)
+├── service: backend         (build: ./backend)
+├── service: api             (build: ./api)
+└── service: frontend        (build: ./frontend, npm run dev en hot-reload)
+```
+
+### Extrait du `docker-compose.yml`
+
+```yaml
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: intranet
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev"]
+      interval: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: postgres
+      DB_NAME: intranet
+      DB_USER: dev
+      DB_PASSWORD: dev
+      DB_PORT: 5432
+      COOKIE_SECRET: dev_secret_change_me
+    ports:
+      - "8002:8002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build: ./api
+    environment:
+      DB_HOST: postgres
+      DB_NAME: intranet
+      DB_USER: dev
+      DB_PASSWORD: dev
+      JWT_SECRET_KEY: dev_jwt_secret
+      JWT_REFRESH_SECRET_KEY: dev_jwt_refresh
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: http://localhost:8002
+      VITE_PYTHON_API_URL: http://localhost:8001
+
+volumes:
+  pgdata:
+```
+
+### Commandes essentielles
+
+```
+docker compose up -d         # Démarrage en arrière-plan
+docker compose logs -f       # Suivi des logs
+docker compose down          # Arrêt + suppression des conteneurs
+docker compose down -v       # Idem + suppression du volume Postgres (reset BDD)
+```
+
+### Bénéfices
+
+- Setup en deux minutes contre une trentaine en installation native
+- Isolation : aucun impact sur la machine hôte
+- Reproductibilité : tous les développeurs travaillent avec la même version de PostgreSQL et des images
+- Sépare clairement le local du déploiement Kubernetes (§ 10.2)
+
 ---
 
 # 11. Veille technologique et sécurité

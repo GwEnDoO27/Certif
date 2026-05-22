@@ -267,12 +267,12 @@ gantt
 
 ## 3.4 Conventions de commit
 
-Le projet adopte la convention **Conventional Commits** (https://www.conventionalcommits.org/) afin de garantir la lisibilité de l'historique, l'automatisation du versioning et la génération du CHANGELOG.
+Le projet adopte la convention [Conventional Commits](https://www.conventionalcommits.org/) afin de garantir la lisibilité de l'historique, l'automatisation du versioning et la génération du CHANGELOG.
 
 ### Format
 
 ```
-<type>(<scope>) : <description>
+<type>(<scope>): <description>
 
 [corps optionnel]
 
@@ -296,7 +296,7 @@ Le projet adopte la convention **Conventional Commits** (https://www.conventiona
 
 ### Exemples tirés du projet
 
-Les commits suivants illustrent l'application de la convention sur ce dépôt (les commits antérieurs à l'adoption formelle sont reformulés à titre d'exemple) :
+Les deux premières lignes ci-dessous reprennent fidèlement les commits déjà présents dans l'historique au format conventionnel ; les suivantes sont des exemples illustratifs, reformulés à partir de commits antérieurs à l'adoption de la convention.
 
 ```
 docs: add CDA dossier implementation plan

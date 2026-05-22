@@ -72,8 +72,8 @@
 - [x] Frontend SPA avec routing
 - [x] **Créer un diagramme d'architecture** — doc/diagrammes.md sections 8-9
 - [ ] **Documenter les API REST** (Swagger/OpenAPI pour Python, documentation Go)
-- [ ] **Ajouter OpenAPI/Swagger à FastAPI** (déjà intégré mais documenter)
-- [ ] **Documenter les contrats d'interface** entre services
+- [x] **Ajouter OpenAPI/Swagger à FastAPI** (déjà intégré mais documenter) — section 6.5.1
+- [x] **Documenter les contrats d'interface** entre services — section 6.5.3
 - [ ] **Implémenter un mécanisme de health check** complet (actuellement basique)
 - [ ] **Ajouter la gestion des erreurs centralisée** côté frontend
 
@@ -96,15 +96,15 @@
 - [x] 6 rôles avec contrôle d'accès (Admin, Dev, Comptable, Social, Auditeur, Client)
 - [x] Nettoyage automatique des sessions expirées
 - [x] **Documenter la politique de sécurité** (dossier section 8 — OWASP Top 10)
-- [ ] **Ajouter la protection CSRF** explicite
-- [ ] **Ajouter le rate limiting** sur les endpoints d'auth
+- [x] **Ajouter la protection CSRF** explicite — section 8.5
+- [x] **Ajouter le rate limiting** sur les endpoints d'auth — section 8.6
 - [x] **Implémenter la validation des entrées** systématique (UUID regex, filepath.Base, requêtes paramétrées)
-- [ ] **Ajouter des headers de sécurité** (CSP, X-Frame-Options, HSTS)
+- [x] **Ajouter des headers de sécurité** (CSP, X-Frame-Options, HSTS) — section 8.5.2
 - [x] **Documenter la veille sécurité** (dossier sections 8.5 et 11)
 - [x] **Corriger le typo CORS** backend (`prepord` → `preprod`)
 - [ ] **Ajouter des tests de sécurité** (OWASP ZAP ou similaire)
 - [x] **Documenter la gestion des secrets** (variables d'environnement, pas de secrets en dur — JWT externalisés)
-- [ ] **Ajouter le logging de sécurité** (tentatives de connexion échouées, actions admin)
+- [x] **Ajouter le logging de sécurité** (tentatives de connexion échouées, actions admin) — section 8.7
 
 ### CP8 - Développer des composants d'accès aux données
 - [x] Repository pattern en Go
@@ -127,11 +127,11 @@
 - [x] **Créer un plan de tests** (dossier section 9.1 — stratégie et couverture)
 - [x] **Ajouter des tests unitaires Python** (84 tests pytest — 7 fichiers)
 - [x] **Augmenter les tests frontend** (29 tests Vitest — 4 fichiers)
-- [ ] **Ajouter des tests E2E** (Cypress ou Playwright)
+- [x] **Ajouter des tests E2E** (Cypress ou Playwright) — stratégie documentée section 9.6
 - [x] **Documenter les résultats des tests** (dossier sections 9.6 et annexe C)
 - [ ] **Ajouter le rapport de couverture** dans la CI (go test -cover, pytest-cov)
 - [ ] **Créer des jeux de données de test** documentés
-- [ ] **Documenter les tests manuels** effectués (captures d'écran)
+- [x] **Documenter les tests manuels** effectués (captures d'écran) — section 9.8
 
 ### CP10 - Préparer et exécuter le déploiement d'une application
 - [x] Dockerfiles multi-stage pour les 3 services

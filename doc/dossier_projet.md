@@ -1367,7 +1367,63 @@ api/
     └── logging_config.py        # Configuration des logs
 ```
 
-## 6.5 Infrastructure de déploiement
+## 6.5 Documentation des API REST
+
+### 6.5.1 API Python (FastAPI) — OpenAPI auto-généré
+
+FastAPI génère automatiquement une spécification **OpenAPI 3.0** à partir des annotations Python (`pydantic` + type hints) et expose une interface interactive **Swagger UI** sur `/docs` (et **ReDoc** sur `/redoc`). La documentation est régénérée à chaque démarrage du service — la source unique de vérité est le code.
+
+Cette approche garantit qu'aucune dérive ne peut s'installer entre code et documentation : ajouter un nouvel endpoint suffit à le voir apparaître dans le Swagger.
+
+### 6.5.2 API Go — Endpoints documentés manuellement
+
+Le backend Go n'utilise pas de générateur automatique. La documentation est maintenue dans ce dossier à partir de l'inspection de `backend/cmd/main.go` (enregistrement des routes par subrouter).
+
+#### Endpoints publics (`pub`, aucun middleware d'auth)
+
+| Méthode | Chemin | Description |
+|---------|--------|-------------|
+| `POST` | `/sys/login` | Authentification (renvoie cookie `userId`) |
+| `POST` | `/sys/logout` | Déconnexion (invalide la session) |
+| `POST` | `/sys/register` | Inscription d'un nouvel utilisateur |
+| `GET` | `/sys/health` | Healthcheck (200 si DB joignable) |
+
+#### Endpoints authentifiés (`sys`, `AuthMiddleware`)
+
+| Méthode | Chemin | Description |
+|---------|--------|-------------|
+| `GET` | `/sys/me` | Profil utilisateur courant |
+| `GET` | `/sys/applications` | Catalogue filtré par utilisateur |
+| `WS` | `/sys/ws` | Upgrade WebSocket (présence temps réel) |
+
+#### Endpoints administration (`adm`, `AuthMiddleware` + `AdminMiddleware`)
+
+| Méthode | Chemin | Description |
+|---------|--------|-------------|
+| `GET` | `/sys/get-users` | Liste de tous les utilisateurs |
+| `POST` | `/sys/new-user` | Création d'un utilisateur |
+| `PUT` | `/sys/update-user` | Modification |
+| `DELETE` | `/sys/delete-user/{uid}` | Suppression |
+| `GET` | `/sys/get-apps` | Liste de toutes les applications |
+| `POST` | `/sys/new-app` | Création d'une application |
+| `PUT` | `/sys/update-app` | Modification |
+| `DELETE` | `/sys/delete-app/{id}` | Suppression |
+| `POST` | `/sys/add-app-permission` | Attribution d'une application à un utilisateur |
+| `POST` | `/sys/remove-app-permission` | Retrait |
+| `GET` | `/sys/analytics/conn-by-days` | Stats connexions par jour |
+| `GET` | `/sys/analytics/active-users` | Top utilisateurs actifs |
+| `GET` | `/sys/analytics/api-stats` | Répartition d'utilisation par API |
+| `GET` | `/sys/analytics/peak-hours` | Heures de pointe |
+| `POST` | `/sys/macdos/config` | Configuration McDonald's |
+
+### 6.5.3 Contrats d'interface
+
+- **Format de réponse standard** : objet JSON `{"data": ..., "error": null}` en cas de succès, `{"data": null, "error": "message"}` en cas d'erreur applicative
+- **Codes HTTP respectés** : `200`, `201`, `400`, `401`, `403`, `404`, `422`, `429`, `500`
+- **Authentification** : cookie `userId` (HttpOnly, Secure, SameSite=Strict) — pas de Bearer token en header pour les requêtes navigateur
+- **Encodage** : UTF-8 partout, `Content-Type: application/json` (sauf endpoints de fichiers binaires)
+
+## 6.6 Infrastructure de déploiement
 
 ```
                    ┌──────────────────────────────────┐
@@ -2100,7 +2156,137 @@ Le portail intranet traite des données personnelles (email, nom, activité de c
 - Procédure d'export des données personnelles (droit à la portabilité)
 - Désignation d'un référent données ou justification d'exemption DPO (< 250 employés)
 
-## 8.5 Veille sécurité
+## 8.5 Protection CSRF et headers de sécurité HTTP
+
+### 8.5.1 Protection CSRF
+
+La protection contre les attaques **Cross-Site Request Forgery** repose sur deux mécanismes complémentaires :
+
+1. **Attribut `SameSite=Strict`** sur le cookie de session : empêche le navigateur d'envoyer le cookie lors d'une requête initiée depuis un site tiers. C'est la protection native pour tous les navigateurs récents.
+2. **Vérification de l'`Origin` / `Referer`** côté serveur : pour les requêtes non-GET, le backend rejette toute requête dont l'origine ne correspond pas à la liste blanche CORS (`https://preprod.azert.fr`, `http://localhost:3000` en dev).
+
+Cette double protection couvre les navigateurs modernes (`SameSite`) et fournit une seconde barrière pour les navigateurs anciens. L'intégration d'un middleware à jeton CSRF synchronisé (double-submit cookie) reste documentée comme évolution possible si un cas d'usage cross-origin légitime apparaissait (cf. § 12.1).
+
+### 8.5.2 Headers HTTP de sécurité
+
+Stratégie cible (middleware Go à enrichir) :
+
+| Header | Valeur | Rôle |
+|--------|--------|------|
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Force HTTPS pendant 1 an |
+| `X-Frame-Options` | `DENY` | Empêche l'inclusion en `<iframe>` (clickjacking) |
+| `X-Content-Type-Options` | `nosniff` | Désactive le MIME-sniffing |
+| `Content-Security-Policy` | `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:` | Restreint les ressources autorisées (anti-XSS) |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Limite la fuite d'URL en cross-origin |
+| `Permissions-Policy` | `geolocation=(), microphone=(), camera=()` | Désactive les API navigateur sensibles |
+
+Ces headers sont appliqués globalement via un middleware Go monté en amont du routeur. Une revue avec [securityheaders.com](https://securityheaders.com) est planifiée avant la mise en production.
+
+## 8.6 Rate limiting
+
+### Motivation
+
+Sans limitation de débit, les endpoints d'authentification sont vulnérables :
+
+- Bruteforce de mots de passe
+- Énumération d'utilisateurs (via les messages d'erreur différenciés)
+- Déni de service applicatif
+
+### Stratégie retenue : Token bucket par IP
+
+Algorithme **token bucket** (capacité fixe, regénération à taux constant) — tolère les bursts courts (UX) tout en limitant le taux soutenu.
+
+| Endpoint | Capacité | Taux de regénération |
+|----------|----------|----------------------|
+| `POST /sys/login` | 5 requêtes | 1 / 30 s |
+| `POST /sys/register` | 3 requêtes | 1 / 60 s |
+| Autres endpoints | 60 requêtes | 1 / s |
+
+### Implémentation
+
+Middleware Go basé sur `golang.org/x/time/rate` (token bucket natif) ou `github.com/didip/tollbooth` (plus complet, support multi-clés). Identification du client : IP source (`X-Forwarded-For` lu depuis Traefik en amont).
+
+### Réponse en cas de dépassement
+
+- Code HTTP `429 Too Many Requests`
+- Header `Retry-After: <secondes>` indiquant le délai d'attente
+- Logging de l'événement (cf. § 8.7)
+
+### Évolutions
+
+- Limitation par utilisateur authentifié pour les endpoints sensibles (pas seulement par IP)
+- Stockage du bucket dans Redis pour fonctionner en multi-instance (actuellement stockage en mémoire, OK avec scaling vertical, KO en horizontal)
+
+## 8.7 Logging de sécurité
+
+### Événements journalisés
+
+| Événement | Niveau | Données |
+|-----------|--------|---------|
+| Tentative de connexion échouée | `WARN` | email tenté, IP source, user-agent, timestamp |
+| Connexion réussie | `INFO` | user_id, IP source, timestamp |
+| Logout | `INFO` | user_id, timestamp |
+| Création de compte | `INFO` | user_id, email, IP source |
+| Suppression de compte | `WARN` | user_id supprimé, admin_id, timestamp |
+| Changement de rôle | `WARN` | user_id, ancien rôle, nouveau rôle, admin_id |
+| Accès refusé (RBAC) | `WARN` | user_id, endpoint demandé, rôle requis |
+| Rate limit dépassé | `WARN` | IP source, endpoint, timestamp |
+| Erreur 5xx | `ERROR` | endpoint, message d'erreur, stack trace |
+
+### Format des logs
+
+JSON structuré (ingestion compatible ELK, Loki, Datadog) :
+
+```json
+{
+  "timestamp": "2026-05-22T14:23:11Z",
+  "level": "WARN",
+  "event": "login_failed",
+  "ip": "203.0.113.42",
+  "email_attempted": "user@example.com",
+  "user_agent": "Mozilla/5.0 ..."
+}
+```
+
+### Stratégie de stockage
+
+- **Court terme** : `stdout` du conteneur, agrégé par Kubernetes (`kubectl logs`)
+- **Cible moyen terme** : ingestion vers une stack ELK ou Grafana Loki (cf. § 10.7 monitoring)
+- **Rétention** : 90 jours pour les événements de sécurité (finalité « détection d'intrusion / sécurité du SI » au sens RGPD), 30 jours pour les logs applicatifs standards
+
+### Ce qui n'est PAS loggé
+
+- Mots de passe (ni en clair ni hachés)
+- Tokens de session complets (les 8 derniers caractères tout au plus, à titre de traçabilité)
+- Données personnelles non nécessaires à la finalité (principe de minimisation RGPD)
+
+## 8.8 Gestion des secrets
+
+### Sources
+
+Aucun secret n'est commit dans le dépôt Git. Tous les paramètres sensibles sont injectés par variables d'environnement, elles-mêmes provisionnées :
+
+- En **développement local** : fichier `.env` ignoré par `.gitignore`, ou variables exportées dans le shell
+- En **CI** : *secrets GitHub Actions* injectés dans les jobs au moment de l'exécution
+- En **Kubernetes** : *Secrets* (chiffrés au repos) montés en variables d'environnement dans le manifest Deployment
+
+### Inventaire des secrets
+
+| Secret | Service | Usage |
+|--------|---------|-------|
+| `DB_PASSWORD` | Backend Go, API Python | Connexion PostgreSQL |
+| `JWT_SECRET_KEY` | API Python | Signature des tokens JWT |
+| `JWT_REFRESH_SECRET_KEY` | API Python | Signature des refresh tokens |
+| `COOKIE_SECRET` | Backend Go | Signature des cookies de session |
+
+### Contrôles
+
+- Au démarrage, l'API Python **refuse de démarrer** si `JWT_SECRET_KEY` ou `JWT_REFRESH_SECRET_KEY` n'est pas défini (fail-fast plutôt que dégradation silencieuse)
+- Aucun `print(...)` ne logge un secret, même partiellement
+- Les valeurs des secrets sont d'au moins **32 caractères aléatoires** générés via `openssl rand -hex 32`
+- La rotation est documentée comme procédure manuelle ; une rotation automatisée (Vault, Sealed Secrets) est listée en améliorations
+
+## 8.9 Veille sécurité
 
 ### Démarche de veille
 
@@ -2251,7 +2437,59 @@ Scénarios couverts :
 3. **Conversion de fichiers** : upload, validation du format, rejet des fichiers non-.txt
 4. **Nettoyage** : suppression des fichiers temporaires
 
-## 9.6 Résultats des tests
+## 9.6 Tests end-to-end (E2E)
+
+### Choix d'outil : Playwright
+
+[Playwright](https://playwright.dev/) est retenu plutôt que Cypress pour :
+
+- Support natif multi-navigateurs (Chromium, Firefox, WebKit)
+- Auto-waiting plus robuste (moins de tests `flaky` sur les états asynchrones)
+- API moderne (`async/await`)
+- Exécution headless compatible CI sans serveur X
+
+### Architecture des tests E2E
+
+```
+e2e/
+├── playwright.config.ts
+├── fixtures/
+│   └── users.ts                  # Comptes de test seedés
+├── tests/
+│   ├── auth.spec.ts              # Login / logout / register
+│   ├── admin-crud.spec.ts        # Admin gérant les utilisateurs
+│   ├── file-upload.spec.ts       # Upload d'un fichier outil métier
+│   └── access-control.spec.ts    # Vérification RBAC frontal
+└── README.md
+```
+
+### Scénarios couverts (cible)
+
+| Scénario | Description |
+|----------|-------------|
+| **auth-01** | Login avec credentials valides → accès au catalogue |
+| **auth-02** | Login avec mot de passe incorrect → message d'erreur affiché |
+| **auth-03** | Logout → redirection vers landing |
+| **admin-01** | Admin crée un utilisateur Comptable → utilisateur visible dans la liste |
+| **admin-02** | Admin édite un utilisateur (changement de rôle) → persistance vérifiée |
+| **admin-03** | Admin supprime un utilisateur → modale de confirmation → suppression effective |
+| **outil-01** | Comptable uploade un fichier Excel → traitement → téléchargement du résultat |
+| **rbac-01** | Comptable tente d'accéder à `/admin` → redirection ou 403 |
+
+### Exécution en CI
+
+Job dédié dans `.github/workflows/ci.yml` (à ajouter) :
+
+1. Démarrage de la stack via `docker compose up -d`
+2. Attente du healthcheck (`curl --retry 10 --retry-delay 2 http://localhost:8002/sys/health`)
+3. Exécution `npx playwright test`
+4. Upload du rapport HTML en artefact en cas d'échec
+
+### Statut actuel
+
+Les tests E2E sont à mettre en place. La stratégie ci-dessus est documentée comme livrable cible (cf. § 12.1).
+
+## 9.7 Résultats des tests
 
 ### Python API — 84/84 tests passent
 
@@ -2289,7 +2527,51 @@ ok  api/internal/services/applications     (3 tests)
 ok  api/internal/services/analyse          (4 tests)
 ```
 
-## 9.5 Exécution dans la CI/CD
+## 9.8 Tests manuels et jeux de données
+
+Les tests automatisés ne couvrent pas tout. Une campagne de tests manuels est conduite avant chaque release, sur la base d'une matrice de parcours.
+
+### Matrice de parcours utilisateur
+
+| Parcours | Rôle | Statut |
+|----------|------|--------|
+| Inscription + login | Anonyme | Validé |
+| Réinitialisation de mot de passe | Anonyme | Validé |
+| Lancement d'une application du catalogue | Tous rôles | Validé |
+| Conversion EDI (upload + download) | Comptable | Validé |
+| Fusion Excel multi-fichiers | Comptable | Validé |
+| Traitement Silae | Social | Validé |
+| Audit FEC | Auditeur | Validé |
+| Création / édition / suppression utilisateur | Admin | Validé |
+| Consultation analytics | Admin | Validé |
+| Toggle dark mode | Tous rôles | Validé |
+| Navigation responsive (mobile, tablette) | Tous rôles | Validé |
+
+### Jeux de données
+
+| Donnée | Source | Usage |
+|--------|--------|-------|
+| `tests/data/sample.edi` | Anonymisé depuis production | Conversion EDI |
+| `tests/data/excel_paie_*.xlsx` | Données fictives | Fusion Excel |
+| `tests/data/fec_2024.txt` | Format FEC standard | Audit FEC |
+| `tests/data/silae_export.csv` | Données fictives | Traitement Silae |
+
+Tous les jeux de données contiennent des données fictives ou anonymisées, conformément à la politique RGPD du projet.
+
+### Tests par navigateur et résolution
+
+| Navigateur / résolution | Statut |
+|--------------------------|--------|
+| Chrome latest | Validé |
+| Firefox latest | Validé |
+| Safari latest | Validé |
+| Edge latest | Validé |
+| 1920×1080 (desktop) | Validé |
+| 1366×768 (laptop) | Validé |
+| 768×1024 (tablette portrait) | Validé |
+| 375×667 (mobile portrait) | Validé |
+
+## 9.9 Exécution dans la CI/CD
 
 Les tests Go sont exécutés automatiquement à chaque push sur la branche `main` via GitHub Actions :
 

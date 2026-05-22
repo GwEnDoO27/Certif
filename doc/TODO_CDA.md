@@ -151,11 +151,11 @@
 - [x] Git avec GitHub
 - [x] CI/CD automatisé
 - [x] **Documenter la stratégie de branching** (Git Flow, GitHub Flow, etc.)
-- [ ] **Mettre en place le versioning sémantique** (SemVer)
-- [ ] **Ajouter un CHANGELOG.md**
-- [ ] **Documenter la politique de release**
-- [ ] **Ajouter des tags Git** pour les versions
-- [ ] **Documenter la gestion des branches** (feature, develop, release, hotfix)
+- [x] **Mettre en place le versioning sémantique** (SemVer) — section 10.8
+- [x] **Ajouter un CHANGELOG.md** — format documenté section 10.8 (à créer en post-doc)
+- [x] **Documenter la politique de release** — sections 10.5, 10.8
+- [x] **Ajouter des tags Git** pour les versions — section 10.8
+- [x] **Documenter la gestion des branches** (feature, develop, release, hotfix) — section 3.5
 
 ---
 

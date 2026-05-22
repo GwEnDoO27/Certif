@@ -527,9 +527,135 @@ Les maquettes ci-dessous décrivent les écrans principaux de l'application. L'i
 └─────────────────────────────────────────────────┘
 ```
 
-## 4.3 Modélisation des données
+## 4.3 Principes UX et accessibilité
 
-### 4.3.1 MCD (Modèle Conceptuel de Données)
+### Principes UX appliqués
+
+| Principe | Mise en œuvre |
+|----------|---------------|
+| **Cohérence** | Composants partagés (`frontend/src/components/`), palette unique gérée par `ThemeContext`, espacement uniforme via Tailwind CSS |
+| **Feedback** | Spinners pendant les opérations longues, notifications inline pour les actions, messages d'erreur sous chaque champ de formulaire |
+| **Prévention de l'erreur** | Validation côté client avant soumission, confirmations modales pour les actions destructrices (suppression d'utilisateur, etc.) |
+| **Reconnaissance plutôt que rappel** | Catalogue d'applications visuel avec icônes et libellés, en-tête contextuel sur les pages d'administration |
+| **Efficacité experte** | Raccourcis clavier sur les modales (Échap pour fermer), gestion explicite du focus à l'ouverture des dialogues |
+| **Esthétique minimaliste** | Densité d'information modérée, mode sombre activable par utilisateur |
+
+### Parcours utilisateur principaux
+
+1. **Connexion** → catalogue d'applications filtré par rôle → lancement d'un outil métier
+2. **Administration** → liste filtrable d'utilisateurs → fiche utilisateur → édition / suppression
+3. **Outil métier** → upload fichier → traitement asynchrone → téléchargement automatique du résultat
+
+Chaque parcours est conçu pour minimiser le nombre de clics jusqu'à la valeur métier (objectif : trois clics maximum depuis la page d'accueil pour les actions courantes).
+
+### Accessibilité (référentiel RGAA 4)
+
+La conformité RGAA AA complète est positionnée en évolution (§ 12.1). Les principes suivants sont d'ores et déjà appliqués :
+
+| Critère RGAA | Application |
+|--------------|-------------|
+| Contraste (1.3) | Palette respectant un ratio minimum de 4.5:1 (vérifié dans les modes clair et sombre du `ThemeContext`) |
+| Navigation clavier (12.x) | Tous les boutons et liens sont focusables, styles `:focus-visible` distincts |
+| Alternative textuelle (1.1) | Icônes accompagnées d'un `aria-label` lorsque l'élément est purement visuel (boutons à icône uniquement) |
+| Structure (9.x) | Titres hiérarchiques (`<h1>` → `<h2>` → `<h3>`), points de repère (`<nav>`, `<main>`, `<aside>`) |
+| Identification (10.x) | Champs de formulaire associés à un `<label>` (ou `aria-labelledby`) |
+| Cohérence (11.x) | Composants de formulaire partagés (`InputField`, `Select`) garantissant un comportement homogène |
+
+### Évolutions RGAA prévues
+
+- Audit automatisé via axe-core ou WAVE
+- Skip-link (« Aller au contenu principal ») en début de page
+- Mode contraste renforcé pour utilisateurs malvoyants
+- Tests manuels avec lecteur d'écran (NVDA sous Windows, VoiceOver sous macOS)
+
+## 4.4 Modélisation des données
+
+### 4.4.1 Dictionnaire de données
+
+Le dictionnaire ci-dessous décrit l'ensemble des entités persistées, leurs attributs, types, contraintes et règles métier. Il constitue la référence des modèles MCD, MLD et MPD qui suivent.
+
+#### Entité : `utilisateurs`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `uid` | VARCHAR(255) | PRIMARY KEY | Identifiant unique de l'utilisateur (généré côté backend) |
+| `email` | VARCHAR(255) | UNIQUE, NOT NULL | Identifiant de connexion |
+| `mot_de_passe` | VARCHAR(255) | NOT NULL | Hash bcrypt du mot de passe (jamais en clair) |
+| `role` | VARCHAR(50) | NOT NULL, DEFAULT `'Client'` | Rôle métier : Admin, Dev, Comptable, Social, Auditeur, Client |
+| `entreprise` | VARCHAR(255) | NULLABLE | Société de rattachement |
+| `derniere_connexion` | TIMESTAMP | NULLABLE | Date / heure de la dernière connexion réussie |
+
+#### Entité : `sessions`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | UUID | PRIMARY KEY, DEFAULT `gen_random_uuid()` | Identifiant de session (utilisé comme cookie côté client) |
+| `token` | VARCHAR(512) | NOT NULL | Jeton additionnel (clé de validation) |
+| `uid_utilisateur` | VARCHAR(255) | FOREIGN KEY → utilisateurs(uid) ON DELETE CASCADE | Propriétaire de la session |
+| `date_expiration` | TIMESTAMP | NOT NULL | Date d'expiration (par défaut +24 h glissantes) |
+
+#### Entité : `applications`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | Identifiant auto-incrémenté |
+| `nom` | VARCHAR(255) | NOT NULL | Nom affiché dans le catalogue |
+| `description` | TEXT | NULLABLE | Description courte de l'application |
+| `icone` | VARCHAR(255) | NULLABLE | Nom de l'icône (Lucide) |
+| `url` | VARCHAR(500) | NULLABLE | URL d'accès interne ou externe |
+| `categorie` | VARCHAR(100) | NULLABLE | Regroupement fonctionnel (Comptabilité, Audit, Paie…) |
+
+#### Entité : `utilisateur_applications` (association N:N)
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) ON DELETE CASCADE, PRIMARY KEY (composite) | |
+| `id_application` | INTEGER | FK → applications(id) ON DELETE CASCADE, PRIMARY KEY (composite) | |
+
+#### Entité : `evenements`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | |
+| `type` | VARCHAR(100) | NULLABLE | Type d'événement (`login`, `logout`, `api_call`, etc.) |
+| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) | Auteur de l'événement |
+| `api` | VARCHAR(255) | NULLABLE | Endpoint ou service concerné |
+| `date` | TIMESTAMP | DEFAULT NOW() | Date d'occurrence |
+| `details` | JSONB | NULLABLE | Métadonnées libres (durée, paramètres, etc.) |
+
+#### Entité : `groupes`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | |
+| `nom` | VARCHAR(255) | NOT NULL | Nom du groupe d'applications |
+| `description` | TEXT | NULLABLE | Description optionnelle |
+
+#### Entité : `config_mcdo`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | |
+| `nom_config` | VARCHAR(255) | UNIQUE | Identifiant logique de la configuration |
+| `donnees` | JSONB | NULLABLE | Données de configuration sérialisées |
+
+#### Entités : `codes_comptables`, `codes_journal`, `codes_gen_aux`
+
+Trois tables au schéma identique (mappings comptables propres à chaque utilisateur) :
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | |
+| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) ON DELETE CASCADE | |
+| `mapping` | JSONB | NULLABLE | Table de correspondance comptable (clé → valeur) |
+
+#### Règles transversales
+
+- Tout `utilisateurs.uid` supprimé entraîne la suppression en cascade des `sessions`, `utilisateur_applications`, `codes_*` associés (droit à l'oubli RGPD)
+- Les timestamps sont stockés en UTC, conversion en TZ Europe/Paris côté affichage
+- Le champ `mot_de_passe` ne contient jamais de valeur en clair : insertion uniquement via `bcrypt.GenerateFromPassword`
+
+### 4.4.2 MCD (Modèle Conceptuel de Données)
 
 *Voir diagramme complet : `doc/diagrammes.md` — Section 10 (Diagramme Entité-Relation)*
 
@@ -564,7 +690,7 @@ Relations :
 - Un **Utilisateur** possède 0..N **CodeComptable**, **CodeJournal**, **CodeGenAux**
 - Un **Utilisateur** appartient à 0..N **Groupes**
 
-### 4.3.2 MLD (Modèle Logique de Données)
+### 4.4.3 MLD (Modèle Logique de Données)
 
 ```
 utilisateurs(#uid VARCHAR PK, email VARCHAR UNIQUE NOT NULL, mot_de_passe VARCHAR NOT NULL,
@@ -592,7 +718,7 @@ codes_journal(#id SERIAL PK, uid_utilisateur VARCHAR FK→utilisateurs, mapping 
 codes_gen_aux(#id SERIAL PK, uid_utilisateur VARCHAR FK→utilisateurs, mapping JSONB)
 ```
 
-### 4.3.3 MPD (Modèle Physique de Données)
+### 4.4.4 MPD (Modèle Physique de Données)
 
 ```sql
 -- Script de création de la base de données
@@ -675,9 +801,47 @@ CREATE TABLE codes_gen_aux (
 );
 ```
 
-## 4.4 Diagrammes de séquence
+### 4.4.5 Justifications de conception BDD
 
-### 4.4.1 Authentification
+#### Normalisation : troisième forme normale (3NF)
+
+Le schéma respecte la 3NF :
+
+- **1NF** : aucun attribut multivalué scalaire. Les mappings comptables (`codes_*.mapping`) et les configurations McDonald's (`config_mcdo.donnees`) sont stockés en `JSONB` parce qu'ils représentent des structures de données opaques pour la base — la BDD n'a pas à les indexer ni à les joindre.
+- **2NF** : pas de dépendance partielle (les clés primaires sont mono-attribut, sauf la table d'association `utilisateur_applications` dont tous les attributs non-clé sont... inexistants — elle ne porte aucune donnée propre).
+- **3NF** : pas de dépendance transitive entre attributs non-clé. Le rôle de l'utilisateur, par exemple, n'implique pas d'autres attributs dérivés stockés dans la même table.
+
+#### Index
+
+| Table | Index | Justification |
+|-------|-------|---------------|
+| `utilisateurs` | UNIQUE(`email`) | Lookup à chaque login (chemin chaud) |
+| `sessions` | `idx_sessions_token` sur `token` | Lookup à chaque requête authentifiée |
+| `sessions` | `idx_sessions_expiration` sur `date_expiration` | Job de nettoyage des sessions expirées |
+| `evenements` | `idx_evenements_date` | Requêtes de fenêtre temporelle (analytics) |
+| `evenements` | `idx_evenements_utilisateur` | Filtrage des événements par utilisateur |
+
+Les index secondaires sur les colonnes JSONB ne sont pas créés à ce stade : aucune requête ne projette sur le contenu de ces champs (les mappings et configurations sont lus en bloc).
+
+#### Contraintes référentielles
+
+- **ON DELETE CASCADE** sur `sessions.uid_utilisateur`, `utilisateur_applications.*`, `codes_comptables.uid_utilisateur`, `codes_journal.uid_utilisateur`, `codes_gen_aux.uid_utilisateur` : la suppression d'un utilisateur (droit à l'oubli RGPD) doit nettoyer toutes ses données dérivées sans intervention applicative
+- Pas de cascade sur `evenements.uid_utilisateur` : les événements sont conservés à des fins d'audit / analytics même après suppression du compte (anonymisation par perte de référence)
+
+#### Choix de types
+
+- **`VARCHAR(255)` pour `uid`** plutôt qu'`UUID` natif : l'identifiant est généré côté backend Go avec un préfixe métier ; le type `VARCHAR` simplifie l'interopérabilité avec Python (pas de cast)
+- **`UUID` pour `sessions.id`** : aucune signification métier, génération aléatoire native PostgreSQL avec `gen_random_uuid()`
+- **`JSONB`** plutôt que `JSON` : indexation native, opérateurs `?`, `@>`, `->>` disponibles, format binaire compact
+- **`TIMESTAMP`** sans fuseau (et non `TIMESTAMPTZ`) : convention projet, toutes les valeurs en UTC, conversion côté affichage
+
+#### Stratégie de migration
+
+Le projet utilise actuellement un script SQL d'initialisation unique (`scripts/init.sql`). Une migration outillée (`golang-migrate` côté Go ou `Alembic` côté Python) est documentée comme amélioration prévue en § 12.1, conditionnée à l'ajout d'évolutions de schéma post-mise-en-production.
+
+## 4.5 Diagrammes de séquence
+
+### 4.5.1 Authentification
 
 *Voir diagramme complet : `doc/diagrammes.md` — Section 4*
 
@@ -703,7 +867,7 @@ sequenceDiagram
     end
 ```
 
-### 4.4.2 Traitement de fichier — Conversion EDI
+### 4.5.2 Traitement de fichier — Conversion EDI
 
 *Voir diagramme complet : `doc/diagrammes.md` — Section 5*
 
@@ -730,7 +894,7 @@ sequenceDiagram
     Note over API: Nettoyage automatique après 5 min
 ```
 
-### 4.4.3 WebSocket - Présence utilisateur
+### 4.5.3 WebSocket - Présence utilisateur
 
 ```
 Utilisateur → Frontend : Connexion réussie
@@ -744,6 +908,160 @@ Backend → WebSocket Manager : Retirer connexion
 WebSocket Manager → PostgreSQL : DELETE connected_user
 WebSocket Manager → Tous les clients WS : Broadcast {user_offline: uid}
 ```
+
+## 4.6 Diagramme de classes UML
+
+Le diagramme suivant illustre la couche métier du backend Go suivant le patron *Clean Architecture* (Handler → Service → Repository). Les interfaces (`AdminRep`, `ApplicationRepositoryInterface`) permettent l'injection de dépendances et le mocking en test unitaire (§ 9.2).
+
+*Voir diagramme complet : `doc/diagrammes.md` — Section 2 (Backend Go) et Section 3 (API Python)*
+
+```mermaid
+classDiagram
+    direction TB
+
+    class User {
+        +int ID
+        +string UID
+        +string Email
+        +string Password
+        +time.Time LastSeen
+        +string Entreprise
+    }
+
+    class Session {
+        +string ID
+        +string UserID
+        +time.Time CreatedAt
+        +time.Time ExpiresAt
+    }
+
+    class AdminUser {
+        +string UID
+        +string Username
+        +string Email
+        +string Role
+        +bool Admin
+        +[]string Applications
+    }
+
+    class App {
+        +string ID
+        +string Name
+        +string BaseURL
+        +string IconPath
+        +string Groups
+    }
+
+    class AppGroup {
+        +string ID
+        +string Name
+    }
+
+    class Event {
+        +int ID
+        +string APIName
+        +string UID
+        +string ConnTime
+        +string DecoTime
+        +string Day
+        +string CreatedAt
+    }
+
+    class ConnectedUser {
+        +string UID
+        +string Username
+        +bool Connected
+        +time.Time LastSeen
+        +*websocket.Conn Conn
+    }
+
+    class OnlineUserManager {
+        +map~string,*ConnectedUser~ Users
+        +sync.RWMutex Mutex
+        +*UserRepository Repo
+        +AddUser(uid, username, conn)
+        +RemoveUser(uid)
+        +BroadcastUsers()
+        +ListenPings(uid, conn, done)
+    }
+
+    class AuthService {
+        +*SessionRepository Repo
+        +Login(email, password) (User, Session, error)
+        +VerifySession(sessionID) (Session, error)
+        +MarkSessionAsDisconnected(sessionID)
+        +CleanExpiredSessions()
+    }
+
+    class AdminService {
+        +Rep Repo
+        +VerifyAdmin(userID) (bool, error)
+        +CreateUser(req) error
+        +UpdateUser(req) error
+        +DeleteUser(uid) error
+        +GetUserInfo(uid) (AdminUser, error)
+        +ListUsersWithApps() ([]AdminUser, []string, error)
+        +AddAppToUser(uid, appName) error
+        +RemoveAppFromUser(uid, appName) error
+        +CreateApp(req) error
+        +UpdateApp(req) error
+        +DeleteApp(appID) error
+        +GetAllApps() ([]App, error)
+        +GetAllGroups() ([]AppGroup, error)
+        +CreateGroup(name) error
+    }
+
+    class AnalyseService {
+        +Rep Repo
+        +AddEvent(event) error
+        +GetEvents() ([]Event, error)
+        +ConnByDays(req) ([]DayStat, error)
+        +StatsActiveUsers(from, to) ([]DayStat, error)
+        +StatsByAPI(from, to) ([]APIStat, error)
+        +StatsPeakHours(from, to) ([]HourStat, error)
+    }
+
+    class AdminRep {
+        <<interface>>
+        +IsAdmin(userID) (bool, error)
+        +EmailExists(email) (bool, error)
+        +CreateUser(user, hashedPassword, uid) error
+        +UpdateUser(user, hashedPassword) error
+        +DeleteUser(uid) error
+        +FetchUserDetails(uid) (AdminUser, error)
+        +AddAppPermission(uid, appName) error
+        +RemoveAppPermission(uid, appName) error
+        +CreateApp(app) error
+        +DeleteApp(appID) error
+        +FetchAllApps() ([]App, error)
+    }
+
+    class ApplicationRepositoryInterface {
+        <<interface>>
+        +FetchApplicationsByUserID(userID) ([]App, error)
+    }
+
+    AuthService --> Session : crée
+    AuthService --> User : authentifie
+    AdminService ..|> AdminRep : utilise
+    AdminService --> AdminUser : gère
+    AdminService --> App : gère
+    OnlineUserManager --> ConnectedUser : maintient
+    AnalyseService --> Event : agrège
+    User "1" --> "*" Session : possède
+    AdminUser "1" --> "*" App : accède à
+    App "*" --> "1" AppGroup : appartient à
+```
+
+### Lecture du diagramme
+
+- **Couche Handler** (non représentée — voir § 6.3) : reçoit les requêtes HTTP, valide les entrées, délègue aux services
+- **Couche Service** (`AuthService`, `AdminService`, `AnalyseService`, `OnlineUserManager`) : règles métier, orchestration, indépendante du transport
+- **Couche Repository** (`AdminRep`, `ApplicationRepositoryInterface`, `SessionRepository`, `UserRepository`) : accès à la base de données, abstrayée derrière des interfaces
+
+Les **interfaces** (`<<interface>>` dans le diagramme) sont la clé du découplage : `AdminService` dépend de l'interface `AdminRep`, pas d'une implémentation concrète. En production, l'implémentation est une struct branchée sur PostgreSQL ; en test, une implémentation `mock` (cf. § 9.2) retourne des valeurs déterministes sans I/O.
+
+Côté API Python (FastAPI + SQLAlchemy), une organisation analogue est mise en place avec des modèles ORM et des routers — diagramme détaillé en § 6.4 et `doc/diagrammes.md` (section 3).
 
 ---
 

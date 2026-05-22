@@ -26,9 +26,9 @@
 - [x] Lazy loading des pages (React.lazy)
 - [x] Animations (Framer Motion)
 - [x] **Créer des maquettes/wireframes** (wireframes ASCII dans le dossier, section 4.2)
-- [ ] **Documenter les principes UX appliqués** (ergonomie, parcours utilisateur)
-- [ ] **Ajouter la conformité RGAA** (accessibilité : aria-labels, navigation clavier, contraste)
-- [ ] **Documenter les choix d'accessibilité** dans le dossier
+- [x] **Documenter les principes UX appliqués** (ergonomie, parcours utilisateur)
+- [x] **Ajouter la conformité RGAA** (accessibilité : aria-labels, navigation clavier, contraste)
+- [x] **Documenter les choix d'accessibilité** dans le dossier
 - [ ] **Ajouter des tests d'interface** (React Testing Library ou Cypress)
 - [ ] **Créer des user stories** formalisées pour chaque fonctionnalité
 - [ ] **Documenter la gestion d'état** (Context API, flux de données)
@@ -53,9 +53,10 @@
 - [x] Repository pattern (Go)
 - [x] Sessions en base de données avec expiration
 - [x] **Créer le MCD (Modèle Conceptuel de Données)** — doc/diagrammes.md section 10
-- [x] **Créer le MLD (Modèle Logique de Données)** — dossier section 4.3.2
-- [x] **Créer le MPD (Modèle Physique de Données)** — dossier section 4.3.3 (script SQL)
-- [ ] **Documenter les choix de conception BDD** (normalisation, index, contraintes)
+- [x] **Créer le MLD (Modèle Logique de Données)** — dossier section 4.4.3
+- [x] **Créer le MPD (Modèle Physique de Données)** — dossier section 4.4.4 (script SQL)
+- [x] **Documenter les choix de conception BDD** (normalisation, index, contraintes)
+- [x] **Créer un dictionnaire de données** — dossier section 4.4.1
 - [ ] **Ajouter des migrations de base de données** (golang-migrate ou alembic)
 - [ ] **Documenter la stratégie de sauvegarde** des données
 - [x] **Implémenter/documenter la conformité RGPD** (dossier section 8.4)

@@ -39,7 +39,7 @@
 - [x] Services métier : auth, admin, applications, analytics, websocket, McDonald's config
 - [x] API Python avec traitement de fichiers Excel/PDF/CSV
 - [x] Système de mapping de codes comptables
-- [ ] **Documenter les règles métier** dans le dossier (cahier des charges fonctionnel)
+- [x] **Documenter les règles métier** dans le dossier (cahier des charges fonctionnel) — section 7 par module
 - [x] **Créer des diagrammes de classes** (UML) — doc/diagrammes.md sections 2-3
 - [x] **Créer des diagrammes de séquence** — doc/diagrammes.md sections 4-7
 - [x] **Ajouter la validation des données d'entrée** côté API (validation UUID, filepath.Base sur uploads)

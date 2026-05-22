@@ -1400,13 +1400,24 @@ api/
 
 # 7. Réalisation
 
-## 7.1 Développement du frontend
+Cette section décrit la réalisation de l'application par **module fonctionnel vertical** plutôt que par couche technique. Chaque module est présenté selon le même schéma : besoin fonctionnel rappelé, interface utilisateur, logique backend, persistance, flux complet, extrait de code clé. Les couches transversales (architecture, middlewares, infrastructure) sont décrites en § 6.
 
-### 7.1.1 Composant d'authentification
+## 7.1 Authentification et sessions
 
-Le composant Login gère l'authentification de l'utilisateur via un formulaire email/mot de passe. Les cookies de session sont configurés avec les flags `HttpOnly`, `Secure` et `SameSite=Strict` pour la sécurité.
+### 7.1.1 Besoin fonctionnel
 
-Le système de routing est entièrement dynamique, piloté par un fichier `config.yaml`. Le composant `RouteGenerator` lit la configuration et génère les routes React Router avec les protections appropriées :
+Couvre l'épic 1 (BF01 — authentification sécurisée). L'utilisateur doit pouvoir s'inscrire, se connecter avec ses identifiants, rester authentifié pendant une session, et se déconnecter. Toute action protégée doit être interdite à un utilisateur non authentifié.
+
+### 7.1.2 Interface utilisateur
+
+| Composant | Rôle |
+|-----------|------|
+| `frontend/src/components/Landing/Login.jsx` | Formulaire de connexion (email + mot de passe) |
+| `frontend/src/components/Landing/Register.jsx` | Formulaire d'inscription |
+| `frontend/src/components/AuthenticationWrapper.jsx` | HOC vérifiant la présence du cookie `userId` avant le rendu des pages protégées |
+| `frontend/src/components/Admin/AdminRoute.jsx` | HOC supplémentaire vérifiant le rôle Admin |
+
+Le routage est entièrement piloté par un fichier `config.yaml` consommé par le `RouteGenerator`. Les routes peuvent être marquées `protected` (auth requise) ou `requireAdmin` (auth + rôle Admin).
 
 ```jsx
 // App.jsx — Routing dynamique avec protection par rôle
@@ -1434,7 +1445,6 @@ const RouteGenerator = () => {
               } />
             );
           }
-          // Route standard publique
           return <Route key={key} path={route.path}
             element={React.createElement(ComponentMap[route.component])} />;
         })}
@@ -1444,36 +1454,236 @@ const RouteGenerator = () => {
 };
 ```
 
-Le `MicroserviceProvider` centralise tous les appels API avec gestion automatique des tokens et redirection en cas d'expiration de session :
+### 7.1.3 Backend
 
-```jsx
-// App.jsx — Couche d'abstraction des appels API
-const requestService = async (serviceName, endpoint, method, data, config) => {
-  const serviceUrl = getServiceUrl(serviceName);
-  const response = await axios({
-    method, url: `${serviceUrl}/${endpoint}`, data,
-    withCredentials: true,
-    headers: { 'Authorization': `Bearer ${Cookies.get('userId')}` },
-  });
-  return response.data;
-};
+Le service est implémenté en architecture en couches (cf. § 4.6 diagramme de classes) :
+
+| Couche | Fichier | Rôle |
+|--------|---------|------|
+| Handler | `backend/internal/services/auth/handler.go` | Parsing JSON, validation, réponse HTTP |
+| Service | `backend/internal/services/auth/service.go` | Comparaison bcrypt, création de session, nettoyage périodique |
+| Repository | `backend/internal/services/auth/repository.go` | Requêtes SQL (`SELECT users`, `INSERT sessions`) |
+| Middleware | `backend/internal/middleware/auth.go` | `AuthMiddleware`, `AdminMiddleware` |
+
+Le flux d'authentification :
+
+1. Réception des credentials (email + mot de passe) sur `POST /sys/login`
+2. Comparaison via `bcrypt.CompareHashAndPassword` (résistant aux attaques par timing)
+3. Création d'une session avec expiration 24 h glissantes
+4. Retour d'un cookie `userId` avec les flags `HttpOnly`, `Secure`, `SameSite=Strict`
+5. Une goroutine de nettoyage tourne toutes les 6 h pour purger les sessions expirées
+
+### 7.1.4 Base de données
+
+Tables impliquées (cf. dictionnaire § 4.4.1) :
+
+- `utilisateurs` — lecture (`SELECT uid, mot_de_passe FROM utilisateurs WHERE email = ?`)
+- `sessions` — écriture (`INSERT`), lecture (validation middleware), suppression (nettoyage)
+
+### 7.1.5 Flux complet
+
+Diagramme de séquence détaillé en § 4.5.1.
+
+```
+Client → POST /sys/login (email, password)
+Backend → SELECT users WHERE email = ?
+Backend → bcrypt.Compare(hash, password)
+Backend → INSERT sessions (token, expires_at)
+Backend → Set-Cookie userId=<token>; HttpOnly; Secure; SameSite=Strict
+Client → requêtes ultérieures portent automatiquement le cookie
+Backend → AuthMiddleware vérifie session valide + non expirée à chaque requête
 ```
 
-### 7.1.2 Interface d'administration
+### 7.1.6 Extrait de code clé
 
-L'interface d'administration comprend :
-- **Liste des utilisateurs** avec recherche, filtrage par rôle, et actions CRUD
-- **Gestion du catalogue d'applications** avec upload d'icônes
-- **Tableau de bord analytique** avec graphiques (Recharts) : connexions par jour, utilisateurs actifs, utilisation par API, heures de pointe
+```go
+// backend/internal/services/auth/service.go
+func (s *Service) Login(email, password string) (models.User, models.Session, error) {
+    user, hashedPassword, err := s.Repo.GetUserByEmail(email)
+    if err != nil {
+        return models.User{}, models.Session{}, err
+    }
+    // Comparaison à temps constant : protection contre le timing attack
+    if err := bcrypt.CompareHashAndPassword(
+        []byte(hashedPassword), []byte(password),
+    ); err != nil {
+        return models.User{}, models.Session{}, err
+    }
+    session, err := s.Repo.CreateSession(user.UID, 24*time.Hour)
+    return user, session, err
+}
 
-[À insérer : captures d'écran de l'interface admin — voir wireframes section 4.2]
+// Nettoyage périodique des sessions expirées
+func (s *Service) CleanExpiredSessions() {
+    go func() {
+        ticker := time.NewTicker(6 * time.Hour)
+        for range ticker.C {
+            s.Repo.CleanExpiredSessions()
+        }
+    }()
+}
+```
 
-### 7.1.3 Outils métier
+Voir aussi annexes A.1 (Service Auth complet) et A.2 (Middlewares).
 
-22 outils spécialisés ont été développés, chacun en lazy loading pour optimiser le bundle :
+---
 
-| Outil | Description | Utilisateur cible |
-|-------|-------------|-------------------|
+## 7.2 Administration des utilisateurs
+
+### 7.2.1 Besoin fonctionnel
+
+Couvre l'épic 2 (BF02 — gestion utilisateurs + 6 rôles). Un administrateur doit pouvoir lister, créer, modifier, supprimer un utilisateur, ainsi qu'attribuer / retirer des applications du catalogue.
+
+### 7.2.2 Interface utilisateur
+
+| Composant | Rôle |
+|-----------|------|
+| `frontend/src/components/Admin/Admin.jsx` | Dashboard administrateur |
+| `frontend/src/components/Admin/UserList.jsx` | Liste filtrable + CRUD utilisateurs |
+| `frontend/src/components/Admin/Applications.jsx` | Gestion du catalogue applicatif |
+
+Les actions destructrices (suppression) déclenchent une confirmation modale. La liste supporte recherche par nom/email et filtrage par rôle. Les rôles disponibles sont listés dans la matrice RBAC (§ 8.3).
+
+### 7.2.3 Backend
+
+| Couche | Fichier |
+|--------|---------|
+| Handler | `backend/internal/services/admin/handler.go` |
+| Service | `backend/internal/services/admin/service.go` (`AdminService`) |
+| Repository | `backend/internal/services/admin/repository.go` (implémente l'interface `AdminRep` cf. § 4.6) |
+
+Les endpoints sont enregistrés sur le subrouter `adm` (cf. § 6.3), donc protégés par le double middleware `AuthMiddleware` + `AdminMiddleware`. Le mot de passe d'un utilisateur créé est immédiatement haché par `bcrypt.GenerateFromPassword` ; il n'est jamais stocké en clair.
+
+### 7.2.4 Base de données
+
+- `utilisateurs` — CRUD complet
+- `utilisateur_applications` — INSERT/DELETE lors de l'attribution/retrait d'apps
+- `evenements` — INSERT d'un événement d'audit pour chaque action sensible (création/suppression user)
+
+### 7.2.5 Flux complet (création d'utilisateur)
+
+```
+Admin → POST /sys/new-user {email, role, password}
+Backend → AuthMiddleware → AdminMiddleware → admin handler
+Backend → AdminRep.EmailExists(email) → false
+Backend → bcrypt.GenerateFromPassword(password)
+Backend → AdminRep.CreateUser(user, hashedPassword, generatedUID)
+Backend → AnalyseService.AddEvent(type=user_created, by=admin_uid)
+Backend → 201 Created
+```
+
+### 7.2.6 Extrait de code clé
+
+Interface Repository (clé du découplage testable) :
+
+```go
+// backend/internal/services/admin/repository.go
+type AdminRep interface {
+    IsAdmin(userID string) (bool, error)
+    EmailExists(email string) (bool, error)
+    CreateUser(user models.AdminUser, hashedPassword, uid string) error
+    UpdateUser(user models.AdminUser, hashedPassword string) error
+    DeleteUser(uid string) error
+    FetchUserDetails(uid string) (models.AdminUser, error)
+    FetchUsersWithApps() ([]models.AdminUser, []string, error)
+    AddAppPermission(uid, appName string) error
+    RemoveAppPermission(uid, appName string) error
+    // ... CRUD apps + groups
+}
+```
+
+Voir annexe A.4 pour l'implémentation PostgreSQL complète.
+
+---
+
+## 7.3 Catalogue d'applications
+
+### 7.3.1 Besoin fonctionnel
+
+Couvre l'épic 3 (BF03 — catalogue dynamique). Un utilisateur authentifié voit le sous-ensemble du catalogue d'applications auquel son rôle / ses attributions personnelles donnent accès. L'administrateur peut éditer ce catalogue.
+
+### 7.3.2 Interface utilisateur
+
+| Composant | Rôle |
+|-----------|------|
+| `frontend/src/components/Landing/Home.jsx` (post-login) | Dashboard utilisateur — grille d'icônes des applications accessibles |
+| `frontend/src/components/Admin/Applications.jsx` | CRUD du catalogue (Admin seulement) |
+
+Le composant utilisateur consomme `GET /sys/applications`, qui retourne uniquement les apps autorisées. Aucun filtrage côté client (défense en profondeur).
+
+### 7.3.3 Backend
+
+| Couche | Fichier |
+|--------|---------|
+| Handler | `backend/internal/services/applications/handler.go` |
+| Service | `backend/internal/services/applications/service.go` |
+| Repository | `backend/internal/services/applications/repository.go` |
+| Interface | `backend/internal/services/applications/interface.go` (`ApplicationRepositoryInterface`) |
+
+La séparation interface / implémentation autorise le mocking en test unitaire (cf. § 9.2).
+
+### 7.3.4 Base de données
+
+- `applications` — lecture du catalogue
+- `utilisateur_applications` — jointure pour le filtrage par utilisateur
+- `groupes` — regroupement fonctionnel (Comptabilité, Audit, etc.)
+
+### 7.3.5 Flux complet
+
+```
+User → GET /sys/applications (cookie userId)
+Backend → AuthMiddleware → applications handler
+Backend → ApplicationRepository.FetchApplicationsByUserID(uid)
+        → SELECT a.* FROM applications a
+          JOIN utilisateur_applications ua ON a.id = ua.id_application
+          WHERE ua.uid_utilisateur = ?
+Backend → 200 OK [{id, nom, url, icone, categorie}]
+Frontend → rendu de la grille d'icônes
+```
+
+### 7.3.6 Extrait de code clé
+
+```go
+// backend/internal/services/applications/repository.go
+func (r *Repository) FetchApplicationsByUserID(userID string) ([]models.App, error) {
+    rows, err := r.DB.Query(`
+        SELECT a.id, a.nom, a.url, a.icone, a.categorie
+        FROM applications a
+        JOIN utilisateur_applications ua ON a.id = ua.id_application
+        WHERE ua.uid_utilisateur = $1
+        ORDER BY a.categorie, a.nom
+    `, userID)
+    if err != nil { return nil, err }
+    defer rows.Close()
+
+    var apps []models.App
+    for rows.Next() {
+        var a models.App
+        if err := rows.Scan(&a.ID, &a.Name, &a.BaseURL, &a.IconPath, &a.Groups); err != nil {
+            return nil, err
+        }
+        apps = append(apps, a)
+    }
+    return apps, nil
+}
+```
+
+Requête paramétrée (protection injection SQL — A03 OWASP, cf. § 8.1).
+
+---
+
+## 7.4 Outils métier
+
+### 7.4.1 Besoin fonctionnel
+
+Couvre l'épic 3 (BF04 — outils de traitement de fichiers). 22 outils spécialisés sont développés pour automatiser des tâches comptables, sociales et d'audit.
+
+### 7.4.2 Interface utilisateur
+
+22 pages spécialisées dans `frontend/src/components/pages/`, chacune **lazy-loadée** via `React.lazy()` pour optimiser le bundle initial.
+
+| Outil | Description | Rôle cible |
+|-------|-------------|-----------|
 | Silae (3 variantes) | Traitement fichiers de paie | Comptable, Social |
 | MergeExcel | Fusion de fichiers Excel | Comptable |
 | ConvertExcel | Conversion de formats | Comptable |
@@ -1485,106 +1695,333 @@ L'interface d'administration comprend :
 | Trieur Paie | Tri des fichiers de paie | Social |
 | Comparateur Stock | Comparaison de stocks | Comptable |
 
-### 7.1.4 Gestion du thème (Dark Mode)
+Chaque outil partage un même composant `FileDropZone` pour l'upload, et un composant `ResultDownloader` pour la récupération du résultat.
 
-Implémentation via React Context + Tailwind CSS `darkMode: 'class'`. Le thème est persisté dans le `localStorage` de l'utilisateur.
+### 7.4.3 Backend
 
-### 7.1.5 WebSocket et temps réel
+L'API Python (FastAPI, port 8001) porte toute la logique de traitement de fichiers :
 
-Deux hooks personnalisés gèrent la communication temps réel :
-- `useWebSocket` : connexion basique pour la présence utilisateur
-- `useAdvancedWebSocket` : gestion de rooms pour les fonctionnalités avancées
+| Fichier | Rôle |
+|---------|------|
+| `api/main.py` | Configuration FastAPI + CORS |
+| `api/routers.py` | Endpoints (~500 lignes) |
+| `api/utils/convert.py` | Parsing EDI / conversion vers Excel |
+| `api/utils/format.py` | Formatage Excel multi-feuilles |
+| `api/utils/searching.py` | Recherches dans les jeux de données |
+| `api/utils/sort.py` | Tris personnalisés |
+| `api/auth/auth_bearer.py` | Validation du cookie d'auth (UUID regex) |
 
-## 7.2 Développement du backend (Go)
+### 7.4.4 Base de données
 
-### 7.2.1 Service d'authentification
+Usage limité : la majorité des traitements opèrent sur des fichiers transients. Trois tables servent à la personnalisation par utilisateur :
 
-Flux d'authentification :
-1. Réception des credentials (email + mot de passe)
-2. Vérification du mot de passe hashé via `bcrypt.CompareHashAndPassword`
-3. Génération d'un token de session (UUID)
-4. Stockage en base avec date d'expiration
-5. Retour du token dans un cookie sécurisé
+- `codes_comptables` — mapping JSONB (code interne → code client)
+- `codes_journal` — mapping JSONB pour les journaux comptables
+- `codes_gen_aux` — mapping JSONB pour les comptes généraux auxiliaires
 
-Un goroutine de nettoyage tourne en arrière-plan toutes les 6 heures pour supprimer les sessions expirées.
+### 7.4.5 Flux complet (conversion EDI)
+
+Diagramme détaillé en § 4.5.2.
+
+```
+Comptable → upload .txt sur /api/conversion
+API Python → validation UUID du cookie userId (regex)
+API Python → mkdir -p /tmp/{uid}/uploads + sauvegarde du fichier
+API Python → boucle sur chaque .txt :
+            → extract_bill_values() (parsing EDI ligne à ligne)
+            → get_document_type() (Facture vs Avoir)
+            → SELECT mapping FROM codes_comptables WHERE uid = ?
+            → openpyxl writer → /tmp/{uid}/downloads/result.xlsx
+API Python → 200 {download_url}
+Comptable → téléchargement automatique
+Daemon thread → nettoyage /tmp/{uid}/* après 5 min
+```
+
+### 7.4.6 Extrait de code clé
+
+```python
+# api/utils/convert.py — extraction d'un fichier EDI
+def extract_bill_values(filepath: str) -> dict:
+    """Parse un fichier EDI bancaire et retourne les valeurs structurées."""
+    values = {}
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("DTM+137"):     # Date du document
+                values["date"] = line[7:15]
+            elif line.startswith("MOA+39"):    # Montant total
+                values["total"] = float(line.split(":")[1])
+            elif line.startswith("BGM+"):      # Type de document
+                values["type"] = get_document_type(line)
+    return values
+```
+
+Voir annexes A.3 (conversion EDI complète) et A.7 (validation UUID + path traversal).
+
+---
+
+## 7.5 Tableau de bord analytique
+
+### 7.5.1 Besoin fonctionnel
+
+Couvre l'épic 2 (BF05 — suivi d'activité). L'administrateur doit pouvoir consulter des métriques agrégées sur l'utilisation du portail.
+
+### 7.5.2 Interface utilisateur
+
+| Composant | Rôle |
+|-----------|------|
+| `frontend/src/components/Admin/Analytics.jsx` | Tableau de bord avec graphiques Recharts |
+| `frontend/src/hooks/useAnalytics.js` | Tracking côté client (events `api_call`, `page_view`) |
+
+Quatre graphiques : connexions par jour, utilisateurs les plus actifs, utilisation par endpoint API, heures de pointe. Filtrage par plage de dates.
+
+### 7.5.3 Backend
+
+| Couche | Fichier |
+|--------|---------|
+| Handler | `backend/internal/services/analyse/handler.go` |
+| Service | `backend/internal/services/analyse/service.go` (`AnalyseService`) |
+| Repository | `backend/internal/services/analyse/repository.go` |
+
+Endpoints (subrouter `adm`) :
+- `GET /sys/analytics/conn-by-days` — agrégation connexions
+- `GET /sys/analytics/active-users` — top utilisateurs
+- `GET /sys/analytics/api-stats` — répartition d'utilisation
+- `GET /sys/analytics/peak-hours` — heures de pointe
+
+### 7.5.4 Base de données
+
+- `evenements` (lecture seule en agrégation) — `GROUP BY` sur la colonne `date` ou sur `EXTRACT(HOUR FROM date)`
+- Index `idx_evenements_date` mobilisé pour les requêtes par fenêtre temporelle (cf. § 4.4.5)
+
+### 7.5.5 Flux complet
+
+```
+Admin → GET /sys/analytics/conn-by-days?from=2026-01-01&to=2026-05-31
+Backend → AnalyseService.ConnByDays(req)
+        → SELECT DATE(date) AS day, COUNT(*) AS count
+          FROM evenements
+          WHERE type = 'login' AND date BETWEEN ? AND ?
+          GROUP BY day ORDER BY day
+Backend → 200 [{day, count}]
+Frontend → rendu Recharts (LineChart)
+```
+
+### 7.5.6 Extrait de code clé
 
 ```go
-// backend/internal/services/auth/service/service.go
-func (s *Service) Login(email, password string) (models.User, models.Session, error) {
-    // 1. Recherche de l'utilisateur par email
-    user, hashedPassword, err := s.Repo.GetUserByEmail(email)
-    if err != nil {
-        return models.User{}, models.Session{}, err
-    }
-    // 2. Vérification du mot de passe via bcrypt
-    if err := bcrypt.CompareHashAndPassword(
-        []byte(hashedPassword), []byte(password),
-    ); err != nil {
-        return models.User{}, models.Session{}, err
-    }
-    // 3. Création d'une session avec expiration 24h
-    session, err := s.Repo.CreateSession(user.UID, 24*time.Hour)
-    if err != nil {
-        return models.User{}, models.Session{}, err
-    }
-    return user, session, nil
-}
+// backend/internal/services/analyse/repository.go — agrégation par jour
+func (r *Repository) ConnByDays(from, to time.Time) ([]models.DayStat, error) {
+    rows, err := r.DB.Query(`
+        SELECT DATE(date) AS day, COUNT(*) AS count
+        FROM evenements
+        WHERE type = 'login' AND date BETWEEN $1 AND $2
+        GROUP BY day
+        ORDER BY day
+    `, from, to)
+    if err != nil { return nil, err }
+    defer rows.Close()
 
-// Nettoyage automatique des sessions expirées (goroutine)
-func (s *Service) CleanExpiredSessions() {
-    go func() {
-        ticker := time.NewTicker(6 * time.Hour)
-        for range ticker.C {
-            s.Repo.CleanExpiredSessions()
-        }
-    }()
+    var stats []models.DayStat
+    for rows.Next() {
+        var s models.DayStat
+        if err := rows.Scan(&s.Day, &s.Count); err != nil { return nil, err }
+        stats = append(stats, s)
+    }
+    return stats, nil
 }
 ```
 
-### 7.2.2 Middlewares de sécurité
+---
 
-Le backend utilise un pipeline de middlewares Gorilla Mux pour sécuriser les routes :
+## 7.6 WebSocket — présence temps réel
 
-- **AuthMiddleware** : vérifie la présence d'un cookie `userId`, interroge la table `sessions` pour valider le token et vérifier que la session n'est pas expirée. Laisse passer les requêtes `OPTIONS` pour le preflight CORS.
-- **AdminMiddleware** : après authentification, joint la table `users` via la session pour vérifier le flag `admin`. Retourne 403 si non-admin.
+### 7.6.1 Besoin fonctionnel
 
-Les routes sont organisées en 3 subrouters :
-1. `pub` — routes publiques (login, logout) sans middleware
-2. `sys` — routes authentifiées (applications, WebSocket) avec `AuthMiddleware`
-3. `adm` — routes admin (CRUD users, apps, upload) avec `AuthMiddleware` + `AdminMiddleware`
+Couvre l'épic 4 (BF06 — présence temps réel). Les utilisateurs connectés voient en direct quels collègues sont en ligne sur le portail.
 
-### 7.2.3 WebSocket Manager
+### 7.6.2 Interface utilisateur
 
-Le WebSocket Manager gère la présence en temps réel :
-- Maintient une map thread-safe (`sync.RWMutex`) des connexions actives
-- Broadcast les événements de connexion/déconnexion à tous les clients
-- Persiste l'état en base pour la reprise après redémarrage
-- **Validation de l'origine** : le `CheckOrigin` de l'upgrader WebSocket vérifie que le header `Origin` appartient à une allowlist (`https://preprod.azert.fr`, `localhost:3000`), prévenant le Cross-Site WebSocket Hijacking
+| Composant / Hook | Rôle |
+|------------------|------|
+| `frontend/src/hooks/useWebSocket.js` | Connexion WebSocket de base, gestion reconnect |
+| `frontend/src/hooks/useAdvancedWebSocket.js` | Gestion de rooms (extensions futures) |
+| Bandeau de présence intégré au Dashboard | Affichage des utilisateurs en ligne |
 
-### 7.2.4 Service Analytics
+### 7.6.3 Backend
 
-Le service analytics collecte les événements d'utilisation et fournit des agrégations :
-- Connexions par jour
-- Utilisateurs les plus actifs
-- Utilisation par endpoint API
-- Heures de pointe
+| Couche | Fichier |
+|--------|---------|
+| Handler | `backend/internal/services/websocket/handler.go` (upgrade HTTP → WS) |
+| Manager | `backend/internal/services/websocket/manager.go` (`OnlineUserManager`) |
+| Repository | `backend/internal/services/websocket/repository.go` |
 
-## 7.3 Développement de l'API Python
+Le manager maintient une `map[string]*ConnectedUser` protégée par un `sync.RWMutex`. Toute modification (connexion / déconnexion) déclenche un broadcast vers l'ensemble des clients connectés.
 
-### 7.3.1 Traitement de fichiers
+**Validation de l'origine** (protection contre le **Cross-Site WebSocket Hijacking** — CSWSH) :
 
-L'API Python gère le cycle de vie complet des fichiers :
-1. **Upload** : stockage dans `/tmp/{user_uid}/uploads/` (isolation par utilisateur)
-2. **Validation** : le `user_uid` est validé au format UUID v4 par regex avant toute opération sur le système de fichiers (protection contre le path traversal)
-3. **Traitement** : utilisation de Pandas/openpyxl pour les opérations
-4. **Download** : fichier résultat disponible dans `/tmp/{user_uid}/downloads/`
-5. **Nettoyage** : daemon thread supprime les fichiers après 5 minutes
+```go
+upgrader := websocket.Upgrader{
+    CheckOrigin: func(r *http.Request) bool {
+        origin := r.Header.Get("Origin")
+        return origin == "https://preprod.azert.fr" || origin == "http://localhost:3000"
+    },
+}
+```
 
-**Sécurisation des secrets** : les clés JWT (`JWT_SECRET_KEY`, `JWT_REFRESH_SECRET_KEY`) sont lues depuis les variables d'environnement. Le serveur refuse de démarrer si elles ne sont pas définies.
+### 7.6.4 Base de données
 
-### 7.3.2 Système de codes comptables
+- Table éphémère `connected_users` mise à jour à la connexion / déconnexion. Sert principalement à la reprise après redémarrage du backend (les sockets sont alors invalidées).
 
-Un système flexible de mapping de codes utilise le type JSONB de PostgreSQL pour stocker les correspondances comptables personnalisées par utilisateur. Trois types de mappings sont supportés : codes comptables, codes journaux et codes généraux auxiliaires.
+### 7.6.5 Flux complet
+
+Diagramme détaillé en § 4.5.3.
+
+```
+Client → GET /sys/ws (upgrade: websocket)
+Backend → AuthMiddleware (cookie valide ?)
+Backend → upgrader.Upgrade (avec CheckOrigin)
+Manager → AddUser(uid, username, conn)
+Manager → BroadcastUsers() → tous les clients reçoivent la liste mise à jour
+[boucle ListenPings — heartbeat]
+Client → close
+Manager → RemoveUser(uid)
+Manager → BroadcastUsers()
+```
+
+### 7.6.6 Extrait de code clé
+
+```go
+// backend/internal/services/websocket/manager.go
+type OnlineUserManager struct {
+    Users map[string]*ConnectedUser
+    Mutex sync.RWMutex
+    Repo  *UserRepository
+}
+
+func (m *OnlineUserManager) BroadcastUsers() {
+    m.Mutex.RLock()
+    defer m.Mutex.RUnlock()
+
+    payload := buildUserList(m.Users)
+    for _, u := range m.Users {
+        if u.Conn != nil {
+            _ = u.Conn.WriteJSON(payload)
+        }
+    }
+}
+```
+
+Voir annexes A.5 (manager complet) et A.6 (validation Origin / CSWSH).
+
+---
+
+## 7.7 Configuration McDonald's
+
+### 7.7.1 Besoin fonctionnel
+
+Module spécifique au traitement des tickets de caisse McDonald's : stocke et applique une configuration de mapping propre à chaque restaurant (BF08 — cas particulier).
+
+### 7.7.2 Interface utilisateur
+
+- Page dédiée dans `frontend/src/components/pages/Macdos/` permettant à un administrateur de saisir et modifier la configuration JSON.
+
+### 7.7.3 Backend
+
+| Couche | Fichier |
+|--------|---------|
+| Handler | `backend/internal/services/Macdos/handler.go` |
+| Service | `backend/internal/services/Macdos/service.go` |
+| Repository | `backend/internal/services/Macdos/repository.go` |
+
+Endpoints protégés par `AdminMiddleware` (subrouter `adm`).
+
+### 7.7.4 Base de données
+
+- `config_mcdo` — stockage de la configuration en JSONB (clé unique sur `nom_config`)
+
+### 7.7.5 Flux complet
+
+```
+Admin → POST /sys/macdos/config {nom_config, donnees}
+Backend → AuthMiddleware → AdminMiddleware
+Backend → INSERT INTO config_mcdo (nom_config, donnees) ON CONFLICT DO UPDATE
+Backend → 200 OK
+```
+
+### 7.7.6 Extrait de code clé
+
+L'utilisation du type `JSONB` permet de faire évoluer la structure de configuration sans migration de schéma — le contrat de validation est porté côté applicatif.
+
+```go
+type MacdoConfig struct {
+    ID        int             `json:"id"`
+    NomConfig string          `json:"nom_config"`
+    Donnees   json.RawMessage `json:"donnees"` // JSONB opaque côté backend
+}
+```
+
+---
+
+## 7.8 Thème (Dark Mode)
+
+### 7.8.1 Besoin fonctionnel
+
+Couvre BF07 — mode sombre activable par l'utilisateur. Préférence persistante au-delà de la session.
+
+### 7.8.2 Interface utilisateur
+
+| Composant | Rôle |
+|-----------|------|
+| `frontend/src/context/ThemeContext.jsx` | Context React exposant `theme` et `toggleTheme` |
+| Toggle dans le header | Bascule clair / sombre |
+
+L'utilisation est triviale dans les composants consommateurs :
+
+```jsx
+const { theme, toggleTheme } = useContext(ThemeContext);
+return <button onClick={toggleTheme}>{theme === 'dark' ? '☀' : '🌙'}</button>;
+```
+
+### 7.8.3 Backend
+
+Aucun. La préférence est purement client.
+
+### 7.8.4 Base de données
+
+Aucune. La préférence est persistée dans le `localStorage` du navigateur.
+
+### 7.8.5 Flux complet
+
+```
+User → clic sur toggle
+ThemeContext → setTheme(theme === 'dark' ? 'light' : 'dark')
+ThemeContext → localStorage.setItem('theme', newTheme)
+ThemeContext → document.documentElement.classList.toggle('dark')
+Tailwind CSS → re-applique les variantes `dark:*` sur tout le DOM
+```
+
+### 7.8.6 Extrait de code clé
+
+```jsx
+// frontend/src/context/ThemeContext.jsx
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+```
+
+Tailwind CSS est configuré avec `darkMode: 'class'`, ce qui permet de cibler les styles via le préfixe `dark:` (ex. `bg-white dark:bg-slate-900`).
 
 ---
 

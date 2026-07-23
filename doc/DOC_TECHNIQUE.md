@@ -104,17 +104,18 @@ Handler (HTTP)  →  Service (logique métier)  →  Repository (persistance)
 
 | Table | Rôle | Champs clés |
 |---|---|---|
-| `users` | Comptes | `uid` (UUID), `email`, `password` (bcrypt), `role`, `is_admin`, `company` |
-| `sessions` | Sessions actives | `user_uid`, `expires_at` (+24 h) |
-| `applications` | Catalogue | `id`, `nom`, `icone`, `categorie`, groupe |
-| `user_applications` | Attribution N–N | `user_uid`, `app_id` |
-| `codes_comptables` | Mapping caisse → compte | `user_id`, `code_map` (**JSONB**) |
-| `codes_gen_aux` | Comptes généraux/auxiliaires | `user_id`, `code_map_gen_aux` (**JSONB**) |
-| `codes_journal` | Code journal | `user_id`, `code_map` (**JSONB**) |
-| `config_fascicule` | Config McDonald's par établissement | `name_config`, contenu |
-| `events` | Analytics | type, utilisateur, horodatage |
+| `users` | Comptes | `id` (SERIAL PK), `uid` (TEXT UNIQUE), `email`, `username`, `password` (bcrypt), `role`, `admin`, `entreprise`, `last_seen` |
+| `sessions` | Sessions actives | `id` (jeton), `user_id` → `users(uid)`, `created_at`, `expires_at`, `last_seen` |
+| `applications` | Catalogue | `id`, `name`, `base_url`, `icon_path`, `groups` |
+| `application_groups` | Groupes d'apps | `id`, `name` (UNIQUE), `created_at` |
+| `user_application_permissions` | Attribution N–N | `user_id` → `users(uid)`, `application_id` → `applications(id)`, `can_access` |
+| `user_code_maps` | Mapping caisse → compte | `user_id` → `users(id)`, `code_map` (**JSON**) |
+| `user_code_maps_gen_aux` | Comptes généraux/auxiliaires | `user_id` → `users(id)`, `code_map_gen_aux` (**JSON**) |
+| `code_journal` | Code journal | `user_id` → `users(id)`, `journal_map` (**JSON**) |
+| `fascicule_mcdo` | Config McDonald's par établissement | `noms` (UNIQUE), `config` (TEXT/JSON) |
+| `events` | Analytics (service Go `analyse`) | `api_name`, `uid` → `users(uid)` ON DELETE CASCADE, `conn_time`, `deco_time`, `day`, `created_at` |
 
-Les mappings de codes sont stockés en **JSONB** : un mapping par utilisateur, fusionné à la mise à jour (`{**existant, **nouveau}`), les valeurs vides étant ignorées.
+Les mappings de codes sont stockés en **JSON** : un mapping par utilisateur, fusionné à la mise à jour (`{**existant, **nouveau}`), les valeurs vides étant ignorées.
 
 ---
 
@@ -126,7 +127,7 @@ Endpoint : `POST /api/conversion` (`routers.py` → `utils/format.py` → `utils
 1. Upload         → sauvegarde des .EDI/.txt dans /tmp/{uid}/uploads (un dossier par restaurant)
 2. Parsing EDI    → extract_bill_values() : segments EDIFACT (BGM, DTM, MOA, IMD, UNS)
                     get_document_type() : Facture (BGM+380) vs Avoir (BGM+381)
-3. Mapping        → application des codes comptables de l'utilisateur (SELECT … JSONB)
+3. Mapping        → application des codes comptables de l'utilisateur (SELECT code_map FROM user_code_maps … JSON)
 4. Fusion         → merged_csv() : un CSV consolidé par restaurant
 5. Excel          → create_excel_with_sheets() (xlsxwriter) : une feuille par restaurant → combined.xlsx
 6. Réponse        → FileResponse (factures_MB_<date>.xlsx)

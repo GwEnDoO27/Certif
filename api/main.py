@@ -22,5 +22,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Incluez le routeur API avec le préfixe /api
-app.include_router(api_router, prefix="/api")
+# Incluez le routeur API avec le préfixe /api/Facture-Mb
+# (doit correspondre au service `facture-mb` défini dans frontend/public/config.yaml)
+app.include_router(api_router, prefix="/api/Facture-Mb")

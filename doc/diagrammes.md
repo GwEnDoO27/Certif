@@ -309,7 +309,7 @@ sequenceDiagram
     alt Mot de passe correct
         B->>DB: INSERT INTO sessions (id, user_id, expires_at)
         DB-->>B: Session créée
-        B-->>F: 200 OK + Set-Cookie: userId=sessionID (HttpOnly, Secure, SameSite=Strict)
+        B-->>F: 200 OK + Set-Cookie: sessionId=<token> + userId=<uid> (Secure, SameSite=Lax)
         F->>F: Stockage cookie + redirection Dashboard
         F-->>U: Affichage Dashboard
     else Mot de passe incorrect
@@ -433,14 +433,14 @@ sequenceDiagram
     DB-->>B: false (email disponible)
     B->>B: bcrypt.GenerateFromPassword(password)
     B->>B: uuid.New() → génération UID
-    B->>DB: INSERT INTO users (uid, email, username, password_hash, role, entreprise)
+    B->>DB: INSERT INTO users (email, username, uid, password, admin, role, entreprise)
     DB-->>B: OK
     B-->>F: 201 Created
 
     A->>F: Attribution d'application
     F->>MW: POST /sys/add-app/{uid} {appName}
     MW->>B: Requête authentifiée + admin vérifié
-    B->>DB: INSERT INTO user_applications (uid, app_name)
+    B->>DB: INSERT INTO user_application_permissions (user_id, application_id, can_access)
     DB-->>B: OK
     B-->>F: 200 OK
 
@@ -571,21 +571,23 @@ flowchart LR
 ```mermaid
 erDiagram
     UTILISATEUR {
-        string uid PK
+        serial id PK
+        string uid UK
         string email UK
-        string password_hash
-        string username
-        string role
+        string username UK
+        string password
         boolean admin
+        string role
         string entreprise
         timestamp last_seen
     }
 
     SESSION {
-        uuid id PK
+        string id PK
         string user_id FK
         timestamp created_at
         timestamp expires_at
+        timestamp last_seen
     }
 
     APPLICATION {
@@ -596,59 +598,64 @@ erDiagram
         string groups
     }
 
-    UTILISATEUR_APPLICATION {
-        string uid FK
-        string app_name FK
+    USER_APPLICATION_PERMISSION {
+        serial id PK
+        string user_id FK
+        integer application_id FK
+        boolean can_access
     }
 
-    EVENEMENT {
+    GROUPE_APPLICATION {
         serial id PK
-        string uid FK
-        string api_name
-        string conn_time
-        string deco_time
-        string day
+        string name UK
         timestamp created_at
-    }
-
-    GROUPE {
-        serial id PK
-        string name
-    }
-
-    CONFIG_MCDO {
-        serial id PK
-        string nom_config UK
-        jsonb config
     }
 
     CODE_COMPTABLE {
         serial id PK
         integer user_id FK
-        jsonb code_map
+        json code_map
     }
 
     CODE_GEN_AUX {
         serial id PK
         integer user_id FK
-        jsonb code_map_gen_aux
+        json code_map_gen_aux
     }
 
     CODE_JOURNAL {
         serial id PK
         integer user_id FK
-        jsonb journal_map
+        json journal_map
+    }
+
+    EVENEMENT {
+        serial id PK
+        string api_name
+        string uid FK
+        string conn_time
+        string deco_time
+        string day
+        timestamptz created_at
+    }
+
+    FASCICULE_MCDO {
+        serial id PK
+        string noms UK
+        text config
     }
 
     UTILISATEUR ||--o{ SESSION : "possède"
-    UTILISATEUR ||--o{ UTILISATEUR_APPLICATION : "accède à"
-    APPLICATION ||--o{ UTILISATEUR_APPLICATION : "attribuée à"
-    UTILISATEUR ||--o{ EVENEMENT : "génère"
+    UTILISATEUR ||--o{ USER_APPLICATION_PERMISSION : "peut accéder"
+    APPLICATION ||--o{ USER_APPLICATION_PERMISSION : "attribuée à"
+    APPLICATION }o--|| GROUPE_APPLICATION : "appartient à (réf. faible)"
     UTILISATEUR ||--o{ CODE_COMPTABLE : "configure"
     UTILISATEUR ||--o{ CODE_GEN_AUX : "configure"
     UTILISATEUR ||--o{ CODE_JOURNAL : "configure"
-    APPLICATION }o--|| GROUPE : "appartient à"
+    UTILISATEUR ||--o{ EVENEMENT : "génère"
 ```
+
+> **Note** : `EVENEMENT` (`events`) porte l'analytics (service Go `analyse`, cf. `dossier_projet.md` § 7.5). L'entité `FASCICULE_MCDO` est une table technique isolée. La liaison `APPLICATION`–`GROUPE_APPLICATION` est une référence faible (`applications.groups` en TEXT, sans FK).
 
 ---
 

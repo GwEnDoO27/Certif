@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-job
+spec:
+  schedule: "0 2 * * 0"  # Tous les dimanches à 2h du matin
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: pg-backup
+            image: debian:bullseye-slim
+            command: ["/bin/bash", "-c"]
+            args:
+              - |
+                apt update && apt install -y postgresql-client msmtp-mta gzip mailutils
+                export PGPASSWORD=$PGPASSWORD
+                FILENAME="backup-$(date +%Y-%m-%d).sql.gz"
+                pg_dump -h $PG_HOST -U $PG_USER $PG_DB | gzip > $FILENAME
+                echo "Backup de PostgreSQL en pièce jointe." | mail -s "Backup $PG_DB" -A $FILENAME $EMAIL_TO
+            env:
+              - name: PG_DB
+                value: "db"
+              - name: PG_USER
+                value: "postgres"
+              - name: PG_HOST
+                value: "postgres-service"  # Le nom DNS ou le service Kubernetes
+              - name: PGPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: pg-secret
+                    key: password
+              - name: EMAIL_TO
+                value: "gwendal.benard@cabinet-martini.fr"
+            volumeMounts:
+              - name: mail-config
+                mountPath: /etc/msmtprc
+                subPath: msmtprc
+          restartPolicy: OnFailure
+          volumes:
+            - name: mail-config
+              configMap:
+                name: msmtp-config
+
+
+                

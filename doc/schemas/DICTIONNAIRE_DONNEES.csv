@@ -1,0 +1,43 @@
+﻿N°;Code;Désignation;Type;Entité;Contrainte
+1;admin;Indicateur de privilège administrateur;B;users;NOT NULL
+2;api_name;Service ou fonctionnalité concerné par l'événement;AN;events;Nullable
+3;application_id;Référence de l'application concernée;N;user_application_permissions;NOT NULL, FK → applications(id)
+4;base_url;URL d'accès de l'application;AN;applications;NOT NULL
+5;can_access;Droit d'accès effectif de l'utilisateur à l'application;B;user_application_permissions;DEFAULT FALSE
+6;code_map;Table de correspondance des codes comptables;J;user_code_maps;NOT NULL, DEFAULT '{}'
+7;code_map_gen_aux;Table de correspondance des codes auxiliaires généraux;J;user_code_maps_gen_aux;NOT NULL
+8;conn_time;Horodatage de début de session applicative;AN;events;NOT NULL
+9;created_at (application_groups);Date de création du groupe;D;application_groups;DEFAULT CURRENT_TIMESTAMP
+10;created_at (events);Date d'enregistrement de l'événement;D;events;TIMESTAMPTZ DEFAULT NOW()
+11;created_at (sessions);Date d'ouverture de la session;D;sessions;NOT NULL
+12;day;Jour de l'événement, clé d'agrégation;AN;events;NOT NULL
+13;deco_time;Horodatage de fin de session applicative;AN;events;NOT NULL
+14;email;Adresse électronique, identifiant de connexion;AN;users;UNIQUE NOT NULL
+15;entreprise;Société de rattachement de l'utilisateur;AN;users;Nullable
+16;expires_at;Date d'expiration de la session;D;sessions;NOT NULL
+17;groups;Groupe de rattachement de l'application;AN;applications;Nullable, FK → application_groups(name) ON UPDATE CASCADE
+18;icon_path;Chemin de l'icône affichée au catalogue;AN;applications;Nullable
+19;id (application_groups);Identifiant technique du groupe;N;application_groups;SERIAL PRIMARY KEY
+20;id (applications);Identifiant technique de l'application;N;applications;SERIAL PRIMARY KEY
+21;id (code_journal);Identifiant technique du paramétrage;N;code_journal;SERIAL PRIMARY KEY
+22;id (events);Identifiant technique de l'événement;N;events;SERIAL PRIMARY KEY
+23;id (sessions);Jeton de session;AN;sessions;PRIMARY KEY
+24;id (user_application_permissions);Identifiant technique de la permission;N;user_application_permissions;SERIAL PRIMARY KEY
+25;id (user_code_maps);Identifiant technique du paramétrage;N;user_code_maps;SERIAL PRIMARY KEY
+26;id (user_code_maps_gen_aux);Identifiant technique du paramétrage;N;user_code_maps_gen_aux;SERIAL PRIMARY KEY
+27;id (users);Identifiant technique de l'utilisateur;N;users;SERIAL PRIMARY KEY
+28;journal_map;Table de correspondance des journaux comptables;J;code_journal;NOT NULL
+29;last_seen (sessions);Dernière activité observée sur cette session;D;sessions;Nullable
+30;last_seen (users);Dernière activité observée du compte;D;users;DEFAULT CURRENT_TIMESTAMP
+31;name (application_groups);Libellé du groupe d'applications;AN;application_groups;UNIQUE NOT NULL
+32;name (applications);Nom de l'application affiché au catalogue;AN;applications;NOT NULL
+33;noms;(hors périmètre — § 3.4);AN;fascicule_mcdo;UNIQUE
+34;password;Empreinte bcrypt du mot de passe;AN;users;NOT NULL
+35;role;Rôle métier de l'utilisateur;A;users;DEFAULT 'user'
+36;uid (events);Auteur de l'événement;AN;events;NOT NULL, FK → users(uid) ON DELETE CASCADE
+37;uid (users);Identifiant métier stable de l'utilisateur;AN;users;UNIQUE NOT NULL
+38;user_id (code_journal);Propriétaire du paramétrage;N;code_journal;NOT NULL, UNIQUE, FK → users(id) ON DELETE CASCADE
+39;user_id (sessions);Titulaire de la session;AN;sessions;NOT NULL, FK → users(uid) ON DELETE CASCADE
+40;user_id (user_application_permissions);Utilisateur détenteur du droit;AN;user_application_permissions;NOT NULL, FK → users(uid) ON DELETE CASCADE
+41;user_id (user_code_maps);Propriétaire du paramétrage;N;user_code_maps;NOT NULL, UNIQUE, FK → users(id) ON DELETE CASCADE
+42;user_id (user_code_maps_gen_aux);Propriétaire du paramétrage;N;user_code_maps_gen_aux;NOT NULL, UNIQUE, FK → users(id) ON DELETE CASCADE

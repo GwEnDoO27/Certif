@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+    version: v3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: v3
+    spec:
+      containers:
+        - name: backend
+          image: localhost:5000/backend:latest
+          imagePullPolicy: Always
+          env:
+            - name: DB_HOST
+              value: "postgresql"
+            - name: DB_NAME
+              value: db
+            - name: DB_PASSWORD
+              value: "motDepasse"
+            - name: DB_PORT
+              value: "5834"
+            - name: DB_USER
+              value: "Admin"
+          ports:
+            - name: http
+              containerPort: 8002
+              protocol: TCP
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+
+          volumeMounts:
+            - mountPath: /app/uploads
+              name: backend-claim0
+      volumes:
+        - name: backend-claim0
+          persistentVolumeClaim:
+            claimName: backend-claim0
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: backend
+                topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 300
+
+      

@@ -7,32 +7,40 @@
 
 ---
 
-**Nom du candidat** : Gwendal [NOM — À compléter]
-**Centre de formation** : [À compléter]
-**Session d'examen** : [À compléter]
+**Nom du candidat** : Bénard Gwendal
+**Centre de formation** : Zone01 Normandie
+**Entreprise d'accueil** : Cabinet Martini — cabinet d'expertise comptable, Rouen
 **Référentiel RNCP** : 37873
 
 ---
 
-### PORTAIL INTRANET D'ENTREPRISE
+### MISE EN PLACE D'UNE PLATEFORME POUR LES COLLABORATEURS ET LES CLIENTS PERMETTANT DE REGROUPER LES DIFFÉRENTS OUTILS DÉVELOPPÉS
 
-**Conception et développement d'une plateforme web multi-services pour la centralisation des outils métier et la gestion sécurisée des utilisateurs**
+**Conception et développement d'un portail intranet multi-services pour la centralisation des outils métier et la gestion sécurisée des utilisateurs**
 
 ---
 
-**Durée du projet** : Septembre 2024 – Mars 2025
-**Temps de développement estimé** : [À compléter] heures
+**Période d'alternance** : novembre 2024 – septembre 2026
+**Durée du projet** : novembre 2024 – avril 2025 (environ 6 mois)
+**Temps de développement estimé** : ≈ 600 heures (~88 jours effectifs, à raison de 3 jours par semaine)
+
+---
+
+## Remerciements
+
+Je tiens d'abord à remercier l'équipe de Zone01 — Bastien Lagrue, Vivien Frébourg et Anne-Marie Oliviera — qui a été présente tout au long de la formation. Leur confiance et leur disponibilité ont été d'une grande aide dans mon apprentissage et ma progression.
+
+Un grand merci également au Cabinet Martini, qui a supervisé mon alternance, ainsi qu'à toute l'équipe avec qui le travail a été formidable. Cette expérience m'a été en tous points bénéfique, enrichissante et intéressante, tant sur le plan professionnel que technique.
 
 ---
 
 # Table des matières
 
 1. **Introduction**
-   - 1.1 Présentation du candidat
-   - 1.2 Contexte du projet
-   - 1.3 Présentation de l'entreprise
-   - 1.4 Objectifs du projet
-   - 1.5 Périmètre fonctionnel
+   - 1.1 Contexte du projet
+   - 1.2 Présentation de l'entreprise
+   - 1.3 Objectifs du projet
+   - 1.4 Périmètre fonctionnel
 2. **Cahier des charges**
    - 2.1 Expression du besoin (BF / BNF)
    - 2.2 Contraintes
@@ -40,7 +48,7 @@
    - 2.4 User Stories (5 épics)
 3. **Organisation du projet**
    - 3.1 Méthodologie
-   - 3.2 Planning et sprints
+   - 3.2 Planning et itérations
    - 3.3 Outils de gestion de projet
    - 3.4 Conventions de commit
    - 3.5 Stratégie de branching Git
@@ -64,13 +72,14 @@
    - 6.6 Infrastructure de déploiement
 7. **Réalisation** *(par module fonctionnel)*
    - 7.1 Authentification et sessions
-   - 7.2 Administration des utilisateurs
-   - 7.3 Catalogue d'applications
-   - 7.4 Outils métier
-   - 7.5 Tableau de bord analytique
-   - 7.6 WebSocket — présence temps réel
-   - 7.7 Configuration McDonald's
-   - 7.8 Thème (Dark Mode)
+   - 7.2 Panneau d'administration
+     - 7.2.1 Gestion des utilisateurs
+     - 7.2.2 Gestion du catalogue d'applications
+     - 7.2.3 Tableau de bord analytique
+     - 7.2.4 Présence temps réel (WebSocket)
+   - 7.3 Catalogue d'applications (côté utilisateur — Home)
+   - 7.4 Outil de traitement des tirages de caisse (dont configuration McDonald's)
+   - 7.5 Thème (Dark Mode)
 8. **Sécurité**
    - 8.1 Analyse OWASP Top 10
    - 8.2 Authentification et sessions
@@ -82,7 +91,6 @@
    - 8.8 Gestion des secrets
    - 8.9 Veille sécurité
    - 8.10 Modélisation des menaces (threat modeling / STRIDE)
-   - 8.11 Code vulnérable vs code corrigé
 9. **Tests**
    - 9.1 Stratégie de tests
    - 9.2 Tests unitaires Backend (Go)
@@ -101,86 +109,49 @@
     - 10.4 Environnements
     - 10.5 Procédure de déploiement step-by-step
     - 10.6 Stratégie de rollback
-    - 10.7 Monitoring et observabilité
-    - 10.8 Versioning sémantique et CHANGELOG
-    - 10.9 Développement local avec docker-compose
+    - 10.7 Versioning sémantique et CHANGELOG
 11. **Veille technologique et sécurité**
 12. **Améliorations et perspectives**
-13. **Conclusion personnelle**
-14. **Glossaire (FR / EN)**
-15. **Annexes**
+13. **Conclusion**
+14. **Annexes**
 
 ---
 
 # 1. Introduction
 
-## 1.1 Présentation du candidat
+## 1.1 Contexte du projet
 
-> *Note au candidat : cette section est volontairement rédigée à la première personne, dans un registre personnel. Les passages entre crochets `[À compléter]` doivent être remplacés par ton parcours réel — je ne les ai pas inventés.*
+Ce dossier présente la conception et le développement du **portail intranet du Cabinet Martini**, réalisé dans le cadre de mon alternance pour la préparation du Titre Professionnel **Concepteur Développeur d'Applications** (niveau 6).
 
-Je m'appelle **Gwendal [NOM — À compléter]**, et je présente ce dossier dans le cadre de l'obtention du **Titre Professionnel Concepteur Développeur d'Applications (niveau 6 — Bac+3, inscrit au RNCP)**.
+Le projet répond à un besoin réel du cabinet : disposer d'outils internes propres à chaque pôle, gérer ses utilisateurs et leurs droits, et mettre à disposition des applications métier spécialisées (traitement comptable, gestion de paie, audit) au travers d'une interface web unique, simple et sécurisée. Le besoin a d'abord porté sur l'**automatisation du traitement des tirages de caisse** des restaurants clients, avant d'évoluer vers la **centralisation de l'ensemble des outils** — actuels et futurs — derrière un accès unique.
 
-[À compléter : ton parcours — formation initiale, reconversion éventuelle, expériences professionnelles antérieures, et ce qui t'a amené au développement.]
+## 1.2 Présentation de l'entreprise
 
-### Une identité technique
+Le **Cabinet Martini** est un cabinet d'expertise comptable basé à Rouen. Il officie majoritairement en Normandie et compte des clients dans toute la France. Le cabinet réunit une quarantaine de collaborateurs répartis en trois pôles : **comptabilité** (qui rassemble la majorité des effectifs), **social** et **juridique**.
 
-En tant que développeur, je me reconnais dans un **profil orienté full-stack et architecture** :
+Le souhait du cabinet était de mettre en place des outils internes répondant à des problématiques propres à chaque pôle. Cette idée a ensuite évolué vers un **portail centralisé** donnant accès à chaque outil, avec la possibilité d'en mettre certains à la disposition des clients.
 
-- à l'aise aussi bien côté **interface** (React, ergonomie, accessibilité) que côté **back-end et données** (Go, Python, PostgreSQL) ;
-- attentif à la **sécurité** et à la **qualité du code** (tests, conventions, revue) ;
-- intéressé par l'**industrialisation** : conteneurisation, CI/CD, déploiement sur Kubernetes.
+## 1.3 Objectifs du projet
 
-[À compléter : ce qui te distingue personnellement, tes domaines de prédilection, tes centres d'intérêt techniques.]
+Les objectifs fixés, en accord avec le besoin exprimé, étaient les suivants :
 
-### Compétences mises en jeu dans ce projet
-
-Au cours de ce projet, j'ai notamment :
-
-- conçu et développé une **application web complète** articulée autour de trois services indépendants (frontend React, backend Go, API Python) ;
-- modélisé et implémenté une **base de données relationnelle** PostgreSQL conforme à la 3NF ;
-- mis en place une **authentification par sessions** et un contrôle d'accès par rôles (RBAC à 6 rôles) ;
-- sécurisé l'application au regard de l'**OWASP Top 10** (injection, contrôle d'accès, secrets, CSWSH) ;
-- automatisé les **tests** (Go, pytest, Vitest) et la **chaîne CI/CD** (GitHub Actions) ;
-- **conteneurisé** et **orchestré** la plateforme (Docker multi-stage, Kubernetes/K3s, Traefik).
-
-### Vision
-
-[À compléter : où tu te projettes professionnellement à l'issue de cette certification, le type de poste ou de projets que tu vises.]
-
-## 1.2 Contexte du projet
-
-Ce dossier présente la conception et le développement d'un **portail intranet d'entreprise**, que j'ai réalisé pour préparer le Titre Professionnel CDA.
-
-Le projet répond à un besoin réel : un cabinet comptable souhaitait d'abord **automatiser le traitement des tirages de caisse** de ses restaurants clients, puis **centraliser l'accès à ses outils internes** — actuels et futurs — au sein d'une interface web unique, sécurisée, et dotée d'une gestion fine des droits d'accès.
-
-## 1.3 Présentation de l'entreprise
-
-[À compléter : nom de l'entreprise, secteur d'activité, nombre d'employés, contexte organisationnel.]
-
-L'entreprise disposait de plusieurs outils internes non unifiés et souhaitait regrouper leur accès derrière un portail centralisé, avec une gestion des droits par rôle.
-
-## 1.4 Objectifs du projet
-
-Les objectifs que je me suis fixés, en accord avec le besoin exprimé, étaient les suivants :
-
-- **Centraliser** l'accès aux applications métier dans une interface unique ;
-- **Gérer** les utilisateurs et leurs droits selon 6 rôles distincts ;
-- **Fournir** des outils de traitement de fichiers (Excel, PDF, CSV) pour les métiers comptables ;
+- **Créer** des applications métier spécialisées ;
+- **Gérer** les utilisateurs et leurs accès selon leur rôle ;
 - **Assurer** le suivi de l'activité via un tableau de bord analytique ;
-- **Offrir** une communication en temps réel entre utilisateurs connectés ;
-- **Garantir** la sécurité des données et la conformité RGPD.
+- **Offrir** une communication entre les utilisateurs connectés ;
+- **Garantir** la sécurisation des données et la conformité au RGPD.
 
-## 1.5 Périmètre fonctionnel
+## 1.4 Périmètre fonctionnel
 
 Le portail couvre les fonctionnalités suivantes :
 
 - **Authentification et gestion de sessions** sécurisées ;
 - **Administration des utilisateurs** (CRUD complet, gestion des rôles) ;
-- **Catalogue d'applications** configurable par l'administrateur ;
+- **Catalogue d'applications** configurable par un administrateur ;
 - **Outil métier** : traitement des tirages de caisse `.EDI` (import multi-fichiers, application de codes comptables paramétrables, restitution d'un Excel par restaurant) ;
-- **Tableau de bord analytique** : connexions, utilisation des API, heures de pointe ;
-- **Communication temps réel** via WebSocket (présence utilisateur) ;
-- **Gestion de configurations** spécifiques (McDonald's).
+- **Tableau de bord analytique** : suivi des connexions, utilisation des applications, heures de pointe ;
+- **Communication en temps réel** via WebSocket (présence utilisateur) ;
+- **Gestion de configurations** : exemple de configuration pour un McDonald's.
 
 ---
 
@@ -248,10 +219,10 @@ En analysant la situation de départ, j'ai identifié plusieurs difficultés con
 
 ### Contraintes organisationnelles
 
-- Projet réalisé **en autonomie** dans le cadre de la certification CDA ;
-- Développement en **méthodologie Agile** (sprints de 2 semaines) ;
+- Projet réalisé **en autonomie**, dans le cadre de mon alternance au Cabinet Martini ;
+- Développement **itératif et incrémental** suivi en Kanban (carnet de bord), à raison de **3 jours par semaine** ;
 - Livraison continue via **pipeline CI/CD** GitHub Actions ;
-- Durée totale : environ **6 mois** (septembre 2024 — mars 2025).
+- Durée totale : environ **6 mois** (novembre 2024 — avril 2025).
 
 ## 2.3 Livrables attendus
 
@@ -319,59 +290,90 @@ Ce que je présente dans le cadre de la certification :
 
 ## 3.1 Méthodologie
 
-J'ai conduit ce projet selon une approche **Agile Scrum** adaptée à un contexte solo :
+J'ai conduit ce projet seul, à raison de **3 jours par semaine**, sur environ six mois. J'ai donc retenu une **démarche itérative et incrémentale, suivie en Kanban**, plutôt qu'un cadre Scrum dont les rôles et les cérémonies (daily standup, sprint review) supposent une équipe et se vident de leur sens pour une personne seule. C'est un choix assumé : la méthode doit servir le contexte, pas l'inverse.
 
-- **Sprints** de 2 semaines ;
-- **Daily standup** ramené à une revue quotidienne de mes tâches ;
-- **Sprint review** en fin de sprint ;
-- **Rétrospective** pour l'amélioration continue.
+Concrètement :
+
+- **Backlog priorisé** : les user stories (§ 2.4) constituent le backlog ; à chaque session de travail, je tirais la tâche la plus prioritaire — flux tiré, sans timebox artificiel, ce qui absorbe naturellement un rythme de travail à temps partiel ;
+- **Suivi Kanban sur carnet de bord** : un carnet papier tenait lieu de tableau — tâches à faire listées par itération, tâche en cours marquée, tâches terminées rayées, reports explicitement recopiés d'une session à l'autre. Un outil rudimentaire, mais toujours à jour, relu systématiquement en début de session pour recharger le contexte après plusieurs jours d'interruption ;
+- **Travail en cours limité (WIP = 1)** : chaque semaine de 3 jours consécutifs en entreprise était dédiée à **une fonctionnalité précise**, choisie en début de session — une seule tâche de développement ouverte à la fois, pour ne jamais laisser de chantier à moitié terminé entre deux sessions espacées ;
+- **Itérations jalonnées** : le travail est découpé en six itérations correspondant à des blocs fonctionnels livrables (§ 3.2) ; chaque fin d'itération donnait lieu à un point avec le commanditaire (démonstration de l'incrément, ajustement des priorités) et à une courte rétrospective personnelle notée dans le carnet ;
+- **Définition de « terminé »** : une tâche n'est rayée que lorsque le code est écrit, testé, passé au lint et commité selon les conventions du projet (§ 3.4).
+
+Ce cadre m'a apporté ce que j'attendais d'une méthode : une priorisation toujours explicite, une visibilité permanente sur le reste à faire, et des jalons réguliers pour confronter l'avancement au besoin réel du commanditaire.
 
 ## 3.2 Planning du projet
 
+Le séquencement suit la logique de valeur du projet, telle qu'elle s'est réellement déroulée :
+
+1. **D'abord le logiciel de tirages de caisse** — la priorité explicite des collaborateurs, livré en autonome pour apporter de la valeur au plus vite ;
+2. **Ensuite la plateforme**, développée en parallèle des retours des collaborateurs sur l'outil — retours qui ont directement alimenté son évolution (persistance des codes comptables par utilisateur, notamment) ;
+3. **Enfin le déploiement** : provisioning du serveur vierge, mise en place du reverse proxy et sécurisation du VPS.
+
+Les durées du diagramme sont exprimées en **jours effectifs de travail**. Au rythme réel de 3 jours par semaine, l'étalement calendaire est environ le double : ~88 jours effectifs répartis sur la période novembre 2024 → avril 2025.
+
 ```mermaid
 gantt
-    title Planning du projet — Portail Intranet
+    title Planning du projet — Portail Intranet (durées en jours effectifs)
     dateFormat YYYY-MM-DD
     axisFormat %d/%m
 
-    section Sprint 1 — Fondations
-    Environnement de dev          :done, s1a, 2024-09-01, 5d
-    Architecture microservices    :done, s1b, after s1a, 5d
-    Authentification (Go)         :done, s1c, after s1b, 5d
+    section Itération 1 — Logiciel tirages de caisse
+    Parsing EDI / extraction caisse :done, s1a, 2024-11-04, 7d
+    Mapping codes comptables        :done, s1b, after s1a, 5d
+    Génération Excel par restaurant :done, s1c, after s1b, 5d
 
-    section Sprint 2 — Administration
-    CRUD utilisateurs             :done, s2a, after s1c, 5d
-    Gestion des rôles             :done, s2b, after s2a, 3d
-    Catalogue applications        :done, s2c, after s2b, 5d
+    section Itération 2 — Retours & fondations plateforme
+    Fiabilisation outil (retours)   :done, s2a, after s1c, 4d
+    Environnement de dev / mono-repo :done, s2b, after s2a, 4d
+    Architecture microservices      :done, s2c, after s2b, 4d
+    Authentification (Go)           :done, s2d, after s2c, 5d
 
-    section Sprint 3 — Outil tirages de caisse
-    Parsing EDI / extraction caisse :done, s3a, after s2c, 7d
-    Mapping codes comptables        :done, s3b, after s3a, 5d
-    Génération Excel par restaurant :done, s3c, after s3b, 5d
+    section Itération 3 — Administration & intégration
+    CRUD utilisateurs               :done, s3a, after s2d, 5d
+    Gestion des rôles               :done, s3b, after s3a, 3d
+    Catalogue + intégration outil   :done, s3c, after s3b, 5d
 
-    section Sprint 4 — Temps réel
-    WebSocket présence            :done, s4a, after s3c, 5d
-    Tableau de bord analytics     :done, s4b, after s4a, 5d
+    section Itération 4 — Temps réel
+    WebSocket présence              :done, s4a, after s3c, 5d
+    Tableau de bord analytics       :done, s4b, after s4a, 5d
 
-    section Sprint 5 — Déploiement
-    Conteneurisation Docker       :done, s5a, after s4b, 3d
-    Déploiement Kubernetes        :done, s5b, after s5a, 5d
-    Pipeline CI/CD                :done, s5c, after s5b, 3d
+    section Itération 5 — Déploiement & sécurisation
+    Conteneurisation Docker         :done, s5a, after s4b, 3d
+    K3s + reverse proxy Traefik     :done, s5b, after s5a, 5d
+    Pipeline CI/CD + durcissement   :done, s5c, after s5b, 3d
 
-    section Sprint 6 — Finalisation
-    Tests unitaires               :done, s6a, after s5c, 5d
-    Documentation / Dossier       :active, s6b, after s6a, 10d
-    Corrections / Optimisations   :s6c, after s6b, 5d
+    section Itération 6 — Finalisation
+    Tests unitaires                 :done, s6a, after s5c, 5d
+    Documentation / Dossier         :active, s6b, after s6a, 10d
+    Corrections / Optimisations     :s6c, after s6b, 5d
 ```
 
-J'ai découpé le travail en six sprints successifs. Pour chacun, je rappelle ci-dessous l'objectif, ce que j'ai effectivement livré, la principale difficulté rencontrée et l'enseignement que j'en ai tiré en rétrospective.
+J'ai découpé le travail en six itérations successives, chacune se concluant par un incrément livrable et un point avec le commanditaire. Pour chacune, je rappelle ci-dessous l'objectif, ce que j'ai effectivement livré, la principale difficulté rencontrée et l'enseignement que j'en ai tiré en rétrospective.
 
-### Sprint 1 — Fondations (3 semaines)
+### Itération 1 — Logiciel de tirages de caisse, version autonome (17 jours effectifs, ~6 semaines)
 
-**Objectif** : poser des bases saines avant d'écrire la moindre fonctionnalité métier.
+**Objectif** : livrer au plus vite l'outil à plus forte valeur pour les comptables — leur priorité explicite —, sous forme de logiciel autonome.
 
 **Réalisations** :
 
+- API Python FastAPI dédiée au traitement des fichiers de caisse ;
+- parsing EDI (extraction des données de caisse, détection facture/avoir) ;
+- application d'un mapping de codes comptables (paramétrage initial par fichier de configuration) ;
+- regroupement des données par restaurant et génération d'un Excel (une feuille par restaurant).
+
+**Difficulté rencontrée** : les fichiers EDI réels présentaient des encodages variables (ISO-8859-1 vs UTF-8) et des segments optionnels. J'ai dû rendre le parsing tolérant aux variations sans masquer les vraies erreurs de format.
+
+**Rétrospective** : confronter le code à de vrais jeux de données anonymisés (et non à des cas idéaux) a fait émerger des bugs que je n'aurais jamais anticipés sur le papier.
+
+### Itération 2 — Retours collaborateurs et fondations de la plateforme (17 jours effectifs, ~6 semaines)
+
+**Objectif** : fiabiliser l'outil à partir de son usage réel par les comptables, et poser en parallèle les bases de la plateforme qui l'hébergera.
+
+**Réalisations** :
+
+- corrections issues des retours des comptables sur l'outil (tolérance du parsing, messages d'erreur explicites) ;
+- **persistance des codes comptables par utilisateur en base** (`user_code_maps` / `user_code_maps_gen_aux` / `code_journal`, colonnes JSON), en remplacement du fichier de configuration initial — évolution directement demandée par les utilisateurs, chacun voulant retrouver ses propres codes ;
 - mise en place du dépôt mono-repo (frontend / api / backend) et des conventions de commit ;
 - choix et installation de la chaîne d'outillage (ESLint/Prettier, golangci-lint, ruff/black) ;
 - schéma initial de la base PostgreSQL et script `init.sql` ;
@@ -380,41 +382,25 @@ J'ai découpé le travail en six sprints successifs. Pour chacun, je rappelle ci
 
 **Difficulté rencontrée** : j'ai d'abord tenté de partager des structures de données entre Go et Python via un format commun, avant de réaliser que le couplage que cela introduisait n'en valait pas la peine. J'ai tranché pour un contrat d'API JSON explicite (§ 6.5) plutôt qu'un schéma partagé.
 
-**Rétrospective** : investir dès le sprint 1 dans l'outillage (lint + format automatiques) m'a fait gagner du temps sur tous les sprints suivants — la dette technique ne s'accumulait pas.
+**Rétrospective** : investir tôt dans l'outillage (lint + format automatiques) m'a fait gagner du temps sur toutes les itérations suivantes — la dette technique ne s'accumulait pas. Et recevoir des retours d'utilisateurs réels dès la deuxième itération a validé le choix de livrer l'outil avant la plateforme.
 
-### Sprint 2 — Administration (2 semaines)
+### Itération 3 — Administration et intégration de l'outil au portail (13 jours effectifs, ~4,5 semaines)
 
-**Objectif** : permettre à un administrateur de gérer le cycle de vie des utilisateurs et le catalogue.
+**Objectif** : permettre à un administrateur de gérer le cycle de vie des utilisateurs et le catalogue, et faire de l'outil de caisse la première application du portail.
 
 **Réalisations** :
 
 - CRUD complet des utilisateurs côté Go (service `admin`) avec hachage bcrypt ;
 - matrice de rôles RBAC à 6 rôles et middleware `AdminMiddleware` ;
-- catalogue d'applications (CRUD) et table d'association `utilisateur_applications` ;
-- interface d'administration React (liste filtrable, modales de confirmation).
+- catalogue d'applications (CRUD) et table d'association `user_application_permissions` ;
+- interface d'administration React (liste filtrable, modales de confirmation) ;
+- intégration du logiciel de caisse comme première application du catalogue : page dédiée, composants partagés `FileDropZone` / `ResultDownloader`, nettoyage automatique des fichiers temporaires (thread daemon, 5 min).
 
 **Difficulté rencontrée** : la vérification du rôle administrateur devait être infaillible. Je l'ai d'abord implémentée côté frontend uniquement, avant de comprendre que c'était une faille de contrôle d'accès (A01 OWASP). J'ai déplacé la vérification côté serveur via un middleware dédié, le frontend ne servant plus qu'au confort d'affichage.
 
 **Rétrospective** : « ne jamais faire confiance au client » est passé du statut de slogan à celui de réflexe ancré.
 
-### Sprint 3 — Outil de traitement des tirages de caisse (2,5 semaines)
-
-**Objectif** : automatiser le traitement des tirages de caisse (le cœur de valeur pour les comptables).
-
-**Réalisations** :
-
-- API Python FastAPI dédiée au traitement des fichiers de caisse ;
-- parsing EDI (extraction des données de caisse, détection facture/avoir) ;
-- application d'un mapping de codes comptables personnalisé par utilisateur (`codes_*` en JSONB) ;
-- regroupement des données par restaurant et génération d'un Excel (une feuille par restaurant) ;
-- composants partagés `FileDropZone` et `ResultDownloader` côté frontend ;
-- nettoyage automatique des fichiers temporaires (thread daemon, 5 min).
-
-**Difficulté rencontrée** : les fichiers EDI réels présentaient des encodages variables (ISO-8859-1 vs UTF-8) et des segments optionnels. J'ai dû rendre le parsing tolérant aux variations sans masquer les vraies erreurs de format.
-
-**Rétrospective** : confronter le code à de vrais jeux de données anonymisés (et non à des cas idéaux) a fait émerger des bugs que je n'aurais jamais anticipés sur le papier.
-
-### Sprint 4 — Temps réel et analytics (2 semaines)
+### Itération 4 — Temps réel et analytics (10 jours effectifs, ~3,5 semaines)
 
 **Objectif** : ajouter la présence temps réel et le suivi d'activité.
 
@@ -428,22 +414,24 @@ J'ai découpé le travail en six sprints successifs. Pour chacun, je rappelle ci
 
 **Rétrospective** : la concurrence ne se « teste » pas à l'œil — l'outil `-race` de Go a été décisif (cf. § 9.2).
 
-### Sprint 5 — Déploiement et sécurité (1,5 semaine)
+### Itération 5 — Déploiement et sécurisation du serveur (11 jours effectifs, ~4 semaines)
 
-**Objectif** : rendre l'application déployable et la durcir.
+**Objectif** : mettre l'application en service sur le serveur mis à disposition (vierge, cf. § 2.2) et la durcir.
 
 **Réalisations** :
 
+- provisioning complet du VPS vierge : système, runtime, orchestrateur K3s ;
+- mise en place du **reverse proxy Traefik** (terminaison HTTPS, routage vers les services) ;
 - Dockerfiles multi-stage pour les trois services ;
 - manifests Kubernetes (Deployment, Service, IngressRoute, PVC) ;
 - pipeline CI/CD GitHub Actions (tests → build → rollout) ;
-- passe de sécurité OWASP (§ 8) : externalisation des secrets, validation d'origine WebSocket, requêtes paramétrées.
+- sécurisation du VPS et passe de sécurité OWASP (§ 8) : externalisation des secrets, validation d'origine WebSocket, requêtes paramétrées.
 
 **Difficulté rencontrée** : un typo dans la configuration CORS de préproduction bloquait toutes les requêtes authentifiées. Le diagnostic m'a appris à lire méthodiquement les erreurs CORS du navigateur plutôt qu'à modifier la config au hasard.
 
-**Rétrospective** : la sécurité traitée « en fin de projet » est un anti-pattern ; j'aurais dû intégrer certaines mesures (secrets, paramétrage SQL) dès les sprints 1-2 — ce que je formalise désormais en *security by design*.
+**Rétrospective** : la sécurité traitée « en fin de projet » est un anti-pattern ; j'aurais dû intégrer certaines mesures (secrets, paramétrage SQL) dès les premières itérations — ce que je formalise désormais en *security by design*.
 
-### Sprint 6 — Finalisation (3 semaines)
+### Itération 6 — Finalisation (20 jours effectifs, ~7 semaines)
 
 **Objectif** : fiabiliser, tester et documenter.
 
@@ -462,16 +450,16 @@ J'ai découpé le travail en six sprints successifs. Pour chacun, je rappelle ci
 
 | Outil | Usage |
 |-------|-------|
-| GitHub | Versioning du code, issues, pull requests |
+| Carnet de bord (papier) | Tableau Kanban personnel : tâches par itération, tâche en cours, fait, reports de session en session, notes de rétrospective |
+| GitHub | Versioning du code, branches, pull requests |
 | GitHub Actions | CI/CD automatisé |
-| GitHub Projects | Tableau Kanban de suivi |
 | Figma | Maquettage des interfaces |
 
-[À insérer : captures d'écran du tableau Kanban GitHub Projects]
+Le choix d'un carnet papier plutôt que d'un outil numérique est délibéré : pour une personne seule, il élimine tout coût d'outillage et reste consultable en un geste au début de chaque session — l'essentiel étant la discipline de mise à jour, pas l'outil.
 
 ## 3.4 Conventions de commit
 
-J'ai adopté la convention [Conventional Commits](https://www.conventionalcommits.org/) pour garantir la lisibilité de l'historique, automatiser le versioning et générer le CHANGELOG.
+J'ai adopté la convention [Conventional Commits](https://www.conventionalcommits.org/) pour garantir la lisibilité de l'historique et automatiser le versioning.
 
 ### Format
 
@@ -518,7 +506,6 @@ perf(analyse): optimisation des requêtes d'analytique par index PostgreSQL
 ### Bénéfices
 
 - Historique lisible et filtrable (`git log --grep="^feat"`) ;
-- Génération automatique du CHANGELOG via `git-cliff` ou `standard-version` ;
 - Détection automatique du type de release (SemVer) : `feat` → MINOR, `fix` → PATCH, `BREAKING CHANGE` → MAJOR ;
 - Onboarding facilité pour de nouveaux contributeurs.
 
@@ -708,7 +695,7 @@ J'ai formalisé les règles de gestion suivantes, qui gouvernent le comportement
 
 ## 4.2 Maquettes et wireframes
 
-Avant de coder, j'ai maquetté les écrans principaux. L'interface s'appuie sur Tailwind CSS avec support natif du mode sombre.
+Avant de coder, j'ai maquetté les écrans principaux. L'interface s'appuie sur Tailwind CSS avec support natif du mode sombre. Les wireframes ci-dessous fixent la structure des quatre écrans clés ; les captures des écrans réellement livrés figurent en **Annexe B**.
 
 ### 4.2.1 Page de connexion
 
@@ -738,7 +725,7 @@ Avant de coder, j'ai maquetté les écrans principaux. L'interface s'appuie sur 
 └─────────────────────────────────────────────────┘
 ```
 
-### 4.2.2 Dashboard utilisateur (catalogue d'applications)
+### 4.2.2 Page Home (catalogue d'applications)
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -786,28 +773,32 @@ Avant de coder, j'ai maquetté les écrans principaux. L'interface s'appuie sur 
 └─────────────────────────────────────────────────┘
 ```
 
-### 4.2.4 Tableau de bord analytique
+### 4.2.4 Logiciel de tirages de caisse
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  Admin > Analytics                               │
+│  [Logo]   Tirages de caisse    [👤] [🌙] [🚪]   │
 ├─────────────────────────────────────────────────┤
-│  📅 Du [01/01/2024] Au [31/03/2024]             │
 │                                                  │
-│  ┌──────────────────┐  ┌──────────────────┐     │
-│  │ Connexions/jour  │  │ Utilisateurs     │     │
-│  │    📈 ─────╱──   │  │ actifs  🥇 Jean  │     │
-│  │         ╱       │  │         🥈 Marie │     │
-│  │    ───╱─────    │  │         🥉 Paul  │     │
-│  └──────────────────┘  └──────────────────┘     │
+│  1 ─ Déposer les fichiers de caisse (.EDI)      │
+│  ┌────────────────────────────────────────┐     │
+│  │   ⬆  Glissez vos fichiers ici           │     │
+│  │      ou cliquez pour parcourir           │     │
+│  │   ─────────────────────────────────      │     │
+│  │   📄 resto-01.EDI   📄 resto-02.EDI      │     │
+│  └────────────────────────────────────────┘     │
 │                                                  │
-│  ┌──────────────────┐  ┌──────────────────┐     │
-│  │ Utilisation API  │  │ Heures de pointe │     │
-│  │ ██████ /conversion │  │    📊          │     │
-│  │ ████── /codes      │  │  ██           │     │
-│  │ ██──── /login      │  │ ████  ████    │     │
-│  │ █───── /analyse    │  │ 8h  10h  14h  │     │
-│  └──────────────────┘  └──────────────────┘     │
+│  2 ─ Codes comptables      [⚙ Configurer]       │
+│      Jeu enregistré : « Dossier McDo Rouen »    │
+│                                                  │
+│  3 ─ [        Lancer le traitement        ]     │
+│      ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░  traitement…          │
+│                                                  │
+│  4 ─ Résultat                                    │
+│      ┌──────────────────────────────────┐       │
+│      │ 📗 tirages.xlsx  (1 feuille/resto)│       │
+│      │            [ ⬇ Télécharger ]      │       │
+│      └──────────────────────────────────┘       │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -856,232 +847,286 @@ La conformité RGAA AA complète est positionnée en évolution (§ 12.1). Les p
 
 ### 4.4.1 Dictionnaire de données
 
+> **Source** : le modèle ci-dessous reflète le schéma PostgreSQL réellement déployé
+> (`backend/internal/db/postgres.go` → `InitSchema`, migrations `001_fix_anomalies.sql`
+> et `002_add_fascicule_pk.sql`, et `api/schemas/model.py`). Les diagrammes exportés
+> correspondants sont fournis : `doc/Mcd.png` (MCD Merise) et `doc/MLD.png` (MLD).
+> Le document de travail détaillé est `doc/schemas/MCD_MLD_MPD.md`.
+>
+> **Périmètre présenté** : le modèle couvre l'ensemble du système — le *hub*
+> (authentification, catalogue d'applications, permissions), l'API métier Python
+> (codes comptables, configuration McDonald's) et l'*analytics* (table `events`,
+> service Go `analyse`, cf. § 7.2.3).
+
 J'ai décrit l'ensemble des entités persistées, leurs attributs, types, contraintes et règles métier. Ce dictionnaire constitue la référence des modèles MCD, MLD et MPD qui suivent.
 
-#### Entité : `utilisateurs`
+#### Entité : `users`
 
 | Attribut | Type SQL | Contraintes | Description |
 |----------|----------|-------------|-------------|
-| `uid` | VARCHAR(255) | PRIMARY KEY | Identifiant unique (généré côté backend) |
-| `email` | VARCHAR(255) | UNIQUE, NOT NULL | Identifiant de connexion |
-| `mot_de_passe` | VARCHAR(255) | NOT NULL | Hash bcrypt du mot de passe (jamais en clair) |
-| `role` | VARCHAR(50) | NOT NULL, DEFAULT `'Client'` | Rôle métier : Admin, Dev, Comptable, Social, Auditeur, Client |
-| `entreprise` | VARCHAR(255) | NULLABLE | Société de rattachement |
-| `derniere_connexion` | TIMESTAMP | NULLABLE | Date / heure de la dernière connexion réussie |
+| `id` | SERIAL | PRIMARY KEY | Clé primaire de substitution (auto-incrément) |
+| `uid` | TEXT | UNIQUE, NOT NULL | Identifiant métier généré côté backend (cible des FK Go) |
+| `email` | TEXT | UNIQUE, NOT NULL | Identifiant de connexion |
+| `username` | TEXT | UNIQUE, NOT NULL | Nom d'affichage unique |
+| `password` | TEXT | NOT NULL | Hash bcrypt du mot de passe (jamais en clair) |
+| `admin` | BOOLEAN | NOT NULL | Indicateur administrateur |
+| `role` | TEXT | DEFAULT `'user'` | Rôle métier : Admin, Dev, Comptable, Social, Auditeur, Client |
+| `entreprise` | TEXT | NULLABLE | Société de rattachement (ajout migration 001) |
+| `last_seen` | TIMESTAMP | DEFAULT `CURRENT_TIMESTAMP` | Date / heure de la dernière activité |
 
 #### Entité : `sessions`
 
 | Attribut | Type SQL | Contraintes | Description |
 |----------|----------|-------------|-------------|
-| `id` | UUID | PRIMARY KEY, DEFAULT `gen_random_uuid()` | Identifiant de session (cookie côté client) |
-| `token` | VARCHAR(512) | NOT NULL | Jeton additionnel (clé de validation) |
-| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) ON DELETE CASCADE | Propriétaire de la session |
-| `date_expiration` | TIMESTAMP | NOT NULL | Date d'expiration (+24 h glissantes) |
+| `id` | TEXT | PRIMARY KEY | Jeton de session (valeur du cookie `userId`) |
+| `user_id` | TEXT | FK → users(uid), NOT NULL | Propriétaire de la session |
+| `created_at` | TIMESTAMP | NOT NULL | Date de création |
+| `expires_at` | TIMESTAMP | NOT NULL | Date d'expiration |
+| `last_seen` | TIMESTAMP | NULLABLE | Dernière activité observée sur la session |
 
 #### Entité : `applications`
 
 | Attribut | Type SQL | Contraintes | Description |
 |----------|----------|-------------|-------------|
 | `id` | SERIAL | PRIMARY KEY | Identifiant auto-incrémenté |
-| `nom` | VARCHAR(255) | NOT NULL | Nom affiché dans le catalogue |
-| `description` | TEXT | NULLABLE | Description courte de l'application |
-| `icone` | VARCHAR(255) | NULLABLE | Nom de l'icône (Lucide) |
-| `url` | VARCHAR(500) | NULLABLE | URL d'accès interne ou externe |
-| `categorie` | VARCHAR(100) | NULLABLE | Regroupement fonctionnel (Comptabilité, Caisse, …) |
+| `name` | TEXT | NOT NULL | Nom affiché dans le catalogue |
+| `base_url` | TEXT | NOT NULL | URL d'accès de l'application |
+| `icon_path` | TEXT | NULLABLE | Chemin de l'icône |
+| `groups` | TEXT | NULLABLE | Libellé du groupe (référence faible vers `application_groups.name`) |
 
-#### Entité : `utilisateur_applications` (association N:N)
-
-| Attribut | Type SQL | Contraintes | Description |
-|----------|----------|-------------|-------------|
-| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) ON DELETE CASCADE, PK (composite) | |
-| `id_application` | INTEGER | FK → applications(id) ON DELETE CASCADE, PK (composite) | |
-
-#### Entité : `evenements`
+#### Entité : `application_groups`
 
 | Attribut | Type SQL | Contraintes | Description |
 |----------|----------|-------------|-------------|
 | `id` | SERIAL | PRIMARY KEY | |
-| `type` | VARCHAR(100) | NULLABLE | Type d'événement (`login`, `logout`, `api_call`, etc.) |
-| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) | Auteur de l'événement |
-| `api` | VARCHAR(255) | NULLABLE | Endpoint ou service concerné |
-| `date` | TIMESTAMP | DEFAULT NOW() | Date d'occurrence |
-| `details` | JSONB | NULLABLE | Métadonnées libres (durée, paramètres, etc.) |
+| `name` | TEXT | UNIQUE, NOT NULL | Nom du groupe d'applications (ex. `Compta`, `Social`) |
+| `created_at` | TIMESTAMP | DEFAULT `CURRENT_TIMESTAMP` | Date de création |
 
-#### Entité : `groupes`
+#### Entité : `user_application_permissions` (association N:N)
 
 | Attribut | Type SQL | Contraintes | Description |
 |----------|----------|-------------|-------------|
 | `id` | SERIAL | PRIMARY KEY | |
-| `nom` | VARCHAR(255) | NOT NULL | Nom du groupe d'applications |
-| `description` | TEXT | NULLABLE | Description optionnelle |
+| `user_id` | TEXT | FK → users(uid), NOT NULL | Utilisateur concerné |
+| `application_id` | INTEGER | FK → applications(id), NOT NULL | Application concernée |
+| `can_access` | BOOLEAN | DEFAULT FALSE | Droit d'accès effectif |
+| *(contrainte)* | — | UNIQUE(`user_id`, `application_id`) | Une seule ligne par couple utilisateur / application |
 
-#### Entité : `config_mcdo`
-
-| Attribut | Type SQL | Contraintes | Description |
-|----------|----------|-------------|-------------|
-| `id` | SERIAL | PRIMARY KEY | |
-| `nom_config` | VARCHAR(255) | UNIQUE | Identifiant logique de la configuration |
-| `donnees` | JSONB | NULLABLE | Données de configuration sérialisées |
-
-#### Entités : `codes_comptables`, `codes_journal`, `codes_gen_aux`
-
-Trois tables au schéma identique (mappings comptables propres à chaque utilisateur) :
+#### Entité : `events` (analytics)
 
 | Attribut | Type SQL | Contraintes | Description |
 |----------|----------|-------------|-------------|
 | `id` | SERIAL | PRIMARY KEY | |
-| `uid_utilisateur` | VARCHAR(255) | FK → utilisateurs(uid) ON DELETE CASCADE | |
-| `mapping` | JSONB | NULLABLE | Table de correspondance comptable (clé → valeur) |
+| `api_name` | TEXT | NULLABLE | Service / endpoint concerné par l'événement |
+| `uid` | TEXT | FK → users(uid) ON DELETE CASCADE, NOT NULL | Utilisateur à l'origine de l'événement |
+| `conn_time` | TEXT | NOT NULL | Horodatage de connexion (chaîne) |
+| `deco_time` | TEXT | NOT NULL | Horodatage de déconnexion (chaîne) |
+| `day` | TEXT | NOT NULL | Jour de l'événement (`YYYY-MM-DD`), clé d'agrégation |
+| `created_at` | TIMESTAMPTZ | DEFAULT `NOW()` | Date d'enregistrement |
+
+#### Entité : `fascicule_mcdo`
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | Clé de substitution (ajout migration 002) |
+| `noms` | TEXT | UNIQUE | Identifiant logique de la configuration |
+| `config` | TEXT (JSON) | NULLABLE | Configuration de mapping sérialisée en JSON |
+
+#### Entités : `user_code_maps`, `user_code_maps_gen_aux`, `code_journal`
+
+Trois tables au schéma analogue (mappings comptables propres à chaque utilisateur), gérées côté API Python (SQLAlchemy) :
+
+| Attribut | Type SQL | Contraintes | Description |
+|----------|----------|-------------|-------------|
+| `id` | SERIAL | PRIMARY KEY | |
+| `user_id` | INTEGER | FK → users(id) ON DELETE CASCADE, NOT NULL | Propriétaire du mapping |
+| `code_map` / `code_map_gen_aux` / `journal_map` | JSON | NOT NULL | Table de correspondance comptable (clé → valeur) |
+
+> **Note** : les FK des tables Python pointent vers `users(id)` (entier), alors que les
+> FK Go (`sessions`, `user_application_permissions`) pointent vers `users(uid)` (texte).
+> Ce choix est conservé volontairement : la couche SQLAlchemy (`api/schemas/model.py`)
+> joint sur `users.id`.
 
 #### Règles transversales
 
-- Tout `utilisateurs.uid` supprimé entraîne la suppression en cascade des `sessions`, `utilisateur_applications`, `codes_*` associés (droit à l'oubli RGPD) ;
-- Les timestamps sont stockés en UTC, conversion en TZ Europe/Paris côté affichage ;
-- Le champ `mot_de_passe` ne contient jamais de valeur en clair : insertion uniquement via `bcrypt.GenerateFromPassword`.
+- Toute suppression d'un `users` entraîne la suppression en cascade des `user_code_maps`, `user_code_maps_gen_aux`, `code_journal` et `events` associés (FK `ON DELETE CASCADE`) — droit à l'oubli RGPD ;
+- Les timestamps sont stockés en UTC, convertis en fuseau Europe/Paris côté affichage ;
+- Le champ `password` ne contient jamais de valeur en clair : insertion uniquement via `bcrypt.GenerateFromPassword`.
 
 ### 4.4.2 MCD (Modèle Conceptuel de Données)
 
-*Voir diagramme complet : `doc/diagrammes.md` — Section 10 (Diagramme Entité-Relation)*
+*Diagramme exporté : `doc/Mcd.png` (MCD Merise — associations **posséder**, **accéder**, **configurer codes comptables / gen aux / journal**, **générer**). Voir aussi `doc/schemas/MCD_MLD_MPD.md` § 1.*
 
 ```mermaid
 erDiagram
     UTILISATEUR ||--o{ SESSION : "possède"
-    UTILISATEUR ||--o{ UTILISATEUR_APPLICATION : "accède à"
-    APPLICATION ||--o{ UTILISATEUR_APPLICATION : "attribuée à"
-    UTILISATEUR ||--o{ EVENEMENT : "génère"
+    UTILISATEUR }o--o{ APPLICATION : "peut accéder (can_access)"
+    APPLICATION }o--|| GROUPE_APPLICATION : "appartient à"
     UTILISATEUR ||--o{ CODE_COMPTABLE : "configure"
     UTILISATEUR ||--o{ CODE_GEN_AUX : "configure"
     UTILISATEUR ||--o{ CODE_JOURNAL : "configure"
-    APPLICATION }o--|| GROUPE : "appartient à"
+    UTILISATEUR ||--o{ EVENEMENT : "génère"
 ```
 
 Entités principales identifiées :
 
-- **Utilisateur** (uid, email, mot_de_passe, role, entreprise, derniere_connexion)
-- **Session** (id, token, uid_utilisateur, date_expiration)
-- **Application** (id, nom, description, icone, url, categorie)
-- **UtilisateurApplication** (uid_utilisateur, id_application) — association N:N
-- **Evenement** (id, type, uid_utilisateur, api, date, details)
-- **Groupe** (id, nom, description)
-- **ConfigMcDo** (id, nom_config, donnees)
-- **CodeComptable / CodeJournal / CodeGenAux** (id, uid_utilisateur, mapping_json)
+- **Utilisateur** (`users`) — id, uid, email, username, password, admin, role, entreprise, last_seen
+- **Session** (`sessions`) — id, user_id, created_at, expires_at, last_seen
+- **Application** (`applications`) — id, name, base_url, icon_path, groups
+- **GroupeApplication** (`application_groups`) — id, name, created_at
+- **Permission** (`user_application_permissions`) — association N:N portant `can_access`
+- **CodeComptable / CodeGenAux / CodeJournal** (`user_code_maps`, `user_code_maps_gen_aux`, `code_journal`) — id, user_id, mapping JSON
+- **Evenement** (`events`) — id, api_name, uid, conn_time, deco_time, day, created_at (analytics, cf. § 7.2.3)
+- **FasciculeMcDo** (`fascicule_mcdo`) — entité technique isolée (id, noms, config)
 
-Relations :
+Relations (cf. `doc/Mcd.png`) :
 
-- Un **Utilisateur** possède 0..N **Sessions** ;
-- Un **Utilisateur** a accès à 0..N **Applications** (via UtilisateurApplication) ;
-- Un **Utilisateur** génère 0..N **Événements** ;
-- Un **Utilisateur** possède 0..N **CodeComptable**, **CodeJournal**, **CodeGenAux** ;
-- Un **Utilisateur** appartient à 0..N **Groupes**.
+- Un **Utilisateur** **possède** 0..N **Sessions** (une session appartient à exactement un utilisateur) ;
+- Un **Utilisateur** **accède** à 0..N **Applications** — association N:N porteuse de l'attribut `can_access`, matérialisée au niveau logique par la table de jonction `user_application_permissions` ;
+- Une **Application** porte le libellé d'un **GroupeApplication** (référence faible, non contrainte en base — cf. remarque ci-dessous) ;
+- Un **Utilisateur** **configure** 0..N **CodeComptable**, **CodeGenAux** et **CodeJournal** ;
+- Un **Utilisateur** **génère** 0..N **Evenement** (analytics).
+
+> **Remarque** : l'association `applications` ↔ `application_groups` est dénormalisée dans le code (`applications.groups` est un `TEXT` libre, pas une FK) — d'où l'entité `application_groups` isolée sur le diagramme `doc/Mcd.png`. Le MCD la modélise correctement ; le MPD (§ 4.4.4) reflète la réalité physique.
 
 ### 4.4.3 MLD (Modèle Logique de Données)
 
+*Diagramme exporté : `doc/MLD.png`. Notation : `#` = clé primaire, `*` = clé étrangère.*
+
 ```
-utilisateurs(#uid VARCHAR PK, email VARCHAR UNIQUE NOT NULL, mot_de_passe VARCHAR NOT NULL,
-             role VARCHAR NOT NULL, entreprise VARCHAR, derniere_connexion TIMESTAMP)
+users (#id, uid [UNIQUE], email [UNIQUE], username [UNIQUE], password,
+       admin, role, entreprise, last_seen)
 
-sessions(#id UUID PK, token VARCHAR NOT NULL, uid_utilisateur VARCHAR FK→utilisateurs,
-         date_expiration TIMESTAMP NOT NULL)
+sessions (#id, *user_id → users(uid), created_at, expires_at, last_seen)
 
-applications(#id SERIAL PK, nom VARCHAR NOT NULL, description TEXT, icone VARCHAR,
-             url VARCHAR, categorie VARCHAR)
+applications (#id, name, base_url, icon_path, groups)
+  -- groups = libellé textuel (référence faible vers application_groups.name)
 
-utilisateur_applications(#uid_utilisateur FK→utilisateurs, #id_application FK→applications)
+application_groups (#id, name [UNIQUE], created_at)
 
-evenements(#id SERIAL PK, type VARCHAR, uid_utilisateur VARCHAR FK→utilisateurs,
-           api VARCHAR, date TIMESTAMP DEFAULT NOW(), details JSONB)
+user_application_permissions (#id, *user_id → users(uid),
+                              *application_id → applications(id),
+                              can_access, UNIQUE(user_id, application_id))
 
-groupes(#id SERIAL PK, nom VARCHAR NOT NULL, description TEXT)
+user_code_maps         (#id, *user_id → users(id), code_map)
+user_code_maps_gen_aux (#id, *user_id → users(id), code_map_gen_aux)
+code_journal           (#id, *user_id → users(id), journal_map)
 
-config_mcdo(#id SERIAL PK, nom_config VARCHAR UNIQUE, donnees JSONB)
+events (#id, api_name, *uid → users(uid), conn_time, deco_time, day, created_at)
 
-codes_comptables(#id SERIAL PK, uid_utilisateur VARCHAR FK→utilisateurs, mapping JSONB)
-
-codes_journal(#id SERIAL PK, uid_utilisateur VARCHAR FK→utilisateurs, mapping JSONB)
-
-codes_gen_aux(#id SERIAL PK, uid_utilisateur VARCHAR FK→utilisateurs, mapping JSONB)
+fascicule_mcdo (#id, noms [UNIQUE], config)
 ```
+
+> **Attention** : `user_application_permissions` référence `users(uid)` côté utilisateur mais `applications(id)` côté application (cohérent avec le code). Les tables `user_code_maps*` / `code_journal` côté Python pointent vers `users(id)` (entier). Ces FK sont matérialisées en base avec `ON DELETE CASCADE` (migration 001).
+>
+> Sur le diagramme `doc/MLD.png`, dérivé mécaniquement du MCD, la table de jonction apparaît sous le nom de l'association **`accéder`** avec une clé primaire composée (`user_id`, `application_id`) — c'est la traduction canonique d'une association N:N porteuse. La base physique matérialise cette même table sous le nom `user_application_permissions`, avec une clé de substitution `id` et une contrainte `UNIQUE(user_id, application_id)` (§ 4.4.4) : deux représentations équivalentes du même modèle, au niveau logique et au niveau physique.
 
 ### 4.4.4 MPD (Modèle Physique de Données)
 
+Reflet exact du code déployé (`backend/internal/db/postgres.go` → `InitSchema`,
+migrations `001_fix_anomalies.sql` / `002_add_fascicule_pk.sql`, `api/schemas/model.py`).
+La table `events` (analytics) fait partie intégrante du modèle présenté (cf. § 7.2.3).
+
 ```sql
--- Script de création de la base de données
--- PostgreSQL
+-- =====================================================================
+-- MPD — Intranet / Portail Cabinet Martini
+-- SGBD : PostgreSQL (>= 12)
+-- =====================================================================
 
-CREATE TABLE utilisateurs (
-    uid VARCHAR(255) PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    mot_de_passe VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL DEFAULT 'Client',
-    entreprise VARCHAR(255),
-    derniere_connexion TIMESTAMP
+-- 1. Utilisateurs
+CREATE TABLE IF NOT EXISTS users (
+    id          SERIAL      PRIMARY KEY,
+    uid         TEXT        UNIQUE NOT NULL,
+    email       TEXT        UNIQUE NOT NULL,
+    username    TEXT        UNIQUE NOT NULL,
+    password    TEXT        NOT NULL,           -- haché (bcrypt)
+    admin       BOOLEAN     NOT NULL,
+    role        TEXT        DEFAULT 'user',
+    entreprise  TEXT,                            -- ajout migration 001
+    last_seen   TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE sessions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    token VARCHAR(512) NOT NULL,
-    uid_utilisateur VARCHAR(255) REFERENCES utilisateurs(uid) ON DELETE CASCADE,
-    date_expiration TIMESTAMP NOT NULL
+-- 2. Sessions
+CREATE TABLE IF NOT EXISTS sessions (
+    id          TEXT        PRIMARY KEY,        -- jeton de session
+    user_id     TEXT        NOT NULL,
+    created_at  TIMESTAMP   NOT NULL,
+    expires_at  TIMESTAMP   NOT NULL,
+    last_seen   TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(uid)
 );
 
-CREATE INDEX idx_sessions_token ON sessions(token);
-CREATE INDEX idx_sessions_expiration ON sessions(date_expiration);
+-- 3. Groupes d'applications
+CREATE TABLE IF NOT EXISTS application_groups (
+    id          SERIAL      PRIMARY KEY,
+    name        TEXT        UNIQUE NOT NULL,
+    created_at  TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO application_groups (name) VALUES ('Compta') ON CONFLICT (name) DO NOTHING;
+INSERT INTO application_groups (name) VALUES ('Social') ON CONFLICT (name) DO NOTHING;
 
-CREATE TABLE applications (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(255) NOT NULL,
-    description TEXT,
-    icone VARCHAR(255),
-    url VARCHAR(500),
-    categorie VARCHAR(100)
+-- 4. Applications
+CREATE TABLE IF NOT EXISTS applications (
+    id          SERIAL      PRIMARY KEY,
+    name        TEXT        NOT NULL,
+    base_url    TEXT        NOT NULL,
+    icon_path   TEXT,
+    groups      TEXT                              -- libellé du groupe (référence faible)
 );
 
-CREATE TABLE utilisateur_applications (
-    uid_utilisateur VARCHAR(255) REFERENCES utilisateurs(uid) ON DELETE CASCADE,
-    id_application INTEGER REFERENCES applications(id) ON DELETE CASCADE,
-    PRIMARY KEY (uid_utilisateur, id_application)
+-- 5. Permissions utilisateur <-> application (table de jonction N:N)
+CREATE TABLE IF NOT EXISTS user_application_permissions (
+    id              SERIAL      PRIMARY KEY,
+    user_id         TEXT        NOT NULL,
+    application_id  INTEGER     NOT NULL,
+    can_access      BOOLEAN     DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES users(uid),
+    FOREIGN KEY (application_id) REFERENCES applications(id),
+    UNIQUE (user_id, application_id)
 );
 
-CREATE TABLE evenements (
-    id SERIAL PRIMARY KEY,
-    type VARCHAR(100),
-    uid_utilisateur VARCHAR(255) REFERENCES utilisateurs(uid),
-    api VARCHAR(255),
-    date TIMESTAMP DEFAULT NOW(),
-    details JSONB
+-- 6. Événements d'analytics (service Go `analyse`, cf. § 7.2.3)
+CREATE TABLE IF NOT EXISTS events (
+    id          SERIAL          PRIMARY KEY,
+    api_name    TEXT,
+    uid         TEXT            NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+    conn_time   TEXT            NOT NULL,
+    deco_time   TEXT            NOT NULL,
+    day         TEXT            NOT NULL,
+    created_at  TIMESTAMPTZ     DEFAULT NOW()
 );
 
-CREATE INDEX idx_evenements_date ON evenements(date);
-CREATE INDEX idx_evenements_utilisateur ON evenements(uid_utilisateur);
-
-CREATE TABLE groupes (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(255) NOT NULL,
-    description TEXT
+-- 7. Codes comptables (gérés côté API Python / SQLAlchemy)
+--    FK matérialisées par la migration 001 (vers users.id, entier).
+CREATE TABLE IF NOT EXISTS user_code_maps (
+    id          SERIAL      PRIMARY KEY,
+    user_id     INTEGER     NOT NULL,
+    code_map    JSON        NOT NULL DEFAULT '{}',
+    CONSTRAINT fk_user_code_maps_user
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE config_mcdo (
-    id SERIAL PRIMARY KEY,
-    nom_config VARCHAR(255) UNIQUE,
-    donnees JSONB
+CREATE TABLE IF NOT EXISTS user_code_maps_gen_aux (
+    id                  SERIAL      PRIMARY KEY,
+    user_id             INTEGER     NOT NULL,
+    code_map_gen_aux    JSON        NOT NULL,
+    CONSTRAINT fk_user_code_maps_gen_aux_user
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE codes_comptables (
-    id SERIAL PRIMARY KEY,
-    uid_utilisateur VARCHAR(255) REFERENCES utilisateurs(uid) ON DELETE CASCADE,
-    mapping JSONB
+CREATE TABLE IF NOT EXISTS code_journal (
+    id          SERIAL      PRIMARY KEY,
+    user_id     INTEGER     NOT NULL,
+    journal_map JSON        NOT NULL,
+    CONSTRAINT fk_code_journal_user
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE codes_journal (
-    id SERIAL PRIMARY KEY,
-    uid_utilisateur VARCHAR(255) REFERENCES utilisateurs(uid) ON DELETE CASCADE,
-    mapping JSONB
-);
-
-CREATE TABLE codes_gen_aux (
-    id SERIAL PRIMARY KEY,
-    uid_utilisateur VARCHAR(255) REFERENCES utilisateurs(uid) ON DELETE CASCADE,
-    mapping JSONB
+-- 8. Configuration métier McDo (renommée "Fascicule McDo" -> fascicule_mcdo, migration 001)
+CREATE TABLE IF NOT EXISTS fascicule_mcdo (
+    id      SERIAL  PRIMARY KEY,           -- ajout migration 002
+    noms    TEXT    CONSTRAINT uq_fascicule_mcdo_noms UNIQUE,
+    config  TEXT                          -- JSON sérialisé
 );
 ```
 
@@ -1091,37 +1136,51 @@ CREATE TABLE codes_gen_aux (
 
 J'ai veillé à respecter la 3NF :
 
-- **1NF** : aucun attribut multivalué scalaire. Les mappings comptables (`codes_*.mapping`) et les configurations McDonald's (`config_mcdo.donnees`) sont stockés en `JSONB` parce qu'ils représentent des structures de données opaques pour la base — la BDD n'a pas à les indexer ni à les joindre.
-- **2NF** : pas de dépendance partielle (les clés primaires sont mono-attribut, sauf la table d'association `utilisateur_applications` qui ne porte aucune donnée propre).
+- **1NF** : aucun attribut multivalué scalaire. Les mappings comptables (`user_code_maps.code_map`, `user_code_maps_gen_aux.code_map_gen_aux`, `code_journal.journal_map`) et la configuration McDonald's (`fascicule_mcdo.config`) sont stockés en `JSON` parce qu'ils représentent des structures de données opaques pour la base — la BDD n'a pas à les indexer ni à les joindre.
+- **2NF** : pas de dépendance partielle. La table d'association `user_application_permissions` porte une clé de substitution `id` et une contrainte d'unicité `UNIQUE(user_id, application_id)` ; son seul attribut propre (`can_access`) dépend bien du couple complet.
 - **3NF** : pas de dépendance transitive entre attributs non-clé.
 
-#### Index
+#### Index et unicité
 
-| Table | Index | Justification |
-|-------|-------|---------------|
-| `utilisateurs` | UNIQUE(`email`) | Lookup à chaque login (chemin chaud) |
-| `sessions` | `idx_sessions_token` sur `token` | Lookup à chaque requête authentifiée |
-| `sessions` | `idx_sessions_expiration` sur `date_expiration` | Job de nettoyage des sessions expirées |
-| `evenements` | `idx_evenements_date` | Requêtes de fenêtre temporelle (analytics) |
-| `evenements` | `idx_evenements_utilisateur` | Filtrage des événements par utilisateur |
+Le schéma s'appuie sur les index implicites créés par PostgreSQL pour les contraintes `PRIMARY KEY` et `UNIQUE` :
 
-Je n'ai pas créé d'index secondaires sur les colonnes JSONB : aucune requête ne projette sur leur contenu (les mappings et configurations sont lus en bloc).
+| Table | Index implicite | Justification |
+|-------|-----------------|---------------|
+| `users` | UNIQUE(`uid`), UNIQUE(`email`), UNIQUE(`username`) | Lookup à chaque login / résolution de FK (chemin chaud) |
+| `sessions` | PK(`id`) | Lookup du jeton à chaque requête authentifiée |
+| `application_groups` | UNIQUE(`name`) | Résolution du libellé de groupe |
+| `user_application_permissions` | UNIQUE(`user_id`, `application_id`) | Un seul droit par couple utilisateur / application |
+| `fascicule_mcdo` | UNIQUE(`noms`) | Résolution d'une configuration par nom |
+
+Je n'ai pas créé d'index secondaires sur les colonnes `JSON` : aucune requête ne projette sur leur contenu (les mappings et configurations sont lus en bloc). Des index secondaires ciblés (p. ex. sur `events` pour l'analytics) sont documentés comme évolution conditionnelle en § 12.1.
 
 #### Contraintes référentielles
 
-- **ON DELETE CASCADE** sur `sessions.uid_utilisateur`, `utilisateur_applications.*`, `codes_*.uid_utilisateur` : la suppression d'un utilisateur (droit à l'oubli RGPD) nettoie toutes ses données dérivées sans intervention applicative ;
-- Pas de cascade sur `evenements.uid_utilisateur` : les événements sont conservés à des fins d'audit / analytics même après suppression du compte (anonymisation par perte de référence).
+- **ON DELETE CASCADE** sur `user_code_maps.user_id`, `user_code_maps_gen_aux.user_id`, `code_journal.user_id` (vers `users(id)`) et sur `events.uid` (vers `users(uid)`) : la suppression d'un utilisateur (droit à l'oubli RGPD) nettoie ses mappings comptables et ses événements d'analytics sans intervention applicative ;
+- **FK** sur `sessions.user_id` et `user_application_permissions.user_id` vers `users(uid)`, et sur `user_application_permissions.application_id` vers `applications(id)` — garantissant l'intégrité du hub ;
+- La colonne `applications.groups` est une **référence faible** (`TEXT` libre, sans FK vers `application_groups`) : choix de dénormalisation assumé, décrit au § 4.4.2.
 
 #### Choix de types
 
-- **`VARCHAR(255)` pour `uid`** plutôt qu'`UUID` natif : l'identifiant est généré côté backend Go avec un préfixe métier ; le type `VARCHAR` simplifie l'interopérabilité avec Python ;
-- **`UUID` pour `sessions.id`** : aucune signification métier, génération aléatoire native PostgreSQL ;
-- **`JSONB`** plutôt que `JSON` : indexation native, opérateurs `?`, `@>`, `->>` disponibles, format binaire compact ;
-- **`TIMESTAMP`** sans fuseau : convention projet, toutes les valeurs en UTC, conversion côté affichage.
+- **`id SERIAL PRIMARY KEY` + `uid TEXT UNIQUE`** sur `users` : la clé de substitution entière sert les jointures internes (notamment les FK Python) tandis que `uid` reste l'identifiant métier stable généré côté backend Go et référencé par les FK Go ;
+- **`sessions.id TEXT`** : le jeton de session lui-même fait office de clé primaire (aucune colonne `token` séparée) ;
+- **`JSON`** pour les mappings et configurations : structures opaques stockées telles quelles, lues en bloc côté API Python ;
+- **`TIMESTAMP`** sans fuseau (hub) et **`TIMESTAMPTZ`** pour `events.created_at` : convention projet, valeurs en UTC, conversion côté affichage.
+
+#### Choix SQL vs NoSQL
+
+J'ai étudié l'opportunité d'introduire un moteur NoSQL aux côtés de PostgreSQL, et j'ai décidé de ne pas le faire. Ce choix est argumenté :
+
+- **Les données du portail sont intrinsèquement relationnelles.** Le cœur du modèle est un graphe de relations (utilisateurs ↔ applications ↔ permissions, sessions, événements) où l'intégrité référentielle est une exigence métier : la suppression d'un utilisateur doit entraîner celle de ses permissions, sessions, mappings comptables et événements (`ON DELETE CASCADE`, droit à l'oubli RGPD, § 8.4). Une base documentaire m'aurait obligé à réimplémenter ces garanties côté applicatif.
+- **Les besoins transactionnels sont réels** : création d'un utilisateur puis attribution de ses applications, upsert de configuration (`ON CONFLICT DO UPDATE`) — des opérations qui bénéficient directement des transactions ACID de PostgreSQL.
+- **La volumétrie ne justifie pas un moteur spécialisé** : des dizaines d'utilisateurs internes et quelques milliers d'événements analytics restent très loin des volumes où la scalabilité horizontale native d'un MongoDB apporte un gain mesurable.
+- **Le besoin semi-structuré existe — et il est couvert en SQL.** Les mappings comptables et les configurations McDonald's sont des structures opaques à schéma variable. Plutôt que d'introduire une seconde base, je les stocke dans des colonnes `JSON` lues en bloc (cf. § 7.4.7) : c'est précisément le pattern documentaire, sans le coût d'exploitation d'un second moteur (sauvegardes, supervision, sécurité, montées de version).
+
+J'ai en revanche identifié les cas où un moteur NoSQL deviendrait pertinent, et je les ai documentés en § 12.1 : un store clé-valeur **Redis** pour externaliser les sessions et les compteurs de rate limiting dès que le backend passera en multi-instances (un état partagé en mémoire ne scale pas horizontalement), et une base orientée documents pour les événements analytics si leur volumétrie l'exigeait. Ne pas utiliser de NoSQL ici est donc un arbitrage coût/bénéfice assumé, pas une méconnaissance de ces moteurs.
 
 #### Stratégie de migration
 
-Le projet utilise actuellement un script SQL d'initialisation unique (`scripts/init.sql`). Une migration outillée (`golang-migrate` ou `Alembic`) est documentée comme amélioration prévue en § 12.1, conditionnée à l'ajout d'évolutions de schéma post-mise-en-production.
+Le schéma est initialisé par InitSchema (backend/internal/db/postgres.go), complété par les migrations SQL idempotentes 001_fix_anomalies.sql (correctifs d'intégrité et de nommage ) et 002_add_fascicule_pk.sql (clé primaire de fascicule_mcdo). Une migration outillée (golang-migrate ou Alembic) est documentée comme amélioration prévue en § 12.1, conditionnée à l'ajout d'évolutions de schéma post-mise-en-production.
 
 ## 4.5 Diagrammes de séquence
 
@@ -1143,7 +1202,7 @@ sequenceDiagram
     B->>B: bcrypt.CompareHashAndPassword(hash, password)
     alt Mot de passe correct
         B->>DB: INSERT INTO sessions (id, user_id, expires_at)
-        B-->>F: 200 OK + Set-Cookie: userId (HttpOnly, Secure, SameSite)
+        B-->>F: 200 OK + Set-Cookie: sessionId + userId (Secure, SameSite=Lax)
         F-->>U: Redirection Dashboard
     else Mot de passe incorrect
         B-->>F: 401 Unauthorized
@@ -1400,7 +1459,7 @@ J'ai préféré **Vite** à Create React App (déprécié) pour sa rapidité de 
 | Extensions | Très riche | Limitées | N/A | **PostgreSQL** |
 | Performance | Excellente | Excellente | Variable | **PostgreSQL** |
 
-**Justification** : PostgreSQL s'est imposé pour sa robustesse, son support natif JSONB (utilisé pour les mappings de codes comptables), ses capacités d'extension et sa conformité ACID complète.
+**Justification** : PostgreSQL s'est imposé pour sa robustesse, son support natif JSON/JSONB (le projet stocke les mappings de codes comptables en colonnes `JSON`), ses capacités d'extension et sa conformité ACID complète.
 
 ### Infrastructure
 
@@ -1656,8 +1715,10 @@ backend/
 **Routage sécurisé (3 subrouters)** :
 
 - `pub` (routes publiques) : `/sys/login`, `/sys/logout` — aucun middleware d'authentification ;
-- `sys` (routes authentifiées) : `/sys/applications`, `/sys/ws` — protégées par `AuthMiddleware` ;
-- `adm` (routes administration) : `/sys/get-users`, `/sys/new-user`, `/sys/delete-user/*` — protégées par `AuthMiddleware` + `AdminMiddleware`.
+- `sys` (routes authentifiées) : `/sys/verify-token`, `/sys/user-applications`, `/sys/analyses/*`, `/sys/*-macdos-config*` — protégées par `AuthMiddleware` ;
+- `adm` (routes administration) : `/sys/get-users`, `/sys/new-user`, `/sys/delete-user/{uid}`, gestion du catalogue — protégées par `AuthMiddleware` + `AdminMiddleware`.
+
+S'y ajoutent, montés à la racine du routeur : `/health` (healthcheck) et `/ws` (WebSocket, contrôle d'`Origin` par allowlist).
 
 ## 6.4 Architecture API Python
 
@@ -1696,48 +1757,58 @@ Cette approche garantit qu'aucune dérive ne peut s'installer entre code et docu
 
 Le backend Go n'utilise pas de générateur automatique. J'ai maintenu la documentation dans ce dossier à partir de l'inspection de `backend/cmd/main.go` (enregistrement des routes par subrouter).
 
-#### Endpoints publics (`pub`, aucun middleware d'auth)
+#### Endpoints publics (racine et subrouter `pub`, aucun middleware d'auth)
 
 | Méthode | Chemin | Description |
 |---------|--------|-------------|
-| `POST` | `/sys/login` | Authentification (renvoie cookie `userId`) |
-| `POST` | `/sys/logout` | Déconnexion (invalide la session) |
-| `POST` | `/sys/register` | Inscription d'un nouvel utilisateur |
-| `GET` | `/sys/health` | Healthcheck (200 si DB joignable) |
+| `GET` | `/health` | Healthcheck (200 `OK`) |
+| `WS` | `/ws` | Upgrade WebSocket — présence temps réel (contrôle d'`Origin` par allowlist) |
+| `POST` | `/sys/login` | Authentification (pose les cookies `sessionId` + `userId`) |
+| `POST` | `/sys/logout` | Déconnexion (marque la session déconnectée, expire les cookies) |
 
-#### Endpoints authentifiés (`sys`, `AuthMiddleware`)
+#### Endpoints authentifiés (subrouter `sys`, `AuthMiddleware`)
 
 | Méthode | Chemin | Description |
 |---------|--------|-------------|
-| `GET` | `/sys/me` | Profil utilisateur courant |
-| `GET` | `/sys/applications` | Catalogue filtré par utilisateur |
-| `WS` | `/sys/ws` | Upgrade WebSocket (présence temps réel) |
+| `GET` | `/sys/verify-token` | Vérification de la session courante |
+| `GET` | `/sys/verify-admin` | Vérification du rôle Admin de la session courante |
+| `GET` | `/sys/user-applications` | Catalogue d'applications filtré par utilisateur |
+| `GET` | `/sys/get-icons` | Icônes des applications du catalogue |
+| `POST` | `/sys/analyses/add-event` | Enregistrement d'un événement d'usage (analytics) |
+| `GET` | `/sys/analyses/get-events` | Liste des événements |
+| `POST` | `/sys/analyses/events/ConnByDays` | Stats connexions par jour |
+| `GET` | `/sys/analyses/stats/active-users` | Top utilisateurs actifs |
+| `GET` | `/sys/analyses/stats/by-api` | Répartition d'utilisation par API |
+| `GET` | `/sys/analyses/stats/peak-hours` | Heures de pointe |
+| `POST` | `/sys/get-macdos-configs-names` | Noms des configurations McDonald's disponibles |
+| `GET` | `/sys/get-macdos-config-{name_config}` | Lecture d'une configuration McDonald's |
+| `PUT` | `/sys/update-macdos-config-{name_config}` | Mise à jour d'une configuration McDonald's |
+| `GET` | `/uploads/{fichier}` | Fichiers uploadés (icônes), servis derrière `AuthMiddleware` |
 
-#### Endpoints administration (`adm`, `AuthMiddleware` + `AdminMiddleware`)
+#### Endpoints administration (subrouter `adm`, `AuthMiddleware` + `AdminMiddleware`)
 
 | Méthode | Chemin | Description |
 |---------|--------|-------------|
 | `GET` | `/sys/get-users` | Liste de tous les utilisateurs |
+| `GET` | `/sys/get-user/{uid}` | Détail d'un utilisateur |
 | `POST` | `/sys/new-user` | Création d'un utilisateur |
-| `PUT` | `/sys/update-user` | Modification |
+| `PUT` | `/sys/update-user/{uid}` | Modification |
 | `DELETE` | `/sys/delete-user/{uid}` | Suppression |
+| `POST` | `/sys/add-app/{uid}` | Attribution d'une application à un utilisateur |
+| `DELETE` | `/sys/remove-app/{uid}` | Retrait d'une application |
+| `POST` | `/sys/create-new-app` | Création d'une application |
+| `PUT` | `/sys/edit-app/{id}` | Modification d'une application |
 | `GET` | `/sys/get-apps` | Liste de toutes les applications |
-| `POST` | `/sys/new-app` | Création d'une application |
-| `PUT` | `/sys/update-app` | Modification |
-| `DELETE` | `/sys/delete-app/{id}` | Suppression |
-| `POST` | `/sys/add-app-permission` | Attribution d'une application à un utilisateur |
-| `POST` | `/sys/remove-app-permission` | Retrait |
-| `GET` | `/sys/analytics/conn-by-days` | Stats connexions par jour |
-| `GET` | `/sys/analytics/active-users` | Top utilisateurs actifs |
-| `GET` | `/sys/analytics/api-stats` | Répartition d'utilisation par API |
-| `GET` | `/sys/analytics/peak-hours` | Heures de pointe |
-| `POST` | `/sys/macdos/config` | Configuration McDonald's |
+| `DELETE` | `/sys/delete-app/{id}` | Suppression d'une application |
+| `POST` | `/sys/upload` | Upload d'une icône d'application |
+| `GET` | `/sys/get-groups` | Liste des groupes d'applications |
+| `POST` | `/sys/create-group` | Création d'un groupe |
 
 ### 6.5.3 Contrats d'interface
 
 - **Format de réponse standard** : objet JSON `{"data": ..., "error": null}` en cas de succès, `{"data": null, "error": "message"}` en cas d'erreur applicative ;
 - **Codes HTTP respectés** : `200`, `201`, `400`, `401`, `403`, `404`, `422`, `429`, `500` ;
-- **Authentification** : cookie `userId` (HttpOnly, Secure, SameSite=Strict) — pas de Bearer token en header pour les requêtes navigateur ;
+- **Authentification** : deux cookies posés au login — `sessionId` (jeton de session opaque, validé en base par `AuthMiddleware`) et `userId` (UID exploité par le frontend). Flags `SameSite=Lax`, `Secure` en production (HTTPS) — pas de Bearer token en header pour les requêtes navigateur ;
 - **Encodage** : UTF-8 partout, `Content-Type: application/json` (sauf endpoints de fichiers binaires).
 
 ## 6.6 Infrastructure de déploiement
@@ -1768,7 +1839,6 @@ Le backend Go n'utilise pas de générateur automatique. J'ai maintenu la docume
                    │  └────────────────────────────┘   │
                    └──────────────────────────────────┘
 ```
-
 ---
 
 # 7. Réalisation
@@ -1785,10 +1855,11 @@ Ce module couvre l'épic 1 (BF01 — authentification sécurisée). L'utilisateu
 
 | Composant | Rôle |
 |-----------|------|
-| `frontend/src/components/Landing/Login.jsx` | Formulaire de connexion (email + mot de passe) |
-| `frontend/src/components/Landing/Register.jsx` | Formulaire d'inscription |
-| `frontend/src/components/AuthenticationWrapper.jsx` | HOC vérifiant la présence du cookie `userId` avant le rendu des pages protégées |
-| `frontend/src/components/Admin/AdminRoute.jsx` | HOC supplémentaire vérifiant le rôle Admin |
+| `frontend/src/components/Auth/Login.jsx` | Formulaire de connexion (email + mot de passe) |
+| `AuthenticationWrapper` (défini dans `frontend/src/App.jsx`) | Wrapper vérifiant la session avant le rendu des pages protégées |
+| `AdminRoute` (défini dans `frontend/src/App.jsx`) | Wrapper supplémentaire vérifiant le rôle Admin |
+
+La création des comptes n'est pas ouverte au public : le portail étant un intranet, seul un administrateur crée les utilisateurs (§ 7.2.1). Il n'existe donc volontairement ni page d'inscription ni réinitialisation autonome de mot de passe.
 
 J'ai piloté le routage entièrement par un fichier `config.yaml` consommé par le `RouteGenerator`. Les routes peuvent être marquées `protected` (auth requise) ou `requireAdmin` (auth + rôle Admin).
 
@@ -1833,9 +1904,9 @@ J'ai implémenté le service en architecture en couches (cf. § 4.6 diagramme de
 
 | Couche | Fichier | Rôle |
 |--------|---------|------|
-| Handler | `backend/internal/services/auth/handler.go` | Parsing JSON, validation, réponse HTTP |
-| Service | `backend/internal/services/auth/service.go` | Comparaison bcrypt, création de session, nettoyage périodique |
-| Repository | `backend/internal/services/auth/repository.go` | Requêtes SQL (`SELECT users`, `INSERT sessions`) |
+| Handler | `backend/internal/services/auth/handler/handler.go` | Parsing JSON, validation, réponse HTTP |
+| Service | `backend/internal/services/auth/service/service.go` | Comparaison bcrypt, création de session, nettoyage périodique |
+| Repository | `backend/internal/services/auth/repository/repository.go` | Requêtes SQL (`SELECT users`, `INSERT sessions`) |
 | Middleware | `backend/internal/middleware/auth.go` | `AuthMiddleware`, `AdminMiddleware` |
 
 Le flux d'authentification que j'ai mis en place :
@@ -1843,14 +1914,14 @@ Le flux d'authentification que j'ai mis en place :
 1. Réception des credentials (email + mot de passe) sur `POST /sys/login` ;
 2. Comparaison via `bcrypt.CompareHashAndPassword` (résistant aux attaques par timing) ;
 3. Création d'une session avec expiration 24 h glissantes ;
-4. Retour d'un cookie `userId` avec les flags `HttpOnly`, `Secure`, `SameSite=Strict` ;
+4. Retour de deux cookies : `sessionId` (jeton de session validé en base à chaque requête) et `userId` (UID lu par le frontend), avec `SameSite=Lax` et `Secure` en production ;
 5. Une goroutine de nettoyage tourne toutes les 6 h pour purger les sessions expirées.
 
 ### 7.1.4 Base de données
 
 Tables impliquées (cf. dictionnaire § 4.4.1) :
 
-- `utilisateurs` — lecture (`SELECT uid, mot_de_passe FROM utilisateurs WHERE email = ?`) ;
+- `users` — lecture (`SELECT email, uid, password, COALESCE(last_seen, CURRENT_TIMESTAMP) FROM users WHERE email = $1`) ;
 - `sessions` — écriture (`INSERT`), lecture (validation middleware), suppression (nettoyage).
 
 ### 7.1.5 Flux complet
@@ -1862,7 +1933,7 @@ Client → POST /sys/login (email, password)
 Backend → SELECT users WHERE email = ?
 Backend → bcrypt.Compare(hash, password)
 Backend → INSERT sessions (token, expires_at)
-Backend → Set-Cookie userId=<token>; HttpOnly; Secure; SameSite=Strict
+Backend → Set-Cookie sessionId=<token> + userId=<uid>; Secure; SameSite=Lax
 Client → requêtes ultérieures portent automatiquement le cookie
 Backend → AuthMiddleware vérifie session valide + non expirée à chaque requête
 ```
@@ -1870,7 +1941,7 @@ Backend → AuthMiddleware vérifie session valide + non expirée à chaque requ
 ### 7.1.6 Extrait de code clé
 
 ```go
-// backend/internal/services/auth/service.go
+// backend/internal/services/auth/service/service.go
 func (s *Service) Login(email, password string) (models.User, models.Session, error) {
     user, hashedPassword, err := s.Repo.GetUserByEmail(email)
     if err != nil {
@@ -1910,39 +1981,41 @@ Voir aussi annexes A.1 (Service Auth complet) et A.2 (Middlewares).
 
 ---
 
-## 7.2 Administration des utilisateurs
+## 7.2 Panneau d'administration
 
-### 7.2.1 Besoin fonctionnel
+Le panneau d'administration (`frontend/src/components/Admin/Admin.jsx`) est un **dashboard unique à onglets** : trois boutons (`setActiveTab`) ouvrent trois pages propres — **gestion des utilisateurs**, **gestion du catalogue d'applications** et **tableau de bord analytique** — complétées par la **vue de présence temps réel** (WebSocket). L'ensemble est réservé aux administrateurs : les endpoints sont enregistrés sur le subrouter `adm` (§ 6.3), protégés par le double middleware `AuthMiddleware` + `AdminMiddleware`.
 
-Ce module couvre l'épic 2 (BF02 — gestion utilisateurs + 6 rôles). Un administrateur doit pouvoir lister, créer, modifier, supprimer un utilisateur, ainsi qu'attribuer / retirer des applications du catalogue.
+### 7.2.1 Gestion des utilisateurs
 
-### 7.2.2 Interface utilisateur
+Couvre l'épic 2 (BF02 — gestion utilisateurs + 6 rôles) : lister, créer, modifier, supprimer un utilisateur, et attribuer / retirer des applications du catalogue.
+
+#### Interface utilisateur
 
 | Composant | Rôle |
 |-----------|------|
-| `frontend/src/components/Admin/Admin.jsx` | Dashboard administrateur |
-| `frontend/src/components/Admin/UserList.jsx` | Liste filtrable + CRUD utilisateurs |
-| `frontend/src/components/Admin/Applications.jsx` | Gestion du catalogue applicatif |
+| `frontend/src/components/Admin/Admin.jsx` | Dashboard administrateur (onglets) |
+| `frontend/src/components/Admin/User/UserList.jsx` | Liste filtrable + CRUD utilisateurs |
+| `frontend/src/components/Admin/User/AddUser.jsx` / `EditUserPopup.jsx` | Création / édition d'un utilisateur |
 
 J'ai fait en sorte que les actions destructrices (suppression) déclenchent une confirmation modale. La liste supporte la recherche par nom/email et le filtrage par rôle. Les rôles disponibles sont listés dans la matrice RBAC (§ 8.3).
 
-### 7.2.3 Backend
+#### Backend
 
 | Couche | Fichier |
 |--------|---------|
-| Handler | `backend/internal/services/admin/handler.go` |
-| Service | `backend/internal/services/admin/service.go` (`AdminService`) |
-| Repository | `backend/internal/services/admin/repository.go` (implémente l'interface `AdminRep` cf. § 4.6) |
+| Handler | `backend/internal/services/admin/handler/handler.go` |
+| Service | `backend/internal/services/admin/service/service.go` (`AdminService`) |
+| Repository | `backend/internal/services/admin/repository/repository.go` (implémente l'interface `AdminRep` cf. § 4.6) |
 
-Les endpoints sont enregistrés sur le subrouter `adm` (cf. § 6.3), donc protégés par le double middleware `AuthMiddleware` + `AdminMiddleware`. Le mot de passe d'un utilisateur créé est immédiatement haché par `bcrypt.GenerateFromPassword` ; il n'est jamais stocké en clair.
+Le mot de passe d'un utilisateur créé est immédiatement haché par `bcrypt.GenerateFromPassword` ; il n'est jamais stocké en clair.
 
-### 7.2.4 Base de données
+#### Base de données
 
-- `utilisateurs` — CRUD complet ;
-- `utilisateur_applications` — INSERT/DELETE lors de l'attribution/retrait d'apps ;
-- `evenements` — INSERT d'un événement d'audit pour chaque action sensible (création/suppression user).
+- `users` — CRUD complet ;
+- `user_application_permissions` — INSERT/DELETE lors de l'attribution/retrait d'apps ;
+- `events` — INSERT d'un événement d'audit pour chaque action sensible (création/suppression user), exploité par l'analytics (§ 7.2.3).
 
-### 7.2.5 Flux complet (création d'utilisateur)
+#### Flux complet (création d'utilisateur)
 
 ```
 Admin → POST /sys/new-user {email, role, password}
@@ -1954,12 +2027,12 @@ Backend → AnalyseService.AddEvent(type=user_created, by=admin_uid)
 Backend → 201 Created
 ```
 
-### 7.2.6 Extrait de code clé
+#### Extrait de code clé
 
 Interface Repository (clé du découplage testable) :
 
 ```go
-// backend/internal/services/admin/repository.go
+// backend/internal/services/admin/repository/repository.go
 type AdminRep interface {
     IsAdmin(userID string) (bool, error)
     EmailExists(email string) (bool, error)
@@ -1984,240 +2057,85 @@ type AdminRep interface {
 
 Voir annexe A.4 pour l'implémentation PostgreSQL complète.
 
----
+### 7.2.2 Gestion du catalogue d'applications
 
-## 7.3 Catalogue d'applications
+Côté administrateur, le même panneau gère le catalogue applicatif (BF03 — catalogue dynamique) : créer, modifier, supprimer des applications et les attribuer aux utilisateurs.
 
-### 7.3.1 Besoin fonctionnel
-
-Ce module couvre l'épic 3 (BF03 — catalogue dynamique). Un utilisateur authentifié voit le sous-ensemble du catalogue auquel son rôle / ses attributions personnelles donnent accès. L'administrateur peut éditer ce catalogue.
-
-### 7.3.2 Interface utilisateur
+#### Interface utilisateur
 
 | Composant | Rôle |
 |-----------|------|
-| `frontend/src/components/Landing/Home.jsx` (post-login) | Dashboard utilisateur — grille d'icônes des applications accessibles |
-| `frontend/src/components/Admin/Applications.jsx` | CRUD du catalogue (Admin seulement) |
+| `frontend/src/components/Admin/Apps/Applications.jsx` | Onglet « Applications » — CRUD du catalogue |
+| `frontend/src/components/Admin/Apps/CreateNewApp.jsx` / `EditApp.jsx` | Création / édition d'une application |
+| `frontend/src/components/Admin/Apps/AppManagementModal.jsx` | Attribution des applications à un utilisateur |
 
-Le composant utilisateur consomme `GET /sys/applications`, qui retourne uniquement les apps autorisées. J'ai volontairement écarté tout filtrage côté client (défense en profondeur).
+#### Backend
 
-### 7.3.3 Backend
+L'attribution des droits et le CRUD du catalogue passent par le service `admin` (interface `AdminRep` : `AddAppPermission`, `RemoveAppPermission`, CRUD apps + groupes), exposé sur le subrouter `adm`.
 
-| Couche | Fichier |
-|--------|---------|
-| Handler | `backend/internal/services/applications/handler.go` |
-| Service | `backend/internal/services/applications/service.go` |
-| Repository | `backend/internal/services/applications/repository.go` |
-| Interface | `backend/internal/services/applications/interface.go` (`ApplicationRepositoryInterface`) |
+#### Base de données
 
-La séparation interface / implémentation autorise le mocking en test unitaire (cf. § 9.2).
+- `applications` — CRUD du catalogue ;
+- `application_groups` — groupes fonctionnels (Compta, Social) ;
+- `user_application_permissions` — INSERT/DELETE lors de l'attribution / retrait d'une application (`can_access`).
 
-### 7.3.4 Base de données
+### 7.2.3 Tableau de bord analytique
 
-- `applications` — lecture du catalogue ;
-- `utilisateur_applications` — jointure pour le filtrage par utilisateur ;
-- `groupes` — regroupement fonctionnel (Comptabilité, Audit, etc.).
+Onglet « Analytics » du panneau (épic 2, BF05 / BF10 — suivi d'activité) : métriques agrégées sur l'utilisation du portail.
 
-### 7.3.5 Flux complet
-
-```
-User → GET /sys/applications (cookie userId)
-Backend → AuthMiddleware → applications handler
-Backend → ApplicationRepository.FetchApplicationsByUserID(uid)
-        → SELECT a.* FROM applications a
-          JOIN utilisateur_applications ua ON a.id = ua.id_application
-          WHERE ua.uid_utilisateur = ?
-Backend → 200 OK [{id, nom, url, icone, categorie}]
-Frontend → rendu de la grille d'icônes
-```
-
-### 7.3.6 Extrait de code clé
-
-```go
-// backend/internal/services/applications/repository.go
-func (r *Repository) FetchApplicationsByUserID(userID string) ([]models.App, error) {
-    rows, err := r.DB.Query(`
-        SELECT a.id, a.nom, a.url, a.icone, a.categorie
-        FROM applications a
-        JOIN utilisateur_applications ua ON a.id = ua.id_application
-        WHERE ua.uid_utilisateur = $1
-        ORDER BY a.categorie, a.nom
-    `, userID)
-    if err != nil { return nil, err }
-    defer rows.Close()
-
-    var apps []models.App
-    for rows.Next() {
-        var a models.App
-        if err := rows.Scan(&a.ID, &a.Name, &a.BaseURL, &a.IconPath, &a.Groups); err != nil {
-            return nil, err
-        }
-        apps = append(apps, a)
-    }
-    return apps, nil
-}
-```
-
-**Lecture du code**
-
-- La jointure entre `applications` et `utilisateur_applications` réalise le **filtrage par autorisation directement en SQL** : la requête ne peut, par construction, retourner que les applications attribuées à l'utilisateur. C'est l'application de RG04 au niveau de la couche données, et non du code applicatif (plus difficile à contourner).
-- Le paramètre `$1` est une **requête paramétrée** : la valeur de `userID` n'est jamais concaténée dans la chaîne SQL, ce qui rend l'injection SQL impossible (A03 OWASP).
-- `defer rows.Close()` garantit la libération de la connexion même en cas de `return` anticipé sur erreur — un oubli classique qui provoque l'épuisement du pool de connexions.
-- Le `ORDER BY a.categorie, a.nom` est fait côté base plutôt que côté frontend : PostgreSQL trie plus efficacement, et le tri reste cohérent quel que soit le client.
-
-**Alternative écartée** : récupérer tout le catalogue puis filtrer côté Go (ou pire, côté React). Outre le surcoût réseau, cela aurait exposé l'existence d'applications non autorisées — une fuite d'information que la jointure SQL élimine d'emblée.
-
----
-
-## 7.4 Outil de traitement des tirages de caisse
-
-### 7.4.1 Besoin fonctionnel
-
-Ce module couvre l'épic 3 (BF01 à BF05 — traitement des tirages de caisse). C'est le **premier logiciel du projet**, à l'origine du besoin : automatiser le traitement des tirages de caisse `.EDI` que les comptables traitaient manuellement, restaurant par restaurant.
-
-### 7.4.2 Interface utilisateur
-
-L'outil est porté par la page `frontend/src/components/pages/Convert/Convert_main.jsx`, **lazy-loadée** via `React.lazy()` pour optimiser le bundle initial.
-
-| Étape (UI) | Description |
-|------------|-------------|
-| Dépôt des fichiers | Import multi-fichiers `.EDI` / `.txt`, par restaurant, via `FileDropZone` |
-| Paramétrage des codes | Édition/enregistrement des codes comptables (comptables, généraux/auxiliaires, journal) |
-| Lancement du traitement | Appel à `POST /api/conversion` |
-| Récupération du résultat | Téléchargement de l'Excel généré (une feuille par restaurant) via `ResultDownloader` |
-
-La page partage le composant `FileDropZone` pour l'upload et `ResultDownloader` pour la récupération du résultat — composants pensés pour être réutilisés par les futurs outils du catalogue.
-
-### 7.4.3 Backend
-
-J'ai porté toute la logique de traitement de fichiers sur l'API Python (FastAPI, port 8001) :
-
-| Fichier | Rôle |
-|---------|------|
-| `api/main.py` | Configuration FastAPI + CORS |
-| `api/routers.py` | Endpoints (~500 lignes) |
-| `api/utils/convert.py` | Parsing EDI / conversion vers Excel |
-| `api/utils/format.py` | Formatage Excel multi-feuilles |
-| `api/utils/searching.py` | Recherches dans les jeux de données |
-| `api/utils/sort.py` | Tris personnalisés |
-| `api/auth/auth_bearer.py` | Validation du cookie d'auth (UUID regex) |
-
-### 7.4.4 Base de données
-
-Usage limité : la majorité des traitements opèrent sur des fichiers transients. Trois tables servent à la personnalisation par utilisateur :
-
-- `codes_comptables` — mapping JSONB (code interne → code client) ;
-- `codes_journal` — mapping JSONB pour les journaux comptables ;
-- `codes_gen_aux` — mapping JSONB pour les comptes généraux auxiliaires.
-
-### 7.4.5 Flux complet (conversion EDI)
-
-Diagramme détaillé en § 4.5.2.
-
-```
-Comptable → upload .txt sur /api/conversion
-API Python → validation UUID du cookie userId (regex)
-API Python → mkdir -p /tmp/{uid}/uploads + sauvegarde du fichier
-API Python → boucle sur chaque .txt :
-            → extract_bill_values() (parsing EDI ligne à ligne)
-            → get_document_type() (Facture vs Avoir)
-            → SELECT mapping FROM codes_comptables WHERE uid = ?
-            → openpyxl writer → /tmp/{uid}/downloads/result.xlsx
-API Python → 200 {download_url}
-Comptable → téléchargement automatique
-Daemon thread → nettoyage /tmp/{uid}/* après 5 min
-```
-
-### 7.4.6 Extrait de code clé
-
-```python
-# api/utils/convert.py — extraction d'un fichier EDI
-def extract_bill_values(filepath: str) -> dict:
-    """Parse un fichier EDI bancaire et retourne les valeurs structurées."""
-    values = {}
-    with open(filepath, "r", encoding="utf-8") as f:
-        for line in f:
-            if line.startswith("DTM+137"):     # Date du document
-                values["date"] = line[7:15]
-            elif line.startswith("MOA+39"):    # Montant total
-                values["total"] = float(line.split(":")[1])
-            elif line.startswith("BGM+"):      # Type de document
-                values["type"] = get_document_type(line)
-    return values
-```
-
-**Lecture du code**
-
-- Le parsing est **piloté par les préfixes de segment** propres au format EDIFACT (`DTM+137` pour la date, `MOA+39` pour le montant, `BGM+` pour le type de document). Chaque segment est une ligne autonome, ce qui permet un parsing en streaming, ligne à ligne, sans charger tout le fichier en mémoire — important pour des fichiers volumineux.
-- Le choix d'une boucle `for line in f` plutôt que `f.readlines()` est délibéré : il borne la consommation mémoire à une ligne à la fois.
-- La fonction reste **pure et déterministe** (entrée : un chemin ; sortie : un dict), ce qui la rend trivialement testable sans base ni I/O réseau (cf. § 9.3, `test_convert.py`).
-
-**Alternative écartée** : utiliser une bibliothèque EDIFACT générique. Les fichiers réels ne mobilisaient qu'une poignée de segments ; une dépendance lourde aurait alourdi l'image Docker et la surface d'attaque pour un bénéfice nul sur ce périmètre. J'ai préféré un parseur ciblé, documenté et testé.
-
-Voir annexes A.3 (conversion EDI complète) et A.7 (validation UUID + path traversal).
-
----
-
-## 7.5 Tableau de bord analytique
-
-### 7.5.1 Besoin fonctionnel
-
-Ce module couvre l'épic 2 (BF05 — suivi d'activité). L'administrateur doit pouvoir consulter des métriques agrégées sur l'utilisation du portail.
-
-### 7.5.2 Interface utilisateur
+#### Interface utilisateur
 
 | Composant | Rôle |
 |-----------|------|
-| `frontend/src/components/Admin/Analytics.jsx` | Tableau de bord avec graphiques Recharts |
+| `frontend/src/components/Admin/Stats/Analytics.jsx` | Tableau de bord avec graphiques Recharts |
 | `frontend/src/hooks/useAnalytics.js` | Tracking côté client (events `api_call`, `page_view`) |
 
 Quatre graphiques : connexions par jour, utilisateurs les plus actifs, utilisation par endpoint API, heures de pointe. Filtrage par plage de dates.
 
-### 7.5.3 Backend
+#### Backend
 
 | Couche | Fichier |
 |--------|---------|
-| Handler | `backend/internal/services/analyse/handler.go` |
-| Service | `backend/internal/services/analyse/service.go` (`AnalyseService`) |
-| Repository | `backend/internal/services/analyse/repository.go` |
+| Handler | `backend/internal/services/analyse/handler/handler.go` |
+| Service | `backend/internal/services/analyse/service/service.go` (`AnalyseService`) |
+| Repository | `backend/internal/services/analyse/repository/repository.go` |
 
-Endpoints (subrouter `adm`) :
+Endpoints (subrouter `sys`, authentifiés) :
 
-- `GET /sys/analytics/conn-by-days` — agrégation connexions ;
-- `GET /sys/analytics/active-users` — top utilisateurs ;
-- `GET /sys/analytics/api-stats` — répartition d'utilisation ;
-- `GET /sys/analytics/peak-hours` — heures de pointe.
+- `POST /sys/analyses/events/ConnByDays` — agrégation connexions par jour ;
+- `GET /sys/analyses/stats/active-users` — top utilisateurs ;
+- `GET /sys/analyses/stats/by-api` — répartition d'utilisation par API ;
+- `GET /sys/analyses/stats/peak-hours` — heures de pointe ;
+- `POST /sys/analyses/add-event` / `GET /sys/analyses/get-events` — écriture et lecture brute des événements.
 
-### 7.5.4 Base de données
+#### Base de données
 
-- `evenements` (lecture seule en agrégation) — `GROUP BY` sur la colonne `date` ou sur `EXTRACT(HOUR FROM date)` ;
-- Index `idx_evenements_date` mobilisé pour les requêtes par fenêtre temporelle (cf. § 4.4.5).
+- `events` (lecture seule en agrégation) — `GROUP BY` sur la colonne `day` (TEXT, format `YYYY-MM-DD`) ou sur `EXTRACT(HOUR FROM created_at)` ;
+- table décrite au dictionnaire § 4.4.1, exploitée par le service `analyse` ; les fenêtres temporelles filtrent via `day >= $1 AND day <= $2`.
 
-### 7.5.5 Flux complet
+#### Flux complet
 
 ```
-Admin → GET /sys/analytics/conn-by-days?from=2026-01-01&to=2026-05-31
+Admin → POST /sys/analyses/events/ConnByDays
 Backend → AnalyseService.ConnByDays(req)
-        → SELECT DATE(date) AS day, COUNT(*) AS count
-          FROM evenements
-          WHERE type = 'login' AND date BETWEEN ? AND ?
+        → SELECT day, COUNT(*) AS count
+          FROM events
           GROUP BY day ORDER BY day
 Backend → 200 [{day, count}]
 Frontend → rendu Recharts (LineChart)
 ```
 
-### 7.5.6 Extrait de code clé
+#### Extrait de code clé
 
 ```go
-// backend/internal/services/analyse/repository.go — agrégation par jour
-func (r *Repository) ConnByDays(from, to time.Time) ([]models.DayStat, error) {
+// backend/internal/services/analyse/repository/repository.go — agrégation par jour
+func (r *Repository) ConnByDays() ([]models.DayStat, error) {
     rows, err := r.DB.Query(`
-        SELECT DATE(date) AS day, COUNT(*) AS count
-        FROM evenements
-        WHERE type = 'login' AND date BETWEEN $1 AND $2
+        SELECT day, COUNT(*) AS count
+        FROM events
         GROUP BY day
         ORDER BY day
-    `, from, to)
+    `)
     if err != nil { return nil, err }
     defer rows.Close()
 
@@ -2234,28 +2152,26 @@ func (r *Repository) ConnByDays(from, to time.Time) ([]models.DayStat, error) {
 **Lecture du code**
 
 - L'agrégation (`GROUP BY day`, `COUNT(*)`) est **déléguée à PostgreSQL** : la base renvoie déjà les données prêtes pour le graphe, au lieu de remonter des milliers d'événements bruts à agréger en Go. C'est le bon endroit pour ce calcul.
-- Le filtre `date BETWEEN $1 AND $2` mobilise l'index `idx_evenements_date` (§ 4.4.5), ce qui maintient des temps de réponse stables même quand la table `evenements` grossit.
-- Les bornes `$1` / `$2` sont paramétrées : la plage de dates, pourtant fournie par l'utilisateur, ne peut servir de vecteur d'injection.
+- Les requêtes à fenêtre temporelle (`active-users`, `api-stats`, `peak-hours`) filtrent via `day >= $1 AND day <= $2` sur la colonne textuelle `day` : les bornes `$1` / `$2`, pourtant fournies par l'utilisateur, sont **paramétrées** et ne peuvent servir de vecteur d'injection.
+- Un index secondaire sur `events(day)` est documenté comme évolution conditionnelle (§ 4.4.5) plutôt que créé prématurément, le volume d'événements restant modéré.
 
 **Alternative écartée** : précalculer des agrégats dans une table de synthèse (matérialisation). Utile à grande échelle, mais prématuré ici : le volume d'événements reste modéré et l'index suffit. Je l'ai documenté comme évolution conditionnelle plutôt que de complexifier le schéma maintenant.
 
----
+### 7.2.4 Présence temps réel (WebSocket)
 
-## 7.6 WebSocket — présence temps réel
+Couvre l'épic 4 (BF06 — présence temps réel) : voir en direct quels collègues sont en ligne sur le portail.
 
-### 7.6.1 Besoin fonctionnel
+> **Détection vs vue** : la **connexion** WebSocket est initiée depuis la page d'accueil (`Landing/Home.jsx`, hook `useWebSocket`) dès qu'un utilisateur est authentifié ; la **vue** de présence (liste des utilisateurs en ligne) est consultée dans le panneau d'administration.
 
-Ce module couvre l'épic 4 (BF06 — présence temps réel). Les utilisateurs connectés voient en direct quels collègues sont en ligne sur le portail.
-
-### 7.6.2 Interface utilisateur
+#### Interface utilisateur
 
 | Composant / Hook | Rôle |
 |------------------|------|
-| `frontend/src/hooks/useWebSocket.js` | Connexion WebSocket de base, gestion reconnect |
+| `frontend/src/hooks/useWebSocket.js` | Connexion WebSocket de base (depuis le Home), gestion reconnect |
 | `frontend/src/hooks/useAdvancedWebSocket.js` | Gestion de rooms (extensions futures) |
-| Bandeau de présence intégré au Dashboard | Affichage des utilisateurs en ligne |
+| Bandeau de présence (panneau admin) | Affichage des utilisateurs en ligne |
 
-### 7.6.3 Backend
+#### Backend
 
 | Couche | Fichier |
 |--------|---------|
@@ -2263,7 +2179,7 @@ Ce module couvre l'épic 4 (BF06 — présence temps réel). Les utilisateurs co
 | Manager | `backend/internal/services/websocket/manager.go` (`OnlineUserManager`) |
 | Repository | `backend/internal/services/websocket/repository.go` |
 
-Le manager que j'ai écrit maintient une `map[string]*ConnectedUser` protégée par un `sync.RWMutex`. Toute modification (connexion / déconnexion) déclenche un broadcast vers l'ensemble des clients connectés.
+Le manager maintient une `map[string]*ConnectedUser` protégée par un `sync.RWMutex`. Toute modification (connexion / déconnexion) déclenche un broadcast vers l'ensemble des clients connectés.
 
 **Validation de l'origine** (protection contre le **Cross-Site WebSocket Hijacking** — CSWSH) :
 
@@ -2271,23 +2187,24 @@ Le manager que j'ai écrit maintient une `map[string]*ConnectedUser` protégée 
 upgrader := websocket.Upgrader{
     CheckOrigin: func(r *http.Request) bool {
         origin := r.Header.Get("Origin")
-        return origin == "https://preprod.azert.fr" || origin == "http://localhost:3000"
+        return origin == "https://logiciel.cabinet-matini.fr" || origin == "http://localhost:3000"
     },
 }
 ```
 
-### 7.6.4 Base de données
+#### Base de données
 
 - Table éphémère `connected_users` mise à jour à la connexion / déconnexion. Sert principalement à la reprise après redémarrage du backend (les sockets sont alors invalidées).
 
-### 7.6.5 Flux complet
+#### Flux complet
 
 Diagramme détaillé en § 4.5.3.
 
 ```
-Client → GET /sys/ws (upgrade: websocket)
-Backend → AuthMiddleware (cookie valide ?)
-Backend → upgrader.Upgrade (avec CheckOrigin)
+Client → GET /ws (upgrade: websocket)
+Backend → CheckOrigin (allowlist d'origines — anti-CSWSH)
+Backend → upgrader.Upgrade
+Client → message d'initialisation {uid}
 Manager → AddUser(uid, username, conn)
 Manager → BroadcastUsers() → tous les clients reçoivent la liste mise à jour
 [boucle ListenPings — heartbeat]
@@ -2296,7 +2213,7 @@ Manager → RemoveUser(uid)
 Manager → BroadcastUsers()
 ```
 
-### 7.6.6 Extrait de code clé
+#### Extrait de code clé
 
 ```go
 // backend/internal/services/websocket/manager.go
@@ -2334,68 +2251,229 @@ Voir annexes A.5 (manager complet) et A.6 (validation Origin / CSWSH).
 
 ---
 
-## 7.7 Configuration McDonald's
+## 7.3 Catalogue d'applications (côté utilisateur — Home)
 
-### 7.7.1 Besoin fonctionnel
+Volet **utilisateur** du catalogue (BF03) : après connexion, l'utilisateur voit sur la page d'accueil la grille des applications auxquelles ses attributions lui donnent accès. Le filtrage est réalisé en base — défense en profondeur, aucun filtrage côté client.
 
-Module spécifique au traitement des tickets de caisse McDonald's : stocke et applique une configuration de mapping propre à chaque restaurant (BF08 — cas particulier).
+### 7.3.1 Interface utilisateur
 
-### 7.7.2 Interface utilisateur
+| Composant | Rôle |
+|-----------|------|
+| `frontend/src/components/Landing/Home.jsx` (post-login) | Grille d'icônes des applications accessibles |
 
-- Page dédiée dans `frontend/src/components/pages/Macdos/` permettant à un administrateur de saisir et modifier la configuration JSON.
+Le composant consomme `GET /sys/user-applications`, qui retourne uniquement les apps autorisées.
 
-### 7.7.3 Backend
+### 7.3.2 Backend
 
 | Couche | Fichier |
 |--------|---------|
-| Handler | `backend/internal/services/Macdos/handler.go` |
-| Service | `backend/internal/services/Macdos/service.go` |
-| Repository | `backend/internal/services/Macdos/repository.go` |
+| Handler | `backend/internal/services/applications/handler/handler.go` |
+| Service | `backend/internal/services/applications/service/service.go` |
+| Repository | `backend/internal/services/applications/repository/repository.go` |
+| Interface | `backend/internal/services/applications/repository/interface.go` (`ApplicationRepositoryInterface`) |
 
-Endpoints protégés par `AdminMiddleware` (subrouter `adm`).
+La séparation interface / implémentation autorise le mocking en test unitaire (cf. § 9.2).
 
-### 7.7.4 Base de données
+### 7.3.3 Base de données
 
-- `config_mcdo` — stockage de la configuration en JSONB (clé unique sur `nom_config`).
+- `applications` — lecture du catalogue ;
+- `user_application_permissions` — jointure pour le filtrage par utilisateur (`can_access = TRUE`) ;
+- `application_groups` — regroupement fonctionnel référencé faiblement par `applications.groups`.
 
-### 7.7.5 Flux complet
+### 7.3.4 Flux complet
 
 ```
-Admin → POST /sys/macdos/config {nom_config, donnees}
-Backend → AuthMiddleware → AdminMiddleware
-Backend → INSERT INTO config_mcdo (nom_config, donnees) ON CONFLICT DO UPDATE
-Backend → 200 OK
+User → GET /sys/user-applications (cookies de session)
+Backend → AuthMiddleware → applications handler
+Backend → ApplicationRepository.FetchApplicationsByUserID(uid)
+        → SELECT a.id, a.name, a.base_url, a.icon_path, COALESCE(a.groups, '')
+          FROM applications a
+          JOIN user_application_permissions uap ON a.id = uap.application_id
+          WHERE uap.user_id = ? AND uap.can_access = TRUE
+Backend → 200 OK [{id, name, base_url, icon_path, groups}]
+Frontend → rendu de la grille d'icônes
 ```
 
-### 7.7.6 Extrait de code clé
-
-J'ai choisi le type `JSONB` pour faire évoluer la structure de configuration sans migration de schéma — le contrat de validation est porté côté applicatif.
+### 7.3.5 Extrait de code clé
 
 ```go
-type MacdoConfig struct {
-    ID        int             `json:"id"`
-    NomConfig string          `json:"nom_config"`
-    Donnees   json.RawMessage `json:"donnees"` // JSONB opaque côté backend
+// backend/internal/services/applications/repository/repository.go
+func (r *Repository) FetchApplicationsByUserID(userID string) ([]models.App, error) {
+    rows, err := r.DB.Query(`
+        SELECT a.id, a.name, a.base_url, a.icon_path, COALESCE(a.groups, '')
+        FROM applications a
+        JOIN user_application_permissions uap ON a.id = uap.application_id
+        WHERE uap.user_id = $1 AND uap.can_access = TRUE
+    `, userID)
+    if err != nil { return nil, err }
+    defer rows.Close()
+
+    var apps []models.App
+    for rows.Next() {
+        var a models.App
+        if err := rows.Scan(&a.ID, &a.Name, &a.BaseURL, &a.IconPath, &a.Groups); err != nil {
+            return nil, err
+        }
+        apps = append(apps, a)
+    }
+    return apps, nil
 }
 ```
 
 **Lecture du code**
 
-- Le champ `Donnees` est typé `json.RawMessage` et non `map[string]interface{}` : le backend **transporte la configuration sans la désérialiser**. Il la stocke et la restitue telle quelle, ce qui le rend insensible aux évolutions de structure côté métier.
-- Couplé au type `JSONB` en base, ce choix permet de faire évoluer le format d'une configuration McDonald's **sans migration de schéma** : la validation fine est portée par le client métier, là où elle a du sens.
-- L'`INSERT ... ON CONFLICT DO UPDATE` (upsert) garantit l'idempotence : enregistrer deux fois la même `nom_config` met à jour au lieu de dupliquer.
+- La jointure entre `applications` et `user_application_permissions` (avec le prédicat `uap.can_access = TRUE`) réalise le **filtrage par autorisation directement en SQL** : la requête ne peut, par construction, retourner que les applications attribuées à l'utilisateur. C'est l'application de RG04 au niveau de la couche données, et non du code applicatif (plus difficile à contourner).
+- Le paramètre `$1` est une **requête paramétrée** : la valeur de `userID` n'est jamais concaténée dans la chaîne SQL, ce qui rend l'injection SQL impossible (A03 OWASP).
+- `defer rows.Close()` garantit la libération de la connexion même en cas de `return` anticipé sur erreur — un oubli classique qui provoque l'épuisement du pool de connexions.
+
+**Alternative écartée** : récupérer tout le catalogue puis filtrer côté Go (ou pire, côté React). Outre le surcoût réseau, cela aurait exposé l'existence d'applications non autorisées — une fuite d'information que la jointure SQL élimine d'emblée.
+
+---
+
+## 7.4 Outil de traitement des tirages de caisse
+
+### 7.4.1 Besoin fonctionnel
+
+Ce module couvre l'épic 3 (BF01 à BF05 — traitement des tirages de caisse, et BF08 — configuration associée). C'est le **premier logiciel du projet**, à l'origine du besoin : automatiser le traitement des tirages de caisse `.EDI` que les comptables traitaient manuellement, restaurant par restaurant. Le même outil comporte deux volets indissociables : le **traitement des fichiers** (conversion EDI → Excel) et sa **configuration** (mapping de codes et paramétrage McDonald's, § 7.4.7) qui pilote la façon dont les tickets d'un restaurant donné sont convertis.
+
+### 7.4.2 Interface utilisateur
+
+L'outil est porté par la page `frontend/src/components/pages/Convert/Convert_main.jsx`, **lazy-loadée** via `React.lazy()` pour optimiser le bundle initial.
+
+| Étape (UI) | Description |
+|------------|-------------|
+| Dépôt des fichiers | Import multi-fichiers `.EDI` / `.txt`, par restaurant, via `FileDropZone` |
+| Paramétrage des codes | Édition/enregistrement des codes comptables (comptables, généraux/auxiliaires, journal) |
+| Lancement du traitement | Appel à `POST /api/conversion` |
+| Récupération du résultat | Téléchargement de l'Excel généré (une feuille par restaurant) via `ResultDownloader` |
+
+La page partage le composant `FileDropZone` pour l'upload et `ResultDownloader` pour la récupération du résultat — composants pensés pour être réutilisés par les futurs outils du catalogue.
+
+### 7.4.3 Backend
+
+J'ai porté toute la logique de traitement de fichiers sur l'API Python (FastAPI, port 8001) :
+
+| Fichier | Rôle |
+|---------|------|
+| `api/main.py` | Configuration FastAPI + CORS |
+| `api/routers.py` | Endpoints (~500 lignes) |
+| `api/utils/convert.py` | Parsing EDI / conversion vers Excel |
+| `api/utils/format.py` | Formatage Excel multi-feuilles |
+| `api/utils/searching.py` | Recherches dans les jeux de données |
+| `api/utils/sort.py` | Tris personnalisés |
+| `api/auth/auth_bearer.py` | Validation du cookie d'auth (UUID regex) |
+
+### 7.4.4 Base de données
+
+Usage limité : la majorité des traitements opèrent sur des fichiers transients. Trois tables servent à la personnalisation par utilisateur :
+
+- `user_code_maps` — mapping JSON (code interne → code client) ;
+- `code_journal` — mapping JSON pour les journaux comptables ;
+- `user_code_maps_gen_aux` — mapping JSON pour les comptes généraux auxiliaires.
+
+Une quatrième table, `fascicule_mcdo`, porte la configuration McDonald's (cf. § 7.4.7).
+
+### 7.4.5 Flux complet (conversion EDI)
+
+Diagramme détaillé en § 4.5.2.
+
+```
+Comptable → upload .txt sur /api/conversion
+API Python → validation UUID du cookie userId (regex)
+API Python → mkdir -p /tmp/{uid}/uploads + sauvegarde du fichier
+API Python → boucle sur chaque .txt :
+            → extract_bill_values() (parsing EDI ligne à ligne)
+            → get_document_type() (Facture vs Avoir)
+            → SELECT code_map FROM user_code_maps WHERE user_id = ?
+            → openpyxl writer → /tmp/{uid}/downloads/result.xlsx
+API Python → 200 {download_url}
+Comptable → téléchargement automatique
+Daemon thread → nettoyage /tmp/{uid}/* après 5 min
+```
+
+### 7.4.6 Extrait de code clé
+
+```python
+# api/utils/convert.py — extraction d'un fichier EDI
+def extract_bill_values(filepath: str) -> dict:
+    """Parse un fichier EDI bancaire et retourne les valeurs structurées."""
+    values = {}
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("DTM+137"):     # Date du document
+                values["date"] = line[7:15]
+            elif line.startswith("MOA+39"):    # Montant total
+                values["total"] = float(line.split(":")[1])
+            elif line.startswith("BGM+"):      # Type de document
+                values["type"] = get_document_type(line)
+    return values
+```
+
+**Lecture du code**
+
+- Le parsing est **piloté par les préfixes de segment** propres au format EDIFACT (`DTM+137` pour la date, `MOA+39` pour le montant, `BGM+` pour le type de document). Chaque segment est une ligne autonome, ce qui permet un parsing en streaming, ligne à ligne, sans charger tout le fichier en mémoire — important pour des fichiers volumineux.
+- Le choix d'une boucle `for line in f` plutôt que `f.readlines()` est délibéré : il borne la consommation mémoire à une ligne à la fois.
+- La fonction reste **pure et déterministe** (entrée : un chemin ; sortie : un dict), ce qui la rend trivialement testable sans base ni I/O réseau (cf. § 9.3, `test_convert.py`).
+
+**Alternative écartée** : utiliser une bibliothèque EDIFACT générique. Les fichiers réels ne mobilisaient qu'une poignée de segments ; une dépendance lourde aurait alourdi l'image Docker et la surface d'attaque pour un bénéfice nul sur ce périmètre. J'ai préféré un parseur ciblé, documenté et testé.
+
+Voir annexes A.3 (conversion EDI complète) et A.7 (validation UUID + path traversal).
+
+### 7.4.7 Volet configurations codes comptables 
+
+La configuration est le second volet du **même outil** (BF08) : chaque restaurant McDonald's possède un paramétrage de mapping propre, saisi une fois puis appliqué automatiquement à chaque conversion (§ 7.4.5). Les codes comptables sont édités directement dans la page de l'outil (`frontend/src/components/pages/Convert/Convert_main.jsx`, volet « codes » adossé aux endpoints `/codes` de l'API Python), tandis que les configurations de fascicules McDonald's sont persistées côté backend Go (service `Macdos`) et exposées en REST — deux facettes techniques d'un seul et même logiciel métier.
+
+**Backend**
+
+| Couche | Fichier |
+|--------|---------|
+| Handler | `backend/internal/services/Macdos/handler/handler.go` |
+| Service | `backend/internal/services/Macdos/service/service.go` |
+| Repository | `backend/internal/services/Macdos/repository/repository.go` |
+
+Endpoints protégés par `AuthMiddleware` (subrouter `sys`) : `POST /sys/get-macdos-configs-names`, `GET /sys/get-macdos-config-{name_config}`, `PUT /sys/update-macdos-config-{name_config}`.
+
+**Base de données** : `fascicule_mcdo` — stockage de la configuration (colonne `config` de type TEXT sérialisant du JSON, contrainte d'unicité `uq_fascicule_mcdo_noms` sur `noms`).
+
+**Flux complet**
+
+```
+Comptable  → GET /codes
+API Python → lit les trois mappings en base
+Écran      → affiche les correspondances enregistrées
+Comptable  → POST /codes
+API Python → met à jour les trois tables à la conversion suivante, le mapping est appliqué automatiquement (§ 7.4.5)
+
+```
+
+**Extrait de code clé**
+
+Le champ `config` est stocké en TEXT sérialisant du JSON : cela permet de faire évoluer la structure de configuration sans migration de schéma — le contrat de validation est porté côté applicatif.
+
+```go
+// backend/internal/models/models.go
+type ConfigFascicule struct {
+    ID     string   `json:"id"`
+    Noms   string   `json:"nom_config"`
+    Config []string `json:"config"` // sérialisé en JSON dans la colonne TEXT `config`
+}
+```
+
+- Le backend **transporte la configuration sans imposer de schéma rigide** : la colonne `config` (TEXT) stocke la structure sérialisée en JSON et la restitue telle quelle, ce qui le rend insensible aux évolutions de structure côté métier.
+- Ce choix (TEXT/JSON plutôt qu'un modèle relationnel éclaté) permet de faire évoluer le format d'une configuration McDonald's **sans migration de schéma** : la validation fine est portée par le client métier, là où elle a du sens.
+- L'`INSERT ... ON CONFLICT DO UPDATE` (upsert) sur `noms` garantit l'idempotence : enregistrer deux fois la même configuration met à jour au lieu de dupliquer.
 
 **Compromis assumé** : ce stockage opaque sacrifie la possibilité de requêter le contenu de la configuration en SQL. C'est acceptable ici car la configuration est toujours lue en bloc, jamais filtrée sur un champ interne (cf. § 4.4.5).
 
 ---
 
-## 7.8 Thème (Dark Mode)
+## 7.5 Thème (Dark Mode)
 
-### 7.8.1 Besoin fonctionnel
+### 7.5.1 Besoin fonctionnel
 
 Ce module couvre BF07 — mode sombre activable par l'utilisateur. Préférence persistante au-delà de la session.
 
-### 7.8.2 Interface utilisateur
+### 7.5.2 Interface utilisateur
 
 | Composant | Rôle |
 |-----------|------|
@@ -2409,15 +2487,15 @@ const { theme, toggleTheme } = useContext(ThemeContext);
 return <button onClick={toggleTheme}>{theme === 'dark' ? '☀' : '🌙'}</button>;
 ```
 
-### 7.8.3 Backend
+### 7.5.3 Backend
 
 Aucun. La préférence est purement client.
 
-### 7.8.4 Base de données
+### 7.5.4 Base de données
 
 Aucune. La préférence est persistée dans le `localStorage` du navigateur.
 
-### 7.8.5 Flux complet
+### 7.5.5 Flux complet
 
 ```
 User → clic sur toggle
@@ -2427,7 +2505,7 @@ ThemeContext → document.documentElement.classList.toggle('dark')
 Tailwind CSS → re-applique les variantes `dark:*` sur tout le DOM
 ```
 
-### 7.8.6 Extrait de code clé
+### 7.5.6 Extrait de code clé
 
 ```jsx
 // frontend/src/context/ThemeContext.jsx
@@ -2483,7 +2561,7 @@ J'ai traité la sécurité comme un axe transversal du projet, pris en compte d�
 
 - **Hashage des mots de passe** : bcrypt avec coût par défaut (10 rounds) ;
 - **Sessions en base de données** : tokens UUID stockés côté serveur, pas de JWT côté client ;
-- **Cookies sécurisés** : `HttpOnly`, `Secure`, `SameSite=Strict` ;
+- **Cookies sécurisés** : `SameSite=Lax` (le cookie n'est pas envoyé sur les requêtes cross-site de mutation), `Secure` activé en production (HTTPS), cookie host-only en développement ;
 - **Expiration automatique** : sessions limitées dans le temps ;
 - **Nettoyage périodique** : goroutine de purge des sessions expirées toutes les 6h ;
 - **Middleware d'authentification** : `AuthMiddleware` vérifie la présence et la validité du cookie de session dans la base (expiration vérifiée côté serveur) avant chaque requête protégée ;
@@ -2493,6 +2571,7 @@ J'ai traité la sécurité comme un axe transversal du projet, pris en compte d�
 ### Améliorations prévues
 
 - [ ] Rate limiting sur les endpoints d'authentification ;
+- [ ] Passage du cookie `sessionId` en `HttpOnly` (le frontend n'exploite que `userId`, le jeton de session n'a pas besoin d'être lisible en JavaScript) ;
 - [ ] Logging des tentatives de connexion échouées ;
 - [ ] Politique de mot de passe renforcée (complexité, longueur minimale) ;
 - [ ] Protection contre le brute force (verrouillage de compte temporaire).
@@ -2544,7 +2623,7 @@ Le portail traite des données personnelles (email, nom, activité de connexion)
 
 J'ai appuyé la protection contre les attaques **Cross-Site Request Forgery** sur deux mécanismes complémentaires :
 
-1. **Attribut `SameSite=Strict`** sur le cookie de session : empêche le navigateur d'envoyer le cookie lors d'une requête initiée depuis un site tiers. C'est la protection native pour tous les navigateurs récents.
+1. **Attribut `SameSite=Lax`** sur les cookies de session : le navigateur n'envoie pas le cookie sur les requêtes cross-site de mutation (`POST`, `PUT`, `DELETE`), ce qui neutralise les CSRF classiques par formulaire tiers, tout en restant compatible avec les navigations entrantes légitimes. C'est la protection native pour tous les navigateurs récents.
 2. **Vérification de l'`Origin` / `Referer`** côté serveur : pour les requêtes non-GET, le backend rejette toute requête dont l'origine ne correspond pas à la liste blanche CORS (`https://preprod.azert.fr`, `http://localhost:3000` en dev).
 
 Cette double protection couvre les navigateurs modernes (`SameSite`) et fournit une seconde barrière pour les navigateurs anciens. L'intégration d'un middleware à jeton CSRF synchronisé (double-submit cookie) reste documentée comme évolution possible si un cas d'usage cross-origin légitime apparaissait (cf. § 12.1).
@@ -2581,7 +2660,6 @@ J'ai retenu l'algorithme **token bucket** (capacité fixe, regénération à tau
 | Endpoint | Capacité | Taux de regénération |
 |----------|----------|----------------------|
 | `POST /sys/login` | 5 requêtes | 1 / 30 s |
-| `POST /sys/register` | 3 requêtes | 1 / 60 s |
 | Autres endpoints | 60 requêtes | 1 / s |
 
 ### Implémentation
@@ -2633,7 +2711,7 @@ JSON structuré (ingestion compatible ELK, Loki, Datadog) :
 ### Stratégie de stockage
 
 - **Court terme** : `stdout` du conteneur, agrégé par Kubernetes (`kubectl logs`) ;
-- **Cible moyen terme** : ingestion vers une stack ELK ou Grafana Loki (cf. § 10.7 monitoring) ;
+- **Cible moyen terme** : ingestion vers une stack ELK ou Grafana Loki (cf. § 12.1) ;
 - **Rétention** : 90 jours pour les événements de sécurité (finalité « détection d'intrusion / sécurité du SI » au sens RGPD), 30 jours pour les logs applicatifs standards.
 
 ### Ce qui n'est PAS loggé
@@ -2699,7 +2777,7 @@ Plutôt que de me contenter de cocher les cases de l'OWASP Top 10, j'ai conduit 
 |-----------------|--------------------|---------------|
 | **Spoofing** | Un attaquant tente de se faire passer pour un utilisateur par bruteforce de mot de passe | bcrypt (coût 10, lent par conception) + rate limiting token bucket (5 essais / 30 s) |
 | **Information disclosure** | Énumération des comptes via des messages d'erreur différenciés (« email inconnu » vs « mauvais mot de passe ») | Message d'erreur **générique unique** quel que soit l'échec |
-| **Tampering** | Vol/forge du cookie de session pour usurper une session | Cookie `HttpOnly` (inaccessible au JS, anti-XSS), `Secure` (HTTPS only), `SameSite=Strict` (anti-CSRF) ; session validée en base à chaque requête |
+| **Tampering** | Vol/forge du cookie de session pour usurper une session | Jeton de session opaque (UUID) validé en base à chaque requête — révocable côté serveur ; cookie `Secure` (HTTPS) et `SameSite=Lax` (anti-CSRF) ; passage en `HttpOnly` prévu (§ 8.2) |
 | **Denial of service** | Submersion de l'endpoint pour saturer bcrypt (coûteux en CPU) | Rate limiting par IP + réponse `429` rapide avant tout calcul bcrypt |
 
 ### 8.10.2 Surface : traitement de fichiers (`/api/conversion`)
@@ -2711,72 +2789,12 @@ Plutôt que de me contenter de cocher les cases de l'OWASP Top 10, j'ai conduit 
 | **Denial of service** | Upload massif pour saturer le disque | Fichiers temporaires isolés par UID + nettoyage automatique à +5 min (RG08) |
 | **Repudiation** | Un utilisateur nie avoir lancé un traitement litigieux | Journalisation horodatée des accès (§ 8.7) |
 
-### 8.10.3 Surface : WebSocket (`/sys/ws`)
+### 8.10.3 Surface : WebSocket (`/ws`)
 
 | Menace (STRIDE) | Scénario d'attaque | Contre-mesure |
 |-----------------|--------------------|---------------|
 | **Spoofing (CSWSH)** | Un site malveillant ouvre une WebSocket vers notre backend en réutilisant le cookie de la victime | Validation de l'en-tête `Origin` contre une allowlist (`CheckOrigin`) — cf. A.6 |
-| **Denial of service** | Multiplication de connexions zombies pour épuiser la mémoire | `AuthMiddleware` requis avant l'upgrade + heartbeat (`ListenPings`) détectant les connexions mortes |
-
-## 8.11 Code vulnérable vs code corrigé
-
-Pour rendre concrètes les corrections de sécurité, voici sur trois risques majeurs la forme vulnérable que j'ai évitée et la forme retenue.
-
-#### A03 — Injection SQL
-
-```go
-// ❌ VULNÉRABLE — concaténation directe de l'entrée utilisateur
-query := "SELECT * FROM applications a " +
-    "JOIN utilisateur_applications ua ON a.id = ua.id_application " +
-    "WHERE ua.uid_utilisateur = '" + userID + "'"   // injection possible
-rows, _ := db.Query(query)
-```
-
-```go
-// ✅ CORRIGÉ — requête paramétrée : userID ne peut pas modifier la structure SQL
-rows, err := db.Query(`
-    SELECT a.id, a.nom FROM applications a
-    JOIN utilisateur_applications ua ON a.id = ua.id_application
-    WHERE ua.uid_utilisateur = $1`, userID)
-```
-
-Avec la version vulnérable, un `userID` valant `' OR '1'='1` retournerait l'intégralité du catalogue. La version paramétrée traite la valeur comme une donnée, jamais comme du code.
-
-#### A01 — Path traversal
-
-```python
-# ❌ VULNÉRABLE — l'identifiant utilisateur est utilisé tel quel dans un chemin
-user_uid = request.cookies.get("userId")          # ex: "../../etc"
-path = os.path.join("/tmp", user_uid, "uploads")  # sort du répertoire prévu
-```
-
-```python
-# ✅ CORRIGÉ — validation stricte du format avant usage
-UUID_RE = re.compile(r"^[0-9a-fA-F-]{36}$")
-if not user_uid or not UUID_RE.match(user_uid):
-    raise HTTPException(status_code=401, detail="Invalid user identifier")
-path = os.path.join("/tmp", user_uid, "uploads")  # user_uid garanti sûr
-```
-
-Un UUID valide ne peut contenir ni `/` ni `..` : la validation en amont neutralise le path traversal à la racine, avant même la construction du chemin.
-
-#### A02 — Secret en dur
-
-```python
-# ❌ VULNÉRABLE — secret committé dans le dépôt Git
-JWT_SECRET_KEY = "s3cr3t-en-dur-dans-le-code"
-```
-
-```python
-# ✅ CORRIGÉ — secret injecté par l'environnement, fail-fast si absent
-JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
-if not JWT_SECRET_KEY:
-    raise RuntimeError("JWT_SECRET_KEY non défini : démarrage refusé")
-```
-
-La version vulnérable expose le secret à quiconque accède au dépôt (et le rend impossible à roter sans redéploiement de code). La version corrigée externalise le secret et **refuse de démarrer** s'il manque, plutôt que de tourner avec une valeur par défaut dangereuse.
-
----
+| **Denial of service** | Multiplication de connexions zombies pour épuiser la mémoire | `ReadDeadline` de 60 s renouvelée par ping/pong : les connexions mortes sont purgées automatiquement. Validation de session à l'upgrade documentée comme amélioration (§ 12.1) |
 
 # 9. Tests
 
@@ -2927,7 +2945,7 @@ e2e/
 ├── fixtures/
 │   └── users.ts                  # Comptes de test seedés
 ├── tests/
-│   ├── auth.spec.ts              # Login / logout / register
+│   ├── auth.spec.ts              # Login / logout
 │   ├── admin-crud.spec.ts        # Admin gérant les utilisateurs
 │   ├── file-upload.spec.ts       # Upload d'un fichier outil métier
 │   └── access-control.spec.ts    # Vérification RBAC frontal
@@ -2952,7 +2970,7 @@ e2e/
 Job dédié dans `.github/workflows/ci.yml` (à ajouter) :
 
 1. Démarrage de la stack via `docker compose up -d` ;
-2. Attente du healthcheck (`curl --retry 10 --retry-delay 2 http://localhost:8002/sys/health`) ;
+2. Attente du healthcheck (`curl --retry 10 --retry-delay 2 http://localhost:8002/health`) ;
 3. Exécution `npx playwright test` ;
 4. Upload du rapport HTML en artefact en cas d'échec.
 
@@ -3006,8 +3024,8 @@ Les tests automatisés ne couvrent pas tout. J'ai conduit une campagne de tests 
 
 | Parcours | Rôle | Statut |
 |----------|------|--------|
-| Inscription + login | Anonyme | Validé |
-| Réinitialisation de mot de passe | Anonyme | Validé |
+| Création de compte par l'Admin + première connexion de l'utilisateur | Admin puis nouvel utilisateur | Validé |
+| Login / logout (pose et expiration des cookies de session) | Tous rôles | Validé |
 | Lancement d'une application du catalogue | Tous rôles | Validé |
 | Traitement tirages de caisse (upload multi-fichiers + download Excel) | Comptable | Validé |
 | Paramétrage des codes comptables (enregistrement + réutilisation) | Comptable | Validé |
@@ -3179,7 +3197,7 @@ FROM python:3.13.3-slim
 |---------------|-----|-------|
 | Développement | localhost:3000/8001/8002 | Dev local |
 | Préproduction | preprod.azert.fr | Tests et validation |
-| Production | [À compléter] | Production |
+| Production | logiciel.cabinet-martini.fr | Production |
 
 La configuration des URLs de services est gérée via `frontend/public/config.yaml` avec un switch par environnement.
 
@@ -3227,8 +3245,8 @@ La configuration des URLs de services est gérée via `frontend/public/config.ya
 
 5. **Vérification du healthcheck**
    ```
-   curl https://preprod.azert.fr/sys/health
-   # → {"status": "ok", "db": "connected"}
+   curl https://<domaine-production>/health
+   # → OK (HTTP 200)
    ```
 
 6. **Tag de la release**
@@ -3289,60 +3307,7 @@ En cas de migration destructive accidentelle, restauration depuis le backup quot
 - Post-mortem rédigé sous 48 h ;
 - Ticket de suivi du correctif.
 
-## 10.7 Monitoring et observabilité
-
-### Architecture cible
-
-```
-[Apps] ──exposent── /metrics (format Prometheus)
-                          │
-                          ▼
-                   [Prometheus] ──── scrape toutes les 15 s
-                          │
-                          ▼
-                    [Grafana] ──── dashboards + alerting
-                          │
-                          ▼
-                 [Alertmanager] ──── notifications (email, Slack)
-```
-
-### Métriques exposées
-
-#### Backend Go
-
-- `http_requests_total{method,path,status}` — compteur de requêtes ;
-- `http_request_duration_seconds{method,path}` — histogramme de latence ;
-- `db_pool_connections{state}` — état du pool PostgreSQL ;
-- `websocket_clients_connected` — gauge des connexions WebSocket actives ;
-- `auth_login_attempts_total{result}` — login réussis / échoués.
-
-#### API Python
-
-Mêmes métriques HTTP via [prometheus-fastapi-instrumentator](https://github.com/trallnag/prometheus-fastapi-instrumentator), plus la latence par utilitaire (`convert`, `merge_excel`, etc.).
-
-### Dashboards Grafana (cibles)
-
-1. **Vue d'ensemble** : RPS, latence P50/P95/P99, taux d'erreur, uptime ;
-2. **Sécurité** : logins échoués par heure, rate limit déclenché, accès refusés ;
-3. **Base de données** : connexions, requêtes lentes, taille des tables ;
-4. **Infrastructure** : CPU/RAM/Disk par pod, redémarrages.
-
-### Alerting
-
-| Alerte | Seuil | Sévérité |
-|--------|-------|----------|
-| Taux d'erreur 5xx > 1 % sur 5 min | warning | P2 |
-| Taux d'erreur 5xx > 5 % sur 5 min | critical | P1 |
-| Latence P95 > 3 s sur 10 min | warning | P2 |
-| Pod en `CrashLoopBackOff` | critical | P1 |
-| Disque > 80 % | warning | P2 |
-| Disque > 95 % | critical | P1 |
-
-### Statut actuel
-
-Healthcheck basique en place (`/sys/health` testant la connexion DB). Stack Prometheus / Grafana documentée comme cible, à déployer post-soutenance.
-
-## 10.8 Versioning sémantique et CHANGELOG
+## 10.7 Versioning sémantique
 
 ### Versioning sémantique (SemVer)
 
@@ -3362,140 +3327,6 @@ Chaque release est matérialisée par un tag annoté :
 git tag -a v1.2.0 -m "Release 1.2.0 — ajout du module Analytics"
 git push origin v1.2.0
 ```
-
-### CHANGELOG.md
-
-Format [Keep a Changelog](https://keepachangelog.com), maintenu manuellement ou semi-automatiquement via `git-cliff` à partir des Conventional Commits (cf. § 3.4) :
-
-```markdown
-# Changelog
-
-## [Unreleased]
-
-## [1.2.0] — 2026-05-22
-### Added
-- Module Analytics (tableau de bord administrateur)
-- WebSocket pour présence temps réel
-
-### Changed
-- Refonte de l'interface de connexion
-
-### Fixed
-- Typo CORS preprod
-- Path traversal sur upload de fichiers
-
-### Security
-- Validation Origin sur les WebSockets (CSWSH)
-
-## [1.1.0] — 2026-04-18
-...
-```
-
-### Lien tag ↔ changelog
-
-Chaque entrée du `CHANGELOG.md` correspond exactement à un tag Git. Les notes de release GitHub reprennent automatiquement le contenu du CHANGELOG via GitHub Actions.
-
-### Statut
-
-`CHANGELOG.md` à créer ; format documenté ci-dessus comme livrable cible.
-
-## 10.9 Développement local avec docker-compose
-
-### Objectif
-
-Permettre à un nouveau développeur de démarrer la stack complète (3 services + BDD) en une commande, sans installer manuellement Go, Python, PostgreSQL.
-
-### Architecture
-
-```
-docker-compose.yml
-├── service: postgres        (image: postgres:16-alpine)
-├── service: backend         (build: ./backend)
-├── service: api             (build: ./api)
-└── service: frontend        (build: ./frontend, npm run dev en hot-reload)
-```
-
-### Extrait du `docker-compose.yml`
-
-```yaml
-version: "3.9"
-
-services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: intranet
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: dev
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dev"]
-      interval: 5s
-      retries: 5
-
-  backend:
-    build: ./backend
-    environment:
-      DB_HOST: postgres
-      DB_NAME: intranet
-      DB_USER: dev
-      DB_PASSWORD: dev
-      DB_PORT: 5432
-      COOKIE_SECRET: dev_secret_change_me
-    ports:
-      - "8002:8002"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  api:
-    build: ./api
-    environment:
-      DB_HOST: postgres
-      DB_NAME: intranet
-      DB_USER: dev
-      DB_PASSWORD: dev
-      JWT_SECRET_KEY: dev_jwt_secret
-      JWT_REFRESH_SECRET_KEY: dev_jwt_refresh
-    ports:
-      - "8001:8001"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    environment:
-      VITE_API_URL: http://localhost:8002
-      VITE_PYTHON_API_URL: http://localhost:8001
-
-volumes:
-  pgdata:
-```
-
-### Commandes essentielles
-
-```
-docker compose up -d         # Démarrage en arrière-plan
-docker compose logs -f       # Suivi des logs
-docker compose down          # Arrêt + suppression des conteneurs
-docker compose down -v       # Idem + suppression du volume Postgres (reset BDD)
-```
-
-### Bénéfices
-
-- Setup en deux minutes contre une trentaine en installation native ;
-- Isolation : aucun impact sur la machine hôte ;
-- Reproductibilité : tous les développeurs travaillent avec la même version de PostgreSQL et des images ;
-- Sépare clairement le local du déploiement Kubernetes (§ 10.2).
-
----
 
 # 11. Veille technologique et sécurité
 
@@ -3550,20 +3381,19 @@ Le projet est fonctionnel et déployé, mais je l'envisage comme une base évolu
 
 ## 12.1 Améliorations techniques
 
-- **Tests** : augmenter la couverture (E2E avec Cypress/Playwright) ;
+- **Tests** : augmenter la couverture (E2E avec Playwright, cf. § 9.6) ;
 - **Monitoring** : mise en place de Prometheus + Grafana ;
-- **Cache** : Redis pour les sessions et données fréquemment accédées ;
-- **Rate limiting** : protection contre les attaques par force brute ;
-- **Headers de sécurité** : CSP, HSTS, X-Frame-Options ;
+- **NoSQL / cache** : introduction de Redis (store clé-valeur) pour externaliser les sessions et les compteurs de rate limiting — prérequis au passage du backend en multi-instances (arbitrage documenté en § 4.4.5) ; à plus long terme, base orientée documents pour les événements analytics si la volumétrie l'exige ;
+- **Rate limiting** : protection contre les attaques par force brute (§ 8.6) ;
+- **WebSocket** : validation de la session à l'upgrade, en complément du contrôle d'origine (§ 8.10.3) ;
+- **Headers de sécurité** : CSP, HSTS, X-Frame-Options (§ 8.5.2) ;
 - **Protection CSRF** : token anti-CSRF sur les formulaires de mutation.
 
 ## 12.2 Améliorations fonctionnelles
 
 - Système de notifications push ;
-- Chat en temps réel entre utilisateurs ;
 - Export de rapports PDF ;
-- Tableau de bord personnalisable par utilisateur ;
-- Application mobile (React Native ou PWA).
+- Tableau de bord personnalisable par utilisateur.
 
 ## 12.3 Améliorations DevOps
 
@@ -3574,7 +3404,7 @@ Le projet est fonctionnel et déployé, mais je l'envisage comme une base évolu
 
 ---
 
-# 13. Conclusion personnelle
+# 13. Conclusion
 
 ## 13.1 Un projet complet
 
@@ -3584,10 +3414,10 @@ Ce projet de portail intranet m'a permis de mettre en pratique l'ensemble des co
 - **Conception d'une architecture multicouche** avec séparation claire des responsabilités (Clean Architecture) ;
 - **Développement multilangage** : JavaScript/React pour le frontend, Go pour le backend haute performance, Python pour le traitement de données ;
 - **Sécurisation de l'application** : authentification robuste (AuthMiddleware + AdminMiddleware), RBAC à 6 rôles, protection OWASP Top 10 (path traversal, CSWSH, secrets externalisés), cookies sécurisés ;
-- **Modélisation des données** avec PostgreSQL et support JSONB ;
+- **Modélisation des données** avec PostgreSQL et support JSON ;
 - **Conteneurisation et orchestration** avec Docker et Kubernetes ;
 - **Intégration et déploiement continus** avec GitHub Actions ;
-- **Gestion de projet** en méthodologie Agile.
+- **Gestion de projet** itérative et incrémentale, suivie en Kanban.
 
 ## 13.2 Ce que ce projet m'a appris
 
@@ -3598,102 +3428,22 @@ Au-delà du code, ce projet m'a fait progresser sur plusieurs plans :
 - **Sécurité applicative** : l'implémentation de l'authentification par sessions, du pipeline de middlewares, de la validation des entrées (UUID, `filepath.Base`), de la protection contre le CSWSH, et de l'externalisation des secrets m'a sensibilisé aux enjeux de sécurité web conformément à l'OWASP Top 10.
 - **DevOps** : la mise en place de Docker, Kubernetes et du pipeline CI/CD m'a apporté une vision complète du cycle de vie d'une application, du développement à la production.
 
-> *Note au candidat : les ressentis ci-dessous sont à personnaliser. Remplace les passages `[À compléter]` par ton vécu réel — je ne les ai pas inventés.*
-
-[À compléter : ce que ce projet a changé dans ta posture de développeur — ce que tu as appris sur toi, tes méthodes de travail, ta façon d'aborder un problème technique.]
+Le projet m'a apporté dans un premier temps une véritable autonomie, ainsi qu'une vision globale de ce qu'est un projet informatique : la capacité à relier plusieurs métiers entre eux, à arbitrer des priorités et à assumer mes choix techniques du besoin jusqu'à la production. J'y ai également appris des technologies que je souhaitais découvrir — certaines se sont révélées bénéfiques, d'autres moins, et savoir faire la différence fait aussi partie de l'apprentissage.
 
 ## 13.3 Difficultés rencontrées
 
 1. **Compatibilité psycopg2 / Python 3.14** : l'extension C de psycopg2 ne compilait pas sur les versions récentes de Python, ce qui m'a obligé à mettre en place une stratégie de mock complète pour les tests.
 2. **Concurrence WebSocket** : la gestion thread-safe des connexions avec `sync.RWMutex` et la détection des connexions mortes ont nécessité plusieurs itérations.
 3. **Isolation des tests** : garantir l'indépendance des tests avec une base partagée a demandé un nettoyage systématique des tables entre chaque test.
-
-[À compléter : autres difficultés réelles que tu as rencontrées et la façon dont tu les as résolues.]
+4. **Mise en production** : c'est la difficulté la plus globale. Au départ, je n'avais aucune notion de la façon de déployer une application, de la maintenir ou de l'exploiter. Sans véritable aide extérieure, provisionner le serveur, mettre en place l'orchestrateur et le reverse proxy, puis ouvrir le service aux utilisateurs a représenté un vrai défi — et la montée en compétence la plus marquante du projet.
 
 ## 13.4 Perspectives
 
-Le projet est fonctionnel et déployé en préproduction. Les prochaines évolutions prioritaires sont le monitoring (Prometheus/Grafana), le rate limiting sur les endpoints d'authentification, et l'ajout de tests end-to-end.
+Le projet est fonctionnel, déployé et utilisé. La suite consiste à le faire vivre en y ajoutant de nouveaux logiciels adaptés aux demandes des différents acteurs du cabinet.
 
-[À compléter : où tu souhaites aller ensuite, professionnellement et techniquement.]
+Me concernant, je souhaite pour l'instant m'orienter vers le Bac+5 « chef de projet et architecture logicielle » que propose l'école. Sur le plan des connaissances, je veux approfondir encore l'IA et le DevOps, notamment par l'apprentissage de Terraform et d'Ansible.
 
-## 13.5 En résumé
-
-[À compléter : une phrase de clôture qui te ressemble — ta « signature » de développeur, ce que tu retiens de ce parcours CDA.]
-
----
-
-# 14. Glossaire
-
-Glossaire bilingue (français / anglais) des termes techniques mobilisés dans le dossier. Couvre la compétence transversale **CT2** (utiliser l'anglais dans son activité professionnelle).
-
-| Terme FR | Terme EN | Définition |
-|----------|----------|------------|
-| **API** | Application Programming Interface | Interface de communication entre logiciels |
-| **ASGI** | Asynchronous Server Gateway Interface | Protocole Python pour serveurs web asynchrones |
-| **Authentification** | Authentication | Vérification de l'identité d'un utilisateur |
-| **Autorisation** | Authorization | Vérification des droits d'accès d'un utilisateur authentifié |
-| **bcrypt** | bcrypt | Algorithme de hachage de mots de passe basé sur Blowfish |
-| **Cache** | Cache | Stockage temporaire de données pour accélérer les accès |
-| **CI/CD** | Continuous Integration / Continuous Deployment | Automatisation du build et du déploiement |
-| **Clé étrangère** | Foreign key | Référence d'une table vers la clé primaire d'une autre |
-| **Conteneurisation** | Containerization | Encapsulation d'une application et de ses dépendances dans un conteneur isolé |
-| **CORS** | Cross-Origin Resource Sharing | Mécanisme navigateur autorisant les requêtes cross-origin |
-| **Couche** | Layer | Niveau d'abstraction dans une architecture en couches |
-| **CRUD** | Create, Read, Update, Delete | Les quatre opérations de base sur les données |
-| **CSRF** | Cross-Site Request Forgery | Attaque par requête forgée depuis un site tiers |
-| **CSWSH** | Cross-Site WebSocket Hijacking | Détournement d'une connexion WebSocket cross-origin |
-| **Déploiement continu** | Continuous Deployment (CD) | Mise en production automatisée à chaque merge |
-| **Docker** | Docker | Plateforme de conteneurisation d'applications |
-| **Endpoint** | Endpoint | Point d'accès d'une API (URL + méthode HTTP) |
-| **FastAPI** | FastAPI | Framework Python moderne pour la création d'API REST |
-| **Go (Golang)** | Go (Golang) | Langage de programmation compilé créé par Google |
-| **Goroutine** | Goroutine | Thread léger géré par le runtime Go pour la concurrence |
-| **Hachage** | Hashing | Transformation irréversible d'une donnée en empreinte |
-| **HMR** | Hot Module Replacement | Rechargement à chaud des modules en développement |
-| **HSTS** | HTTP Strict Transport Security | Header forçant l'usage de HTTPS |
-| **HTTP** | HyperText Transfer Protocol | Protocole de communication web |
-| **HTTPS** | HTTP Secure | HTTP chiffré via TLS |
-| **Intergiciel** | Middleware | Composant interceptant les requêtes/réponses |
-| **Intégration continue** | Continuous Integration (CI) | Tests automatisés à chaque push |
-| **Jeton** | Token | Chaîne d'authentification (ex : JWT) |
-| **JWT** | JSON Web Token | Standard de jeton d'authentification signé |
-| **K3s** | K3s | Distribution légère de Kubernetes |
-| **K8s** | Kubernetes | Système d'orchestration de conteneurs |
-| **MCD** | Conceptual Data Model (CDM) | Modèle Conceptuel de Données |
-| **MLD** | Logical Data Model (LDM) | Modèle Logique de Données |
-| **Migration (BDD)** | Database migration | Évolution incrémentale du schéma de base de données |
-| **MPD** | Physical Data Model (PDM) | Modèle Physique de Données |
-| **Nginx** | Nginx | Serveur web et reverse proxy haute performance |
-| **Orchestration** | Orchestration | Coordination automatisée de plusieurs conteneurs/services |
-| **ORM** | Object-Relational Mapping | Abstraction de la base de données en objets |
-| **OWASP** | Open Web Application Security Project | Référentiel de sécurité web |
-| **Persistance** | Persistence | Sauvegarde durable de données |
-| **PostgreSQL** | PostgreSQL | Système de gestion de base de données relationnelle open source |
-| **Rate limiting** | Rate limiting | Limitation du nombre de requêtes par client et par fenêtre temporelle |
-| **RBAC** | Role-Based Access Control | Contrôle d'accès basé sur les rôles |
-| **Refactorisation** | Refactoring | Restructuration de code sans changement de comportement |
-| **Référentiel (Git)** | Repository | Stockage d'un projet versionné |
-| **REST** | Representational State Transfer | Style d'architecture pour API web |
-| **RGAA** | Référentiel Général d'Amélioration de l'Accessibilité | Standard français d'accessibilité numérique (équivalent WCAG) |
-| **RGPD** | General Data Protection Regulation (GDPR) | Règlement européen sur la protection des données |
-| **Rollback** | Rollback | Retour à un état stable antérieur |
-| **Sérialisation** | Serialization | Transformation d'un objet en flux transmissible |
-| **SPA** | Single Page Application | Application web monopage |
-| **SQLAlchemy** | SQLAlchemy | ORM Python pour l'accès aux bases de données |
-| **Tableau de bord** | Dashboard | Interface de visualisation synthétique |
-| **Tailwind CSS** | Tailwind CSS | Framework CSS utility-first |
-| **Test d'intégration** | Integration test | Test de l'interaction entre composants |
-| **Test unitaire** | Unit test | Test d'une unité de code isolée |
-| **Traefik** | Traefik | Reverse proxy et ingress controller moderne |
-| **UML** | Unified Modeling Language | Langage de modélisation standardisé |
-| **UUID** | Universally Unique Identifier | Identifiant unique universel (128 bits) |
-| **Vite** | Vite | Outil de build frontend rapide basé sur ESBuild |
-| **WebSocket** | WebSocket | Protocole de communication bidirectionnelle persistante |
-| **XSS** | Cross-Site Scripting | Injection de code malveillant côté client |
-
----
-
-# 15. Annexes
+# 14. Annexes
 
 ## Annexe A : Extraits de code
 
@@ -3954,18 +3704,14 @@ func (h *Handler) UploadFile(w http.ResponseWriter, r *http.Request) {
 
 ## Annexe B : Captures d'écran
 
-[À insérer : captures d'écran de l'application en fonctionnement]
+Captures de l'application en fonctionnement, réalisées sur l'environnement de préproduction et intégrées à la version mise en page du dossier :
 
-Captures à réaliser sur l'environnement de préproduction :
-
-### B.1 Page d'accueil (Landing) — mode clair et mode sombre
-### B.2 Page de connexion — formulaire et message d'erreur
-### B.3 Dashboard utilisateur — catalogue d'applications avec indicateur de présence
-### B.4 Interface d'administration — liste des utilisateurs avec filtres
-### B.5 Formulaire de création d'utilisateur — avec sélection du rôle
-### B.6 Tableau de bord analytique — graphiques Recharts (connexions/jour, heures de pointe)
-### B.7 Outil de traitement des tirages de caisse — upload multi-fichiers et résultat Excel
-### B.8 Paramétrage des codes comptables — édition et enregistrement
+- **B.1** Page de connexion — formulaire et message d'erreur ;
+- **B.2** Page Home — catalogue d'applications avec indicateur de présence ;
+- **B.3** Interface d'administration — liste des utilisateurs, filtres et formulaire de création avec sélection du rôle ;
+- **B.4** Tableau de bord analytique — graphiques Recharts (connexions par jour, heures de pointe) ;
+- **B.5** Outil de traitement des tirages de caisse — dépôt multi-fichiers et récupération du classeur Excel ;
+- **B.6** Paramétrage des codes comptables — édition et enregistrement.
 
 ## Annexe C : Résultats de tests
 
@@ -4015,50 +3761,11 @@ ok  api/internal/services/analyse           0.016s
 ok  api/internal/services/Macdos            0.012s
 ```
 
-## Annexe D : Pipeline CI/CD
+## Annexe D : Maquettes
 
-```yaml
-# .github/workflows/ci.yml (extrait)
-name: CI/CD Pipeline
-on:
-  push:
-    branches: [main]
+Les wireframes structurants sont intégrés à la section 4.2 du dossier. Les maquettes haute fidélité réalisées sous Figma — écrans de connexion, d'accueil, d'administration et de l'outil de tirages de caisse — sont reprises dans la version mise en page du dossier.
 
-jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '1.24'
-      - run: go test ./... -v -count=1 --tags=exclude_websocket
-
-  build-and-deploy:
-    needs: unit-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Docker images
-        run: |
-          docker build -t frontend ./frontend
-          docker build -t backend ./backend
-          docker build -t api ./api
-      - name: Deploy to K3s
-        run: |
-          ssh deploy@cluster "kubectl rollout restart deployment/frontend"
-          ssh deploy@cluster "kubectl rollout restart deployment/backend"
-          ssh deploy@cluster "kubectl rollout restart deployment/api"
-```
-
-[À insérer : captures d'écran des exécutions GitHub Actions réussies]
-
-## Annexe E : Maquettes
-
-Les wireframes ASCII sont intégrés dans la section 4.2 du dossier. Pour les maquettes haute fidélité :
-
-[À insérer : exports Figma des écrans principaux si réalisés]
-
-## Annexe F : Diagrammes UML
+## Annexe E : Diagrammes UML
 
 L'ensemble des diagrammes UML est regroupé dans le fichier `doc/diagrammes.md` au format Mermaid :
 
@@ -4069,13 +3776,12 @@ L'ensemble des diagrammes UML est regroupé dans le fichier `doc/diagrammes.md` 
 5. **Diagramme de séquence — Conversion EDI** — Traitement fichier comptable (Section 5)
 6. **Diagramme de séquence — WebSocket** — Présence temps réel (Section 6)
 7. **Diagramme de séquence — CRUD Admin** — Gestion utilisateurs (Section 7)
-8. **Diagramme de déploiement** — Infrastructure K8s (Section 8)
-9. **Diagramme d'architecture en couches** — Handler → Service → Repository (Section 9)
-10. **Diagramme Entité-Relation (MCD)** — Modèle de données complet (Section 10)
-11. **Diagramme de composants Frontend** — Architecture React (Section 11)
+8. **Diagramme de déploiement** — Infrastructure K3s (Section 8)
+9. **Diagramme Entité-Relation (MCD)** — Modèle de données complet (Section 9)
+10. **Diagramme de composants Frontend** — Architecture React (Section 10)
 
 ---
 
-**Gwendal [NOM — À compléter]**
-**[Centre de formation — À compléter]**
-**Session CDA — [À compléter]**
+**Bénard Gwendal**
+**Zone01 Normandie**
+**Titre professionnel Concepteur Développeur d'Applications**

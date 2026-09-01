@@ -1,0 +1,36 @@
+
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: backend
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`logiciel.cabinet-martini.fr`) && PathPrefix(`/ws`)
+      kind: Rule
+      priority: 101
+      services:
+        - name: backend
+          port: 8002
+      middlewares:
+        - name: websocket-headers
+    - match: Host(`logiciel.cabinet-martini.fr`) && PathPrefix(`/sys`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: backend
+          port: 8002
+  tls: {}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: websocket-headers
+  namespace: default
+spec:
+  headers:
+    customRequestHeaders:
+      Connection: "Upgrade"
+      Upgrade: "websocket"

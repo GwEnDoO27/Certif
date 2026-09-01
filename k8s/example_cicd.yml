@@ -1,0 +1,65 @@
+# CI/CD Simple avec Registry Local
+name: Simple CI/CD Local Registry
+# Déclenche sur push vers main uniquement
+on:
+  push:
+    branches: [ main ]
+env:
+  GO_VERSION: '1.24.3'
+jobs:
+  # Job 1: Tests unitaires
+  test:
+    name: Tests Unitaires
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+    - name: Download dependencies
+      run: go mod download
+    - name: Run unit tests
+      run: go test -v $(go list ./... | grep -v '/internal/services/websocket')
+  # Job 2: Build, Push et Deploy sur le serveur
+  deploy:
+    name: Build, Push et Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    # Deploy directement sur le serveur (build + push + restart)
+    - name: Deploy to k3s with local registry
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          echo "🚀 Déploiement backend..."
+          # Variables
+          REPO_DIR="/srv/docker/intraKub/backend"
+          # 1. Récupérer le code source
+          echo "📥 Récupération du code..."
+          sudo rm -rf $REPO_DIR
+          sudo git clone https://${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git $REPO_DIR
+          cd $REPO_DIR
+          # 2. Build exactement comme tu fais manuellement
+          echo "🔨 Build de l'image..."
+          sudo docker build -t localhost:5000/backend .
+          # 3. Push exactement comme tu fais manuellement
+          echo "📤 Push vers le registry..."
+          docker push localhost:5000/backend
+          # 4. Restart deployment exactement comme tu fais manuellement
+          echo "🔄 Restart du deployment..."
+          sudo kubectl rollout restart deployment backend
+          # 5. Attendre que le rollout soit terminé
+          echo "⏳ Attente du rollout..."
+          sudo kubectl rollout status deployment backend --timeout=300s
+          # 6. Vérification finale
+          echo "✅ Vérification..."
+          sudo io.kompose.service=backend
+          echo "🎉 Déploiement terminé avec succès!"
